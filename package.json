@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",
-    "astro": "^5.0.0",
-    "@zeroroot/brand": "^0.1.0"
+    "astro": "^5.0.0"
   },
   "devDependencies": {
     "pnpm": "^9.0.0"
