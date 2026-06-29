@@ -1,0 +1,77 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'ZeroRoot AI — the zero-trust agent factory' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} | ZeroRoot AI</title>
+    <link rel="stylesheet" href="/brand/tokens.css" />
+    <style>
+      :root {
+        --background: #0a0a0f;
+        --foreground: #e2e8f0;
+        --accent: #7c3aed;
+        --accent-light: #a78bfa;
+        --cyan: #22d3ee;
+        --muted: #64748b;
+        --border: #1e293b;
+        --card: #0f172a;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html { font-family: 'JetBrains Mono', 'Fira Code', monospace; background: var(--background); color: var(--foreground); }
+      body { min-height: 100vh; display: flex; flex-direction: column; }
+      main { flex: 1; max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; width: 100%; }
+      a { color: var(--cyan); text-decoration: none; }
+      a:hover { color: var(--accent-light); text-decoration: underline; }
+      h1 { font-size: 2.5rem; font-weight: 700; color: var(--accent-light); margin-bottom: 1rem; line-height: 1.2; }
+      h2 { font-size: 1.75rem; font-weight: 600; color: var(--accent-light); margin: 2rem 0 1rem; }
+      h3 { font-size: 1.25rem; font-weight: 600; color: var(--cyan); margin: 1.5rem 0 0.5rem; }
+      p { line-height: 1.7; margin-bottom: 1rem; color: var(--foreground); }
+      ul { margin: 0.5rem 0 1rem 1.5rem; }
+      li { line-height: 1.7; margin-bottom: 0.25rem; }
+      .cta { display: inline-block; background: var(--accent); color: #fff; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; margin: 0.5rem 0.5rem 0.5rem 0; text-decoration: none; transition: background 0.2s; }
+      .cta:hover { background: var(--accent-light); color: var(--background); text-decoration: none; }
+      .cta-secondary { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); }
+      .cta-secondary:hover { background: var(--cyan); color: var(--background); }
+      nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+      nav .brand { color: var(--accent-light); font-weight: 700; font-size: 1.1rem; text-decoration: none; }
+      nav .brand:hover { text-decoration: none; color: var(--accent-light); }
+      nav .links { display: flex; gap: 1.5rem; }
+      nav .links a { color: var(--muted); font-size: 0.9rem; }
+      nav .links a:hover { color: var(--foreground); }
+      footer { background: var(--card); border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+      .hero { padding: 4rem 0 3rem; }
+      .hero-sub { font-size: 1.2rem; color: var(--muted); margin-bottom: 2rem; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; }
+      .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+      .price-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; }
+      .price-card.featured { border-color: var(--accent); }
+      .price-amount { font-size: 2rem; font-weight: 700; color: var(--accent-light); }
+      .price-period { font-size: 0.85rem; color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a class="brand" href="/">ZeroRoot AI</a>
+      <div class="links">
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/contact-sales">Contact Sales</a>
+        <a href="https://app.zeroroot.ai/signup" class="cta" style="padding: 0.35rem 1rem; font-size: 0.85rem;">Get Started</a>
+      </div>
+    </nav>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>&copy; {new Date().getFullYear()} ZeroRoot AI. All rights reserved. &nbsp;|&nbsp; <a href="https://github.com/zeroroot-ai">GitHub</a> &nbsp;|&nbsp; <a href="mailto:sales@zeroroot.ai">sales@zeroroot.ai</a></p>
+    </footer>
+  </body>
+</html>

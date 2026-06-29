@@ -1,0 +1,64 @@
+---
+layout: ../layouts/Layout.astro
+title: "Features"
+description: "ZeroRoot AI features — agents, tools, plugins, missions, and a zero-trust substrate."
+---
+
+# Features
+
+Everything you need to build production AI agents — and the security substrate to run them safely.
+
+## Agent runtime
+
+### Agents
+Orchestrators that decompose goals into plans, dispatch tools, and manage multi-step reasoning. Built on the open-source ZeroRoot SDK with full CUE-schema mission definitions.
+
+### Tools
+Stateless executors — REST adapters, code interpreters, data connectors. Tools run inside isolated microVMs; a sandbox escape does not become a tenant breach.
+
+### Plugins
+Dynamic capability bridges. MCP plugins connect any Model Context Protocol server to the ZeroRoot runtime. Plugin manifests declare their capabilities; the platform enforces them.
+
+### Missions
+Typed, version-controlled task definitions in CUE. A mission schema specifies agent roles, data flow, LLM slot configuration, and termination criteria — no freestyle prompting at runtime.
+
+## Security substrate
+
+### SPIFFE/SPIRE identity fabric
+Every workload — daemon, agent, tool, plugin — carries a cryptographic SVID. No static API keys in your environment. SPIFFE trust domain: `zeroroot.ai`.
+
+### OpenFGA authorization
+Fine-grained authorization on every resource. The FGA model is generated from your component SDK protos; policy is code-reviewed, not configured in a UI.
+
+### Vault-backed secrets
+Per-tenant OpenBao (HashiCorp Vault-compatible) instances. Secrets never leave the vault in plaintext; components receive ephemeral leases with automatic rotation.
+
+### Envoy ext_authz
+Every inbound RPC passes through the ext_authz sidecar. The authorization decision is logged, auditable, and enforced before the request reaches application code.
+
+## Observability
+
+### Distributed tracing
+OpenTelemetry traces across every agent hop, tool invocation, and LLM call. Correlate latency, cost, and quality in a single trace.
+
+### Mission graph
+Visual DAG of mission execution — which agents ran, which tools were invoked, where the graph forked or retried. Available per-run in the dashboard.
+
+### Audit log
+Every authorization decision, secret access, and configuration change is written to an immutable audit log. Exportable for SIEM integration.
+
+## Platform
+
+### Multi-tenancy
+Hard tenant isolation from the start. Each tenant runs its own graph database, Redis namespace, secret store, and execution pool. No `WHERE tenant_id = ?` bugs.
+
+### CLI and SDK
+`gibson` CLI for local development. The open-source Apache-licensed SDK for authoring agents, tools, plugins, and component manifests.
+
+### Self-hosted option
+Run ZeroRoot AI on your own Kubernetes cluster. The Helm chart and operator are source-available (Elastic License v2). The execution substrate (setec, gibson-executor) is Apache-licensed open source.
+
+---
+
+<a href="/pricing" class="cta">See pricing</a>
+<a href="https://app.zeroroot.ai/signup" class="cta cta-secondary">Start free trial</a>
