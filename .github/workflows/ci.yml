@@ -55,5 +55,9 @@ jobs:
           tags: |
             ghcr.io/zeroroot-ai/www:${{ github.sha }}
             ghcr.io/zeroroot-ai/www:latest
-          build-args: |
-            NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          # BuildKit secret (not a build-arg/ENV) so the GH Packages token
+          # used to fetch @zeroroot-ai/brand is never baked into a layer.
+          # The Dockerfile mounts it and writes a user-level ~/.npmrc for
+          # the pnpm install step only (see issue #3).
+          secrets: |
+            npm_token=${{ secrets.GITHUB_TOKEN }}
