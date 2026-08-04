@@ -1,3 +1,16 @@
+# pnpm 11 requires an explicit decision on every dependency that wants to run a
+# postinstall script, and errors out (ERR_PNPM_IGNORED_BUILDS) until it gets
+# one. pnpm 10 only warned, which is why this file did not exist before.
+#
+# Both are `false` — this site does not need either script:
+#   esbuild — ships its native binary as a platform-specific optional
+#             dependency; the postinstall only verifies it. Astro/Vite build
+#             fine without it, as the image build proves.
+#   sharp   — used by astro:assets for image optimisation. These pages use a
+#             plain <img>, so sharp is never invoked.
+#
+# The Dockerfile installs with --ignore-scripts, so this keeps CI, the image
+# and a workstation making the same choice instead of three different ones.
 allowBuilds:
-  esbuild: set this to true or false
-  sharp: set this to true or false
+  esbuild: false
+  sharp: false
