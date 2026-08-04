@@ -104,6 +104,18 @@ export const hero = {
   quickstart: "first agent live in under an hour. See the quickstart",
 } as const;
 
+/**
+ * The flagship section header. Lived inline in GibsonBrain.tsx until now,
+ * which is exactly what this module exists to prevent: the file's own header
+ * says "Edit copy HERE, never inline it in a component", and an inline
+ * paragraph is how the surfaces drift apart again.
+ */
+export const flagship = {
+  eyebrow: "// the flagship",
+  heading: "Autonomous security that maps how risk connects",
+  body: "Point it at your environment. It finds the paths that matter and replays every move. One engine, both sides of the line.",
+} as const;
+
 /** Closing lockup, reused by footer-adjacent and profile surfaces. */
 export const lockup = {
   line: "Your agents. Any domain. Zero-trust substrate.",
