@@ -1,7 +1,15 @@
 # Stage 1: build
 FROM node:22-alpine AS builder
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# `corepack enable` alone, deliberately: corepack then reads the exact pnpm
+# version from package.json's `packageManager` field. The previous
+# `corepack prepare pnpm@latest` floated, so the image's package manager
+# drifted daily and could differ by a whole major from the one that produced
+# the committed lockfile. That is not hypothetical: pnpm 11 enforces a 24h
+# `minimumReleaseAge` quarantine that pnpm 10 does not, so a lockfile
+# resolved locally on 10 was rejected by the image on 11 — and PR CI never
+# caught it, because the docker job only runs on main.
+RUN corepack enable
 COPY package.json pnpm-lock.yaml .npmrc ./
 # pnpm deliberately ignores env-var auth tokens in the project-level .npmrc
 # ("environment variables are not expanded in registry credentials that come
