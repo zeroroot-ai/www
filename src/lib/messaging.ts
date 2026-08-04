@@ -44,15 +44,15 @@ interface Pillar {
 export const pillars: readonly Pillar[] = [
   {
     title: "A living model of your environment",
-    body: "Gibson builds one coherent picture as it works: every asset, access path, and exposure it discovers, not a one-time scan.",
+    body: "One picture, built as it works: every asset, access path, and exposure it finds. Not a one-time scan.",
   },
   {
     title: "Thinks in paths, not checklists",
-    body: "It reasons about how weaknesses chain and where they lead, so you get the handful of paths that are real risk. Attack: walk it. Defend: cut it.",
+    body: "It reasons about how weaknesses chain, so you get the few paths that are real risk. Attack: walk it. Defend: cut it.",
   },
   {
     title: "Replayable, move by move",
-    body: "Rewind and scrub every decision Gibson made: a reproducible record for the operator who ran it and the team reviewing it.",
+    body: "Rewind and scrub every decision it made. A reproducible record for whoever reviews the run.",
   },
 ] as const;
 
@@ -98,7 +98,7 @@ export const hero = {
   headlineHighlight: ENGINE,
   headlineRest: "thinks in paths, not checklists.",
   subhead:
-    "Gibson is our autonomous security brain. Point it at your environment and it builds a living model of how risk connects, finds the paths that matter, and replays every move. For the teams breaking in and the teams locking down.",
+    "Point it at your environment. It maps how risk connects, finds the paths that matter, and replays every move.",
   ctaPrimary: "Start Free",
   ctaSecondary: "Star the ADK",
   quickstart: "first agent live in under an hour. See the quickstart",
