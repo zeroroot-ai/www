@@ -16,9 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # No `version:` here on purpose. The action reads package.json's
+      # `packageManager` field instead, so CI, the Docker image and a
+      # workstation all run the identical pnpm. They did not before: CI
+      # pinned 9, the image floated to latest (11), and a developer had
+      # whatever they had installed — which is how a lockfile that resolved
+      # fine locally was rejected by the image.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - uses: actions/setup-node@v4
         with:
