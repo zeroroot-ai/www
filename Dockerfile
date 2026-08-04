@@ -22,8 +22,18 @@ COPY . .
 RUN pnpm build
 
 # Stage 2: serve
-FROM nginx:alpine AS runner
+#
+# nginx-unprivileged (not plain nginx): the deploy chart
+# (zeroroot-ai/deploy helm/saas-overlay/www-svc) runs this image as uid 101
+# with ALL capabilities dropped, so nginx cannot bind a privileged port and
+# cannot write to the stock /var/cache/nginx and /var/run paths. The
+# unprivileged variant is built for exactly that, and defaults to :8080.
+FROM nginxinc/nginx-unprivileged:alpine AS runner
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
+# templates/ (not conf.d/): the entrypoint runs envsubst over
+# /etc/nginx/templates/*.template, which is what substitutes ${NGINX_PORT} in
+# nginx.conf. Copying to conf.d/ would ship the literal, unexpanded directive.
+COPY nginx.conf /etc/nginx/templates/default.conf.template
+ENV NGINX_PORT=8080
+EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
