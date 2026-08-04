@@ -1,0 +1,16 @@
+/*
+ * Marketing-site style entry.
+ *
+ * Everything visual comes from the shared brand package: the raw tokens, the
+ * Tailwind `@theme` mapping that turns them into utilities (text-highlight,
+ * text-dracula-green, ...), and the branded utilities (bg-zd-gradient,
+ * text-zd-glow, zd-cursor). The landing components use those class names
+ * directly, so this file must not redefine any of them — one source of truth,
+ * shared with the dashboard.
+ */
+@import "tailwindcss";
+@import "@zeroroot-ai/brand/globals.css";
+
+/* Tailwind v4 scans the files it is told about. The landing components live
+   outside this stylesheet's folder, so declare the source root explicitly. */
+@source "../";

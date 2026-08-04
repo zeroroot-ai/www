@@ -1,0 +1,17 @@
+# The builder stage runs its own `pnpm install --frozen-lockfile`, so a local
+# node_modules is not just unnecessary, it is wrong: it is built for the host
+# platform and would shadow the image's own install. Shipping it also made the
+# build context ~375 MB, all of which crosses to the daemon on every build.
+node_modules
+dist
+.astro
+
+# Build and tooling output that never belongs in an image.
+.git
+.github
+*.log
+.DS_Store
+
+# Local env files — never bake secrets into a layer.
+.env
+.env.*
