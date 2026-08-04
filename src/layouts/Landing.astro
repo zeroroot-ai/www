@@ -1,0 +1,57 @@
+---
+/**
+ * Layout for the real landing page.
+ *
+ * Deliberately separate from Layout.astro: that one carries the scaffold's
+ * hand-written global CSS, which would fight the Tailwind + brand-token
+ * styling the real design is built on. Pages still on the scaffold keep
+ * using it until they are ported too.
+ */
+import "@/styles/global.css";
+import { Lockup } from "@/components/layout/logo";
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "Build any agent on a zero-trust substrate. Gibson, the flagship security engine, thinks in attack paths, builds a living model of your environment, and replays every move, for the teams breaking in and the teams locking down.",
+} = Astro.props;
+
+// Product and docs live on their own hosts (deploy ADR-0006): this site is
+// SaaS-only marketing, the app is app.zeroroot.ai, the docs are docs.zeroroot.ai.
+// Absolute URLs, because a relative /docs or /login would resolve against
+// this host and 404.
+const APP = "https://app.zeroroot.ai";
+const DOCS = "https://docs.zeroroot.ai";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body class="bg-zd-gradient relative min-h-screen text-foreground">
+    <header class="border-b border-border bg-background/80 backdrop-blur">
+      <div class="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
+        <a href="/" aria-label="Zero Root AI, home" class="inline-flex items-center">
+          <Lockup size="md" />
+        </a>
+        <nav class="flex items-center gap-6 font-mono text-sm" aria-label="Primary">
+          <a href={DOCS} class="text-foreground transition-colors hover:text-link">docs</a>
+          <a href="/pricing" class="text-foreground transition-colors hover:text-link">pricing</a>
+          <a href={`${APP}/login`} class="text-foreground transition-colors hover:text-link">sign in</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
