@@ -116,7 +116,7 @@ function Tier({ t, featured }: { t: PricingTierDisplay; featured: boolean }) {
 
 const onPremFeatures: { title: string; body: string }[] = [
   {
-    title: "Self-hosted in your VPC, data center, or air-gapped enclave",
+    title: "Deploys into your own Kubernetes",
     body: "Helm chart deploys the full Gibson stack into your Kubernetes cluster. No egress, no telemetry, no callbacks home.",
   },
   {

@@ -26,7 +26,11 @@ export interface PricingTierDisplay {
 }
 
 function formatQuota(value: number, noun: string): string {
-  if (value === 0) return "Unlimited";
+  // Keep the noun on the unlimited case. Dropping it left the Enterprise
+  // card reading "Unlimited bound to in-flight tasks at any moment" — the
+  // sentence lost its subject, while every other tier read "250 concurrent
+  // agents bound to ...".
+  if (value === 0) return `Unlimited ${noun}`;
   return `${value.toLocaleString()} ${noun}`;
 }
 
