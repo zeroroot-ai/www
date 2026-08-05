@@ -1,4 +1,4 @@
-import { pillars, ENGINE } from "@/lib/messaging";
+import { flagship, pillars } from "@/lib/messaging";
 
 /**
  * GibsonBrain, the flagship section: surfaces the three Gibson pillars from the
@@ -11,16 +11,13 @@ export function GibsonBrain() {
     <section className="border-t border-border py-20 md:py-24">
       <div className="mx-auto max-w-5xl px-4">
         <p className="mb-3 text-center font-mono text-xs uppercase tracking-[0.3em] text-highlight">
-          {"// the flagship"}
+          {flagship.eyebrow}
         </p>
         <h2 className="mb-4 text-center font-display text-2xl font-bold text-foreground md:text-3xl">
-          Autonomous security that maps how risk connects
+          {flagship.heading}
         </h2>
         <p className="mx-auto mb-12 max-w-2xl text-center text-sm md:text-base leading-relaxed text-foreground/85">
-          {ENGINE} is the factory&apos;s flagship engine. Point it at your
-          environment and it builds a living model, finds the paths that matter,
-          and replays every move. One engine for the teams breaking in and the
-          teams locking down.
+          {flagship.body}
         </p>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {pillars.map((p) => (
