@@ -90,15 +90,15 @@ export const headlines: readonly string[] = [
 ] as const;
 
 /**
- * Hero copy. The headline is split so the engine name renders in the brand
+ * Hero copy. The headline is split so the first phrase renders in the brand
  * highlight: `<highlight>{headlineHighlight}</highlight> {headlineRest}`.
  */
 export const hero = {
-  eyebrow: "// the zero-trust agent factory",
-  headlineHighlight: ENGINE,
-  headlineRest: "thinks in paths, not checklists.",
+  eyebrow: "// agent platform for security & ops teams",
+  headlineHighlight: "Zero Trust",
+  headlineRest: "agent control plane in under an hour.",
   subhead:
-    "Point it at your environment. It maps how risk connects, finds the paths that matter, and replays every move.",
+    "Agents run where you work: laptop, CI, k8s. Identity, missions, shared memory, and audit run in the control plane.",
   ctaPrimary: "Start Free",
   ctaSecondary: "Star the ADK",
   quickstart: "first agent live in under an hour. See the quickstart",
