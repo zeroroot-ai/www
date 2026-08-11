@@ -41,7 +41,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const APP = "https://app.zeroroot.ai";
+import { APP_ORIGIN as APP } from "@/lib/origins";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Full name is required").max(100),

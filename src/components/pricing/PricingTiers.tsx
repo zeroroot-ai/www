@@ -8,6 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { pricingDisplays, type PricingTierDisplay } from "@/lib/pricing-display";
+/** Product surfaces live on their own hosts; a relative href would 404 here. */
+import { APP_ORIGIN as APP } from "@/lib/origins";
 
 /**
  * The pricing tiers, ported from the dashboard's app/(public)/pricing/page.tsx.
@@ -31,9 +33,6 @@ import { pricingDisplays, type PricingTierDisplay } from "@/lib/pricing-display"
 const SAAS_TIER_IDS = new Set(["team", "org", "enterprise"]);
 const FEATURED_TIER_ID = "org";
 const DEPLOY_TIER_ID = "enterprise-deploy";
-
-/** Product surfaces live on their own hosts; a relative href would 404 here. */
-const APP = "https://app.zeroroot.ai";
 
 function ctaForTier(t: PricingTierDisplay): {
   label: string;

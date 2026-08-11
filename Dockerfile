@@ -27,7 +27,12 @@ RUN --mount=type=secret,id=npm_token \
     && pnpm install --frozen-lockfile --ignore-scripts \
     && rm -f "$HOME/.npmrc"
 COPY . .
-RUN pnpm build
+# Origin sentinels, not real hosts (www#15): src/lib/origins.ts reads these at
+# build time, and docker/40-substitute-origins.sh rewrites them to the
+# environment's APP_ORIGIN / DOCS_ORIGIN when the container starts. One image
+# therefore serves every environment; a plain `pnpm build` outside Docker
+# still bakes the prod origins.
+RUN PUBLIC_APP_ORIGIN=__APP_ORIGIN__ PUBLIC_DOCS_ORIGIN=__DOCS_ORIGIN__ pnpm build
 
 # Stage 2: serve
 #
@@ -37,7 +42,13 @@ RUN pnpm build
 # cannot write to the stock /var/cache/nginx and /var/run paths. The
 # unprivileged variant is built for exactly that, and defaults to :8080.
 FROM nginxinc/nginx-unprivileged:alpine AS runner
-COPY --from=builder /app/dist /usr/share/nginx/html
+# --chown, because 40-substitute-origins.sh sed-edits these files in place at
+# container start and the process runs as uid 101.
+COPY --from=builder --chown=101:101 /app/dist /usr/share/nginx/html
+# Runs before nginx starts (stock entrypoint executes /docker-entrypoint.d/*.sh
+# in lexical order): substitutes the __APP_ORIGIN__/__DOCS_ORIGIN__ build
+# sentinels with this environment's origins, defaulting to prod.
+COPY --chmod=755 docker/40-substitute-origins.sh /docker-entrypoint.d/40-substitute-origins.sh
 # templates/ (not conf.d/): the entrypoint runs envsubst over
 # /etc/nginx/templates/*.template, which is what substitutes ${NGINX_PORT} in
 # nginx.conf. Copying to conf.d/ would ship the literal, unexpanded directive.
