@@ -9,6 +9,7 @@
  */
 import "@/styles/global.css";
 import { Lockup } from "@/components/layout/logo";
+import { APP_ORIGIN as APP, DOCS_ORIGIN as DOCS } from "@/lib/origins";
 
 export interface Props {
   title: string;
@@ -21,11 +22,9 @@ const {
 } = Astro.props;
 
 // Product and docs live on their own hosts (deploy ADR-0006): this site is
-// SaaS-only marketing, the app is app.zeroroot.ai, the docs are docs.zeroroot.ai.
-// Absolute URLs, because a relative /docs or /login would resolve against
-// this host and 404.
-const APP = "https://app.zeroroot.ai";
-const DOCS = "https://docs.zeroroot.ai";
+// SaaS-only marketing. Absolute URLs, because a relative /docs or /login
+// would resolve against this host and 404. The origins come from
+// @/lib/origins so each environment links to its own hosts.
 ---
 
 <!doctype html>
