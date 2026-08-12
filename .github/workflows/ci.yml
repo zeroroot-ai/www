@@ -73,3 +73,28 @@ jobs:
           # the pnpm install step only (see issue #3).
           secrets: |
             npm_token=${{ secrets.GITHUB_TOKEN }}
+
+      # Build-only checks miss runtime failures (see the job comment above);
+      # the #17 EACCES crashloop shipped because the artifact was never RUN.
+      # Boot the image exactly as the chart does (uid 101 by base USER) with
+      # substitution env and assert the served HTML: substituted origins in,
+      # sentinels gone. A container that dies at start fails the curl loop.
+      - name: Smoke-run the image with substituted origins
+        env:
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker build -t www-smoke --secret id=npm_token,env=NPM_TOKEN .
+          docker run -d --name www-smoke -p 8080:8080 \
+            -e APP_ORIGIN=https://app.staging.example \
+            -e DOCS_ORIGIN=https://docs.staging.example \
+            www-smoke
+          for i in $(seq 1 30); do
+            curl -fsm2 http://localhost:8080/ >/dev/null 2>&1 && break
+            sleep 1
+          done
+          docker logs www-smoke
+          H=$(curl -fsm5 http://localhost:8080/)
+          echo "$H" | grep -q 'https://app.staging.example/login' || { echo "FAIL: substituted app origin missing"; exit 1; }
+          echo "$H" | grep -q 'https://docs.staging.example' || { echo "FAIL: substituted docs origin missing"; exit 1; }
+          if echo "$H" | grep -q '__APP_ORIGIN__\|__DOCS_ORIGIN__'; then echo "FAIL: sentinels leaked"; exit 1; fi
+          echo "smoke OK: substituted origins served"
