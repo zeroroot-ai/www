@@ -12,6 +12,12 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # packages: read is required here (not just in docker below): pnpm
+    # install fetches @zeroroot-ai/brand from npm.pkg.github.com using
+    # GITHUB_TOKEN as NODE_AUTH_TOKEN, which needs package-read scope.
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
