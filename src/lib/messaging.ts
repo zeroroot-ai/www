@@ -157,6 +157,46 @@ export const blockers: readonly Blocker[] = [
   },
 ] as const;
 
+/** One of the three component shapes you compose an agent from. */
+interface Primitive {
+  readonly kind: string;
+  readonly what: string;
+  readonly builtWith: string;
+}
+
+/**
+ * The primitives section, directly under the hero. The rotator above it shows
+ * eight concrete jobs; this explains how any of them get built, which nothing
+ * on the page did before. Two paths on purpose: assemble parts that already
+ * exist, or write your own.
+ */
+export const primitives = {
+  eyebrow: "// what you build with",
+  heading: "Three shapes, composed by a mission",
+  body: "An agent is not one thing. You compose it, and everything it discovers lands in a knowledge graph the next agent starts from.",
+  shapes: [
+    {
+      kind: "agent",
+      what: "Model-driven service. Reasons, plans, delegates to tools.",
+      builtWith: "sdk.NewAgent",
+    },
+    {
+      kind: "tool",
+      what: "Stateless executor. Proto in, proto out.",
+      builtWith: "serve.Tool",
+    },
+    {
+      kind: "plugin",
+      what: "Stateful integration with declared methods and a lifecycle.",
+      builtWith: "plugin.Serve",
+    },
+  ] as readonly Primitive[],
+  reuse:
+    "Start from parts that exist: gibson-executor is one microVM image carrying parsers for common security and ops command-line tools, and the opencode plugins put a coding agent under Gibson's controls.",
+  build:
+    "Or write your own against the Go SDK. TypeScript and Python SDKs are public too.",
+} as const;
+
 /** Closing lockup, reused by footer-adjacent and profile surfaces. */
 export const lockup = {
   line: "Your agents. Your controls. Any domain.",
