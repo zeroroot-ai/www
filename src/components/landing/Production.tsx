@@ -1,3 +1,4 @@
+import { consulting } from "@/lib/messaging";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -60,9 +61,7 @@ export function Production() {
         </ul>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <Button variant="outline" size="lg" asChild>
-            <a href="mailto:sales@zeroroot.ai?subject=ZeroRoot%20demo%20request">
-              Request a demo
-            </a>
+            <a href="/contact-sales">{consulting.cta}</a>
           </Button>
           <p className="font-mono text-sm leading-relaxed text-foreground/85">
             Every account starts with a 2-week free trial (card required).

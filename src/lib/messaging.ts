@@ -89,6 +89,22 @@ export const hero = {
   quickstart: "first agent live in under an hour. See the quickstart",
 } as const;
 
+/**
+ * The enterprise path. Engagements are delivered by forward-deployed engineers
+ * who embed with the customer's team; self-service stays the front door, so this
+ * is a second route rather than a replacement for it.
+ *
+ * The route is the contact form, never a bare mail link: the form owns rate
+ * limiting, and an address published on a public page is scraped within days.
+ */
+export const consulting = {
+  eyebrow: "// enterprise",
+  heading: "Forward-deployed engineers",
+  body: "Our engineers embed with your team to build the agents, components, and missions on your own infrastructure.",
+  cta: "Talk to an engineer",
+  address: "consulting@zeroroot.ai",
+} as const;
+
 /** Closing lockup, reused by footer-adjacent and profile surfaces. */
 export const lockup = {
   line: "Your agents. Your controls. Any domain.",
