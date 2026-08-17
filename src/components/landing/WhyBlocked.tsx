@@ -1,36 +1,10 @@
-/**
- * WhyBlocked, problem-first section naming the real reasons agents stall
- * before production, each paired with the platform mechanism that resolves
- * it. Pain → resolve; the resolve must name a shipping mechanism, not a
- * promise.
- */
-const blockers = [
-  {
-    title: "Untrusted code in production",
-    pain: "AI-generated code running in your pipelines is a breach waiting to happen without real isolation.",
-    resolve:
-      "Every untrusted payload detonates in a setec microVM. Hardware isolation, not containers.",
-  },
-  {
-    title: "Compliance can't audit a black box",
-    pain: "Regulated environments can't run what they can't replay. “The agent did something” doesn't pass an audit.",
-    resolve:
-      "Every prompt, tool call, and graph write is captured and replayable, step by step.",
-  },
-  {
-    title: "Integration drags on for months",
-    pain: "Bolting AI onto existing infrastructure means custom glue that still doesn't fit your patterns.",
-    resolve:
-      "Standard Kubernetes. Agents run where you already work: laptop, CI, VPS, k8s.",
-  },
-  {
-    title: "Engineers see a threat, not a tool",
-    pain: "Adoption stalls when the team that has to champion automation feels automated away.",
-    resolve:
-      "Your engineers build the agents, own the workflows, and hold the keys. Amplified, not replaced.",
-  },
-] as const;
+import { blockers } from "@/lib/messaging";
 
+/**
+ * WhyBlocked, problem-first section naming the real reasons agents stall before
+ * production, each paired with the platform mechanism that resolves it. The copy
+ * lives in the messaging module.
+ */
 export function WhyBlocked() {
   return (
     <section className="border-t border-highlight/25">
