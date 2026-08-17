@@ -12,49 +12,35 @@
  * (World / Scroller / tick) stays a product-feature name, never a headline. See
  * the parent PRD's Messaging Spec for the full direction.
  *
- * Names are fixed: zeroroot.ai is the company / umbrella; Gibson is the engine,
- * always written as a proper noun. (The chrome product name, "Zero Root AI",
- * lives separately in ./brand.ts; this module owns positioning copy.)
+ * Names are fixed: Gibson is the product — the ADK and the runtime — always
+ * written as a proper noun. zeroroot.ai is the company that makes it, not a
+ * second brand layered above it. (The chrome product name lives separately in
+ * ./brand.ts; this module owns positioning copy.)
+ *
+ * Reposition (2026-08-17): Gibson was described here as "the flagship security
+ * engine" under a "zero-trust agent factory" umbrella. It is neither a second
+ * brand nor a security engine: it is a do-it-yourself ADK and runtime that
+ * platform and DevSecOps teams use to deploy always-on agents. Autonomous
+ * security is now one example of what you build, not the headline. The
+ * `flagship` and `pillars` exports and the GibsonBrain section went with it.
  */
 
-/** The company / umbrella brand, as written in copy. */
+/** The company that makes Gibson, as written in copy. */
 export const COMPANY = "zeroroot.ai";
 
-/** The flagship engine. Always a proper noun. */
+/** The product: the ADK and the runtime. Always a proper noun. */
 export const ENGINE = "Gibson";
 
-/** Umbrella positioning, shared across every surface. */
-export const umbrella = {
-  tagline: "The zero-trust agent factory.",
-  supporting:
-    "Build any agent. Run it on a substrate that enforces zero trust at every layer.",
-} as const;
-
-/** One Gibson flagship pillar: a buyer-legible outcome, no jargon. */
-interface Pillar {
-  readonly title: string;
-  readonly body: string;
-}
-
 /**
- * The three flagship pillars. Pillar 2 is the signature: it is the plain-English
- * reframe of the attack-path belief field. Side-neutral by design (offense walks
- * the path, defense cuts it).
+ * Product positioning, shared across every surface. "Agent factory" is the
+ * category, in the software-factory sense — the umbrella chart is Big Bang
+ * compatible and that reader knows the term. It is not a metaphor.
  */
-export const pillars: readonly Pillar[] = [
-  {
-    title: "A living model of your environment",
-    body: "One picture, built as it works: every asset, access path, and exposure it finds. Not a one-time scan.",
-  },
-  {
-    title: "Thinks in paths, not checklists",
-    body: "It reasons about how weaknesses chain, so you get the few paths that are real risk. Attack: walk it. Defend: cut it.",
-  },
-  {
-    title: "Replayable, move by move",
-    body: "Rewind and scrub every decision it made. A reproducible record for whoever reviews the run.",
-  },
-] as const;
+export const umbrella = {
+  tagline: "The agent factory for platform and security engineering.",
+  supporting:
+    "An ADK and a runtime. You write the agent; Gibson gives it an identity, a grant for every tool it can touch, a sandbox, and a replayable record of what it did.",
+} as const;
 
 /** Which side of the line a persona sits on. The engine serves all four. */
 type PersonaSide = "offense" | "defense" | "purple" | "platform";
@@ -65,9 +51,8 @@ interface Persona {
 }
 
 /**
- * Side-neutral persona set. Offense walks the path, defense cuts it, purple
- * shares one replayable picture, platform/DevSecOps wants reachable risk over a
- * CVE list. Consumed by the landing persona rotator (slice S2, #887).
+ * The teams that build on Gibson. The set stays broad on purpose: the runtime is
+ * domain-agnostic, and security is one thing you build with it, not the boundary.
  */
 export const personas: readonly Persona[] = [
   { label: "Pentest", side: "offense" },
@@ -83,10 +68,10 @@ export const personas: readonly Persona[] = [
 
 /** Approved outcome-first headline candidates. The hero leads with the first. */
 export const headlines: readonly string[] = [
-  "Gibson thinks in paths, not checklists.",
-  "Autonomous security that maps how risk actually connects, for the teams breaking in and the teams locking down.",
-  "Reachable risk, not a wall of findings.",
-  "One engine. Both sides of the line.",
+  "Describe the agent. Ship it under your controls.",
+  "Always-on agents, built by your team, bounded by grants you set.",
+  "Write the agent. Gibson runs it under an identity, a grant, and a sandbox.",
+  "An agent factory your security review can actually read.",
 ] as const;
 
 /**
@@ -94,30 +79,18 @@ export const headlines: readonly string[] = [
  * highlight: `<highlight>{headlineHighlight}</highlight> {headlineRest}`.
  */
 export const hero = {
-  eyebrow: "// agent platform for security & ops teams",
-  headlineHighlight: "Zero Trust",
-  headlineRest: "agent control plane in under an hour.",
+  eyebrow: "// agent factory for platform and security engineering",
+  headlineHighlight: "Describe the agent.",
+  headlineRest: "Ship it under your controls.",
   subhead:
-    "Agents run where you work: laptop, CI, k8s. Identity, missions, shared memory, and audit run in the control plane.",
+    "Build from tools you already trust — amass, nuclei, Trivy, kubectl — or write your own with the SDK. Every agent is a source-controlled artifact owned by a named human, with a grant for each tool it can touch and a record of everything it did.",
   ctaPrimary: "Start Free",
   ctaSecondary: "Star the ADK",
   quickstart: "first agent live in under an hour. See the quickstart",
 } as const;
 
-/**
- * The flagship section header. Lived inline in GibsonBrain.tsx until now,
- * which is exactly what this module exists to prevent: the file's own header
- * says "Edit copy HERE, never inline it in a component", and an inline
- * paragraph is how the surfaces drift apart again.
- */
-export const flagship = {
-  eyebrow: "// the flagship",
-  heading: "Autonomous security that maps how risk connects",
-  body: "Point it at your environment. It finds the paths that matter and replays every move. One engine, both sides of the line.",
-} as const;
-
 /** Closing lockup, reused by footer-adjacent and profile surfaces. */
 export const lockup = {
-  line: "Your agents. Any domain. Zero-trust substrate.",
-  signature: `${COMPANY}, the zero-trust agent factory`,
+  line: "Your agents. Your controls. Any domain.",
+  signature: `${COMPANY} — Gibson, the agent factory`,
 } as const;
