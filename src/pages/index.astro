@@ -15,7 +15,6 @@ import Landing from "@/layouts/Landing.astro";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { TrustBar } from "@/components/landing/TrustBar";
 import { DashboardShowcase } from "@/components/landing/DashboardShowcase";
-import { GibsonBrain } from "@/components/landing/GibsonBrain";
 import { WhyBlocked } from "@/components/landing/WhyBlocked";
 import { WhatYouGet } from "@/components/landing/WhatYouGet";
 import { WhatYouRunItOn } from "@/components/landing/WhatYouRunItOn";
@@ -33,11 +32,10 @@ const footerLinks = [
 const year = new Date().getFullYear();
 ---
 
-<Landing title="zeroroot.ai: the zero-trust agent factory">
+<Landing title="Gibson — the agent factory for platform and security engineering">
   <HeroSection client:load />
   <TrustBar />
   <DashboardShowcase />
-  <GibsonBrain />
   <WhyBlocked />
   <WhatYouGet />
   <WhatYouRunItOn />
