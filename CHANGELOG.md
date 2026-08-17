@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/zeroroot-ai/www/compare/v1.0.0...v1.0.1) (2026-08-17)
+
+
+### Bug Fixes
+
+* **release:** reset www to 0.x and restore the pre-1.0 guardrail ([#24](https://github.com/zeroroot-ai/www/issues/24)) ([850edca](https://github.com/zeroroot-ai/www/commit/850edcadcfd4a87074112174984bef7f03e8a2e0)), closes [#23](https://github.com/zeroroot-ai/www/issues/23)
+
 ## 0.1.0 (2026-08-15)
 
 
