@@ -14,6 +14,7 @@
 import Landing from "@/layouts/Landing.astro";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { TrustBar } from "@/components/landing/TrustBar";
+import { Primitives } from "@/components/landing/Primitives";
 import { DashboardShowcase } from "@/components/landing/DashboardShowcase";
 import { WhyBlocked } from "@/components/landing/WhyBlocked";
 import { WhatYouGet } from "@/components/landing/WhatYouGet";
@@ -35,6 +36,7 @@ const year = new Date().getFullYear();
 <Landing title="Gibson — the agent factory for platform and security engineering">
   <HeroSection client:load />
   <TrustBar />
+  <Primitives />
   <DashboardShowcase />
   <WhyBlocked />
   <WhatYouGet />
