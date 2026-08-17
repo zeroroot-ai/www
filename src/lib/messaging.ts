@@ -105,6 +105,58 @@ export const consulting = {
   address: "consulting@zeroroot.ai",
 } as const;
 
+/**
+ * The trust strip under the hero. Every item must be true of the shipping
+ * platform; accreditation claims do not belong here.
+ *
+ * "microVM isolation per execution" used to sit here and was false. One gate
+ * decides how a component runs, from its declared content trust and the
+ * deployment shape. What is true, and stronger, is that untrusted code has no
+ * in-process fallback: sandbox or refusal.
+ */
+export const trustBar: readonly string[] = [
+  "open-source core",
+  "untrusted code sandboxed or refused",
+  "kubernetes-native",
+  "short-lived credentials",
+  "bring your own LLM",
+] as const;
+
+/** One reason agents stall, and the shipping mechanism that resolves it. */
+interface Blocker {
+  readonly title: string;
+  readonly pain: string;
+  readonly resolve: string;
+}
+
+/** Pain then resolve. The resolve names a shipping mechanism, never a promise. */
+export const blockers: readonly Blocker[] = [
+  {
+    title: "Untrusted code in production",
+    pain: "AI-generated code running in your pipelines is a breach waiting to happen without real isolation.",
+    resolve:
+      "A component that declares it handles untrusted input runs in a Firecracker microVM, or the call is refused. There is no in-process fallback.",
+  },
+  {
+    title: "Compliance can't audit a black box",
+    pain: "Regulated environments can't run what they can't replay. \u201CThe agent did something\u201D doesn't pass an audit.",
+    resolve:
+      "Every model call is recorded with its full transcript and token counts, inside your tenant, and every mission replays step by step.",
+  },
+  {
+    title: "Integration drags on for months",
+    pain: "Bolting AI onto existing infrastructure means custom glue that still doesn't fit your patterns.",
+    resolve:
+      "Standard Kubernetes. Agents run where you already work: laptop, CI, VPS, k8s.",
+  },
+  {
+    title: "Engineers see a threat, not a tool",
+    pain: "Adoption stalls when the team that has to champion automation feels automated away.",
+    resolve:
+      "Your engineers build the agents, own the workflows, and hold the keys. Amplified, not replaced.",
+  },
+] as const;
+
 /** Closing lockup, reused by footer-adjacent and profile surfaces. */
 export const lockup = {
   line: "Your agents. Your controls. Any domain.",
