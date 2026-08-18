@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/zeroroot-ai/www/compare/v1.2.2...v1.2.3) (2026-08-18)
+
+
+### Reverts
+
+* **copy:** restore the landing copy from before the repositioning batch ([#44](https://github.com/zeroroot-ai/www/issues/44)) ([e7351c8](https://github.com/zeroroot-ai/www/commit/e7351c8f09b9b22e7f23160d51a716391e06630c))
+
 ## [1.2.2](https://github.com/zeroroot-ai/www/compare/v1.2.1...v1.2.2) (2026-08-18)
 
 
