@@ -2,11 +2,19 @@
  * Contact-sales form, ported from the dashboard's app/(public)/contact-sales
  * page. Markup, schema, validation messages and copy are unchanged.
  *
- * The one change of substance is where the submission goes. This site is a
- * static build served by nginx, so it has no API route of its own; the form
- * posts cross-origin to the product host, which owns the rate limiter and the
- * email provider that turn a submission into a lead. That endpoint allowlists
- * this origin explicitly.
+ * The submission is SAME-ORIGIN and must stay that way.
+ *
+ * /api/contact-sales is a second origin on this site's own CloudFront
+ * distribution, routed to a Lambda that publishes the lead (deploy ADR-0009).
+ * Because it shares this site's origin, the request needs no CORS: no
+ * preflight, no allowlist, no credentials question.
+ *
+ * It used to post to `${APP_ORIGIN}/api/contact-sales`, a route in the
+ * dashboard. That host has no DNS record, so every submission failed in the
+ * browser with "An error occurred" — a thrown fetch, not a error response,
+ * which is why nothing was logged anywhere. Do not reintroduce an absolute
+ * origin here; scripts/check-contact-form-same-origin.mjs fails the build if
+ * anyone does.
  */
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -41,7 +49,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { APP_ORIGIN as APP } from "@/lib/origins";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Full name is required").max(100),
@@ -78,10 +85,8 @@ export function ContactSalesForm() {
   async function onSubmit(data: ContactFormValues) {
     setIsLoading(true);
     try {
-      const res = await fetch(`${APP}/api/contact-sales`, {
+      const res = await fetch("/api/contact-sales", {
         method: "POST",
-        mode: "cors",
-        credentials: "omit",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
