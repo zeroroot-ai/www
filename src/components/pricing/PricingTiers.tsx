@@ -8,8 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { pricingDisplays, type PricingTierDisplay } from "@/lib/pricing-display";
-/** Product surfaces live on their own hosts; a relative href would 404 here. */
-import { APP_ORIGIN as APP } from "@/lib/origins";
 
 /**
  * The pricing tiers, ported from the dashboard's app/(public)/pricing/page.tsx.
@@ -34,22 +32,37 @@ const SAAS_TIER_IDS = new Set(["team", "org", "enterprise"]);
 const FEATURED_TIER_ID = "org";
 const DEPLOY_TIER_ID = "enterprise-deploy";
 
+/**
+ * SALES-ASSISTED HOLDING PATTERN — reverting this commit IS the flip.
+ *
+ * Every tier routes to /contact-sales while `app.zeroroot.ai` does not exist.
+ * The steady state is unchanged and recorded in deploy/CONTEXT.md: paid tiers
+ * link to `${APP}/signup?plan=<id>` labelled "Start trial", and only
+ * contact-sales tiers use the form.
+ *
+ * This is a constraint of the torn-down estate, not a go-to-market decision.
+ * There is no app host to send a buyer to, so a "Start trial" button would be
+ * a dead link — which is what it is on production right now.
+ *
+ * Deliberately NOT a flag. ADR-0027 forbids a flag that gates a cutover, and a
+ * build-time flag would need a rebuild to switch, which is exactly what
+ * reverting already does. The whole change is this one function plus its
+ * import, so `git revert` restores the steady state in a single step.
+ *
+ * Prices stay visible: the buyer sees the number, then talks to us. Figures
+ * come from the committed plans.ts and do not move.
+ *
+ * Revert when blocker 2 (Signup) is green and app.zeroroot.ai resolves.
+ */
 function ctaForTier(t: PricingTierDisplay): {
   label: string;
   href: string;
   variant: "default" | "outline";
 } {
   const variant = t.id === FEATURED_TIER_ID ? "default" : "outline";
-  if (t.contactSales) {
-    return {
-      label: "Contact sales",
-      href: "/contact-sales?tier=" + encodeURIComponent(t.id),
-      variant,
-    };
-  }
   return {
-    label: "Start trial",
-    href: `${APP}/signup?plan=` + encodeURIComponent(t.id),
+    label: "Contact sales",
+    href: "/contact-sales?tier=" + encodeURIComponent(t.id),
     variant,
   };
 }
