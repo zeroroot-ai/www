@@ -1,0 +1,38 @@
+---
+/**
+ * The 404 page.
+ *
+ * It exists for a functional reason, not a decorative one. The site is served
+ * from S3 behind CloudFront (deploy ADR-0009), where a missing object answers
+ * 403 rather than 404, and the distribution rewrites that to a 404 by serving
+ * THIS page. Without the file the rewrite has nothing to serve, so it falls
+ * back and an unknown path answers a bare 403 — which reads as "you are not
+ * allowed in" instead of "that page does not exist".
+ *
+ * It also gives the nginx container path a body: `try_files ... =404` returned
+ * an empty response before.
+ *
+ * Deliberately no navigation beyond the two links below. A visitor who
+ * mistyped a URL needs a way onward, not a second chance to get lost.
+ */
+import Landing from "@/layouts/Landing.astro";
+import { DOCS_ORIGIN } from "@/lib/origins";
+---
+
+<Landing
+  title="Page not found | zeroroot.ai"
+  description="That page does not exist."
+>
+  <div class="container mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center px-4 py-16 text-center">
+    <p class="font-mono text-sm uppercase tracking-widest text-muted-foreground">404</p>
+    <h1 class="font-display mt-3 text-4xl font-bold">That page does not exist</h1>
+    <p class="mt-4 text-lg text-muted-foreground">
+      The link may be out of date, or the address may have a typo.
+    </p>
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 font-mono text-sm">
+      <a href="/" class="text-foreground hover:text-link">home</a>
+      <span aria-hidden="true" class="text-border">·</span>
+      <a href={DOCS_ORIGIN} class="text-foreground hover:text-link">docs</a>
+    </div>
+  </div>
+</Landing>
