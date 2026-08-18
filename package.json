@@ -10,7 +10,7 @@
     "build": "pnpm run test && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "node scripts/check-no-banned-marketing-phrases.mjs && node scripts/check-no-hardcoded-origins.mjs && node scripts/check-no-hardcoded-origins.mjs --selftest && node scripts/check-no-dead-internal-links.mjs && node scripts/check-no-dead-internal-links.mjs --selftest"
+    "test": "node scripts/check-no-banned-marketing-phrases.mjs && node scripts/check-no-hardcoded-origins.mjs && node scripts/check-no-hardcoded-origins.mjs --selftest && node scripts/check-no-dead-internal-links.mjs && node scripts/check-no-dead-internal-links.mjs --selftest && node scripts/check-contact-form-same-origin.mjs && node scripts/check-contact-form-same-origin.mjs --selftest"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",
