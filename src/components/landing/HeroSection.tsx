@@ -4,6 +4,8 @@ import { Typewriter } from "@/components/landing/Typewriter";
 import type { TypewriterMessage } from "@/components/landing/Typewriter";
 import { Brain } from "@/components/layout/logo";
 import { hero } from "@/lib/messaging";
+/** Docs live on their own host; a relative /docs 404s here (deploy ADR-0006). */
+import { DOCS_ORIGIN } from "@/lib/origins";
 
 /**
  * Proper nouns the Typewriter paints in primary (brand green). Listed by
@@ -295,7 +297,7 @@ export function HeroSection() {
             </Button>
           </div>
           <a
-            href="/docs"
+            href={DOCS_ORIGIN}
             className="font-mono text-xs text-muted-foreground underline-offset-4 hover:text-link hover:underline"
           >
             {hero.quickstart} →
