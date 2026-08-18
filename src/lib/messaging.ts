@@ -37,22 +37,29 @@ interface Pillar {
 }
 
 /**
- * The three flagship pillars. Pillar 2 is the signature: it is the plain-English
- * reframe of the attack-path belief field. Side-neutral by design (offense walks
- * the path, defense cuts it).
+ * The three flagship pillars. Pillar 2 is the signature and is deliberately the
+ * most specific: WorldView (gibson internal/engine/harness/worldview.go, ADR-0012)
+ * is a server-projected, mission-scope-limited read of the tenant World, where
+ * every entity carries an opaque server-minted handle the agent cannot construct
+ * or iterate. "Cannot name what it was not sent to find" is that property in
+ * plain English, not a metaphor — enumerating past the slice is unrepresentable.
+ *
+ * Each claim here is code-backed: the World is per-tenant and long-lived
+ * (brain/mission_projection.go), and the emit contract is append-only
+ * (ADR-0012, harness/append_only_test.go).
  */
 export const pillars: readonly Pillar[] = [
   {
-    title: "A living model of your environment",
-    body: "One picture, built as it works: every asset, access path, and exposure it finds. Not a one-time scan.",
+    title: "A World, not a report",
+    body: "One model per tenant, not one per agent. Every asset, path and finding an agent turns up lands in the same place, and outlives the mission that found it.",
   },
   {
-    title: "Thinks in paths, not checklists",
-    body: "It reasons about how weaknesses chain, so you get the few paths that are real risk. Attack: walk it. Defend: cut it.",
+    title: "Every agent gets a world view",
+    body: "An agent reads a slice of the World, never the whole thing. Its mission fixes the boundary and the server draws it, so an agent cannot name what it was not sent to find.",
   },
   {
     title: "Replayable, move by move",
-    body: "Rewind and scrub every decision it made. A reproducible record for whoever reviews the run.",
+    body: "Observations are append-only and attributed. Rewind a mission step by step and get the same answer twice.",
   },
 ] as const;
 
@@ -96,7 +103,7 @@ export const headlines: readonly string[] = [
 export const hero = {
   eyebrow: "// agent platform for security & ops teams",
   headlineHighlight: "Zero Trust",
-  headlineRest: "agent control plane in under an hour.",
+  headlineRest: "runtime and control plane for agents.",
   subhead:
     "Agents run where you work: laptop, CI, k8s. Identity, missions, shared memory, and audit run in the control plane.",
   ctaPrimary: "Start Free",
@@ -113,7 +120,7 @@ export const hero = {
 export const flagship = {
   eyebrow: "// the flagship",
   heading: "Autonomous security that maps how risk connects",
-  body: "Point it at your environment. It finds the paths that matter and replays every move. One engine, both sides of the line.",
+  body: "One model of your environment, built as agents work it. Each agent reads only its slice.",
 } as const;
 
 /** Closing lockup, reused by footer-adjacent and profile surfaces. */
