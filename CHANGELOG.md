@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/zeroroot-ai/www/compare/v1.2.3...v1.3.0) (2026-08-18)
+
+
+### Features
+
+* **copy:** rewrite the hero line and make the flagship pillars specific ([#46](https://github.com/zeroroot-ai/www/issues/46)) ([80ea714](https://github.com/zeroroot-ai/www/commit/80ea714882f9ce6e74784ba79eaeceff1d9fdf0a))
+
 ## [1.2.3](https://github.com/zeroroot-ai/www/compare/v1.2.2...v1.2.3) (2026-08-18)
 
 
