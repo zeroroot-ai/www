@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/zeroroot-ai/www/compare/v1.2.0...v1.2.1) (2026-08-18)
+
+
+### Bug Fixes
+
+* **ci:** pin the real configure-aws-credentials sha ([#40](https://github.com/zeroroot-ai/www/issues/40)) ([ada7b3a](https://github.com/zeroroot-ai/www/commit/ada7b3a1539d70989e8f23433e30b8f4e66888fc))
+
 ## [1.2.0](https://github.com/zeroroot-ai/www/compare/v1.1.0...v1.2.0) (2026-08-18)
 
 
