@@ -5,8 +5,8 @@
  *
  * Banned in customer-facing landing copy:
  *   - probability jargon ("probabilistic model", "P(juicy|exploitable|reachable",
- *     "scores the (attack) surface", "belief field") — name the control the
- *     reader can verify instead of the maths behind it.
+ *     "scores the (attack) surface", "belief field") — say "thinks in paths" /
+ *     "reachable risk" instead.
  *   - the "no playbooks" wedge — lead with what Gibson does, not what it lacks.
  *   - competitor contrast ("unlike other/most/competing") — state what Gibson
  *     IS, positively.
@@ -53,10 +53,10 @@ const PROSE_EXT = new Set([".mdx", ".md"]);
 
 /** Each rule: a matcher and the fix to suggest. */
 const BANNED = [
-  { re: /probabilistic model/i, why: 'probability jargon — name the control, not the maths' },
-  { re: /\bP\(\s*(juicy|exploitable|reachable)/i, why: 'probability jargon — name the control, not the maths' },
-  { re: /scores?\s+the\s+(attack\s+)?surface/i, why: 'probability jargon — say what the agent does' },
-  { re: /belief\s+field/i, why: 'internal term — drop it from customer copy' },
+  { re: /probabilistic model/i, why: 'probability jargon — say "thinks in paths"' },
+  { re: /\bP\(\s*(juicy|exploitable|reachable)/i, why: 'probability jargon — reframe as reachable risk' },
+  { re: /scores?\s+the\s+(attack\s+)?surface/i, why: 'probability jargon — say "finds the paths that matter"' },
+  { re: /belief\s+field/i, why: 'internal term — reframe as "thinks in paths"' },
   { re: /\bno\s+playbooks\b/i, why: 'dated wedge — lead with what Gibson does, not what it lacks' },
   { re: /\bunlike\s+(other|most|competing)/i, why: 'competitor contrast — state what Gibson IS, positively' },
   { re: /game[-\s]?engine/i, why: 'keep game framing out of customer copy — World/Scroller/tick are feature names only' },

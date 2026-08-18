@@ -12,35 +12,49 @@
  * (World / Scroller / tick) stays a product-feature name, never a headline. See
  * the parent PRD's Messaging Spec for the full direction.
  *
- * Names are fixed: Gibson is the product — the ADK and the runtime — always
- * written as a proper noun. zeroroot.ai is the company that makes it, not a
- * second brand layered above it. (The chrome product name lives separately in
- * ./brand.ts; this module owns positioning copy.)
- *
- * Reposition (2026-08-17): Gibson was described here as "the flagship security
- * engine" under a "zero-trust agent factory" umbrella. It is neither a second
- * brand nor a security engine: it is a do-it-yourself ADK and runtime that
- * platform and DevSecOps teams use to deploy always-on agents. Autonomous
- * security is now one example of what you build, not the headline. The
- * `flagship` and `pillars` exports and the GibsonBrain section went with it.
+ * Names are fixed: zeroroot.ai is the company / umbrella; Gibson is the engine,
+ * always written as a proper noun. (The chrome product name, "Zero Root AI",
+ * lives separately in ./brand.ts; this module owns positioning copy.)
  */
 
-/** The company that makes Gibson, as written in copy. */
+/** The company / umbrella brand, as written in copy. */
 export const COMPANY = "zeroroot.ai";
 
-/** The product: the ADK and the runtime. Always a proper noun. */
+/** The flagship engine. Always a proper noun. */
 export const ENGINE = "Gibson";
 
-/**
- * Product positioning, shared across every surface. "Agent factory" is the
- * category, in the software-factory sense — the umbrella chart is Big Bang
- * compatible and that reader knows the term. It is not a metaphor.
- */
+/** Umbrella positioning, shared across every surface. */
 export const umbrella = {
-  tagline: "The agent factory for platform and security engineering.",
+  tagline: "The zero-trust agent factory.",
   supporting:
-    "An ADK and a runtime. You write the agent; Gibson gives it an identity, a grant for every tool it can touch, a sandbox, and a replayable record of what it did.",
+    "Build any agent. Run it on a substrate that enforces zero trust at every layer.",
 } as const;
+
+/** One Gibson flagship pillar: a buyer-legible outcome, no jargon. */
+interface Pillar {
+  readonly title: string;
+  readonly body: string;
+}
+
+/**
+ * The three flagship pillars. Pillar 2 is the signature: it is the plain-English
+ * reframe of the attack-path belief field. Side-neutral by design (offense walks
+ * the path, defense cuts it).
+ */
+export const pillars: readonly Pillar[] = [
+  {
+    title: "A living model of your environment",
+    body: "One picture, built as it works: every asset, access path, and exposure it finds. Not a one-time scan.",
+  },
+  {
+    title: "Thinks in paths, not checklists",
+    body: "It reasons about how weaknesses chain, so you get the few paths that are real risk. Attack: walk it. Defend: cut it.",
+  },
+  {
+    title: "Replayable, move by move",
+    body: "Rewind and scrub every decision it made. A reproducible record for whoever reviews the run.",
+  },
+] as const;
 
 /** Which side of the line a persona sits on. The engine serves all four. */
 type PersonaSide = "offense" | "defense" | "purple" | "platform";
@@ -51,8 +65,9 @@ interface Persona {
 }
 
 /**
- * The teams that build on Gibson. The set stays broad on purpose: the runtime is
- * domain-agnostic, and security is one thing you build with it, not the boundary.
+ * Side-neutral persona set. Offense walks the path, defense cuts it, purple
+ * shares one replayable picture, platform/DevSecOps wants reachable risk over a
+ * CVE list. Consumed by the landing persona rotator (slice S2, #887).
  */
 export const personas: readonly Persona[] = [
   { label: "Pentest", side: "offense" },
@@ -68,10 +83,10 @@ export const personas: readonly Persona[] = [
 
 /** Approved outcome-first headline candidates. The hero leads with the first. */
 export const headlines: readonly string[] = [
-  "Describe the agent. Ship it under your controls.",
-  "Always-on agents, built by your team, bounded by grants you set.",
-  "Write the agent. Gibson runs it under an identity, a grant, and a sandbox.",
-  "An agent factory your security review can actually read.",
+  "Gibson thinks in paths, not checklists.",
+  "Autonomous security that maps how risk actually connects, for the teams breaking in and the teams locking down.",
+  "Reachable risk, not a wall of findings.",
+  "One engine. Both sides of the line.",
 ] as const;
 
 /**
@@ -79,126 +94,30 @@ export const headlines: readonly string[] = [
  * highlight: `<highlight>{headlineHighlight}</highlight> {headlineRest}`.
  */
 export const hero = {
-  eyebrow: "// agent factory for platform and security engineering",
-  headlineHighlight: "Describe the agent.",
-  headlineRest: "Ship it under your controls.",
+  eyebrow: "// agent platform for security & ops teams",
+  headlineHighlight: "Zero Trust",
+  headlineRest: "agent control plane in under an hour.",
   subhead:
-    "Build from tools you already trust — amass, nuclei, Trivy, kubectl — or write your own with the SDK. Every agent is a source-controlled artifact owned by a named human, with a grant for each tool it can touch and a record of everything it did.",
+    "Agents run where you work: laptop, CI, k8s. Identity, missions, shared memory, and audit run in the control plane.",
   ctaPrimary: "Start Free",
   ctaSecondary: "Star the ADK",
   quickstart: "first agent live in under an hour. See the quickstart",
 } as const;
 
 /**
- * The enterprise path. Engagements are delivered by forward-deployed engineers
- * who embed with the customer's team; self-service stays the front door, so this
- * is a second route rather than a replacement for it.
- *
- * The route is the contact form, never a bare mail link: the form owns rate
- * limiting, and an address published on a public page is scraped within days.
+ * The flagship section header. Lived inline in GibsonBrain.tsx until now,
+ * which is exactly what this module exists to prevent: the file's own header
+ * says "Edit copy HERE, never inline it in a component", and an inline
+ * paragraph is how the surfaces drift apart again.
  */
-export const consulting = {
-  eyebrow: "// enterprise",
-  heading: "Forward-deployed engineers",
-  body: "Our engineers embed with your team to build the agents, components, and missions on your own infrastructure.",
-  cta: "Talk to an engineer",
-  address: "consulting@zeroroot.ai",
-} as const;
-
-/**
- * The trust strip under the hero. Every item must be true of the shipping
- * platform; accreditation claims do not belong here.
- *
- * "microVM isolation per execution" used to sit here and was false. One gate
- * decides how a component runs, from its declared content trust and the
- * deployment shape. What is true, and stronger, is that untrusted code has no
- * in-process fallback: sandbox or refusal.
- */
-export const trustBar: readonly string[] = [
-  "open-source core",
-  "untrusted code sandboxed or refused",
-  "kubernetes-native",
-  "short-lived credentials",
-  "bring your own LLM",
-] as const;
-
-/** One reason agents stall, and the shipping mechanism that resolves it. */
-interface Blocker {
-  readonly title: string;
-  readonly pain: string;
-  readonly resolve: string;
-}
-
-/** Pain then resolve. The resolve names a shipping mechanism, never a promise. */
-export const blockers: readonly Blocker[] = [
-  {
-    title: "Untrusted code in production",
-    pain: "AI-generated code running in your pipelines is a breach waiting to happen without real isolation.",
-    resolve:
-      "A component that declares it handles untrusted input runs in a Firecracker microVM, or the call is refused. There is no in-process fallback.",
-  },
-  {
-    title: "Compliance can't audit a black box",
-    pain: "Regulated environments can't run what they can't replay. \u201CThe agent did something\u201D doesn't pass an audit.",
-    resolve:
-      "Every model call is recorded with its full transcript and token counts, inside your tenant, and every mission replays step by step.",
-  },
-  {
-    title: "Integration drags on for months",
-    pain: "Bolting AI onto existing infrastructure means custom glue that still doesn't fit your patterns.",
-    resolve:
-      "Standard Kubernetes. Agents run where you already work: laptop, CI, VPS, k8s.",
-  },
-  {
-    title: "Engineers see a threat, not a tool",
-    pain: "Adoption stalls when the team that has to champion automation feels automated away.",
-    resolve:
-      "Your engineers build the agents, own the workflows, and hold the keys. Amplified, not replaced.",
-  },
-] as const;
-
-/** One of the three component shapes you compose an agent from. */
-interface Primitive {
-  readonly kind: string;
-  readonly what: string;
-  readonly builtWith: string;
-}
-
-/**
- * The primitives section, directly under the hero. The rotator above it shows
- * eight concrete jobs; this explains how any of them get built, which nothing
- * on the page did before. Two paths on purpose: assemble parts that already
- * exist, or write your own.
- */
-export const primitives = {
-  eyebrow: "// what you build with",
-  heading: "Three shapes, composed by a mission",
-  body: "An agent is not one thing. You compose it, and everything it discovers lands in a knowledge graph the next agent starts from.",
-  shapes: [
-    {
-      kind: "agent",
-      what: "Model-driven service. Reasons, plans, delegates to tools.",
-      builtWith: "sdk.NewAgent",
-    },
-    {
-      kind: "tool",
-      what: "Stateless executor. Proto in, proto out.",
-      builtWith: "serve.Tool",
-    },
-    {
-      kind: "plugin",
-      what: "Stateful integration with declared methods and a lifecycle.",
-      builtWith: "plugin.Serve",
-    },
-  ] as readonly Primitive[],
-  reuse:
-    "Start from parts that exist: gibson-executor is one microVM image carrying parsers for common security and ops command-line tools, and the opencode plugins put a coding agent under Gibson's controls.",
-  build:
-    "Or write your own against the Go SDK. TypeScript and Python SDKs are public too.",
+export const flagship = {
+  eyebrow: "// the flagship",
+  heading: "Autonomous security that maps how risk connects",
+  body: "Point it at your environment. It finds the paths that matter and replays every move. One engine, both sides of the line.",
 } as const;
 
 /** Closing lockup, reused by footer-adjacent and profile surfaces. */
 export const lockup = {
-  line: "Your agents. Your controls. Any domain.",
-  signature: `${COMPANY} — Gibson, the agent factory`,
+  line: "Your agents. Any domain. Zero-trust substrate.",
+  signature: `${COMPANY}, the zero-trust agent factory`,
 } as const;

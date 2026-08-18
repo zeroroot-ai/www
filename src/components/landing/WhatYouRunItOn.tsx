@@ -1,41 +1,34 @@
-const cveMissionCue = `// Respond to a newly published advisory.
-// Started by your CI, webhook, or scheduler \u2014
-// Gibson does not own the clock.
+const reconMissionCue = `// Recon mission template.
+// Discover the target's exposed surface (open ports,
+// running services, reachable subdomains).
 
 mission: {
-  name:        "cve-response"
-  description: "Find services affected by an advisory and open the patch PR."
+  name:        "recon"
+  description: "Reconnaissance across a target's exposed surface."
   version:     "1.0.0"
-
-  constraints: {
-    max_cost:        25.0   // USD, hard ceiling
-    max_duration:    "45m"
-    blocked_domains: ["prod.internal"]
-  }
+  target_ref:  ""
 
   nodes: {
-    advisory: {
-      id:   "advisory"
-      type: "NODE_TYPE_TOOL"
-      tool_config: {tool_name: "advisory-feed"}
-    }
-    affected: {
-      id:   "affected"
+    scan: {
+      id:   "scan"
       type: "NODE_TYPE_AGENT"
-      agent_config: {agent_name: "graph-matcher"}
+      agent_config: {
+        agent_name: "nmap-agent"
+      }
     }
-    patch: {
-      id:   "patch"
+    enrich: {
+      id:   "enrich"
       type: "NODE_TYPE_AGENT"
-      agent_config: {agent_name: "coding-agent"}
+      agent_config: {
+        agent_name: "shodan-agent"
+      }
     }
   }
   edges: [
-    {from: "advisory", to: "affected"},
-    {from: "affected", to: "patch"},
+    {from: "scan", to: "enrich"},
   ]
-  entry_points: ["advisory"]
-  exit_points:  ["patch"]
+  entry_points: ["scan"]
+  exit_points:  ["enrich"]
 }`;
 
 export function WhatYouRunItOn() {
@@ -55,8 +48,7 @@ export function WhatYouRunItOn() {
             <code className="font-mono text-highlight">api.zeroroot.ai</code>{" "}
             for orchestration, shared memory, and the knowledge graph.
             Your team decides what crosses the wire and what stays on
-            the host. BYOK for LLM keys. A component that declares it
-            handles untrusted input runs inside{" "}
+            the host. BYOK for LLM keys. Untrusted payloads detonate inside{" "}
             <a
               href="https://github.com/zeroroot-ai/setec"
               target="_blank"
@@ -64,15 +56,15 @@ export function WhatYouRunItOn() {
               className="text-highlight font-semibold underline-offset-4 decoration-highlight/40 hover:underline hover:decoration-highlight">
               Setec microVMs
             </a>
-            , or the call is refused. Hardware isolation, not containers.
+            . Hardware isolation, not containers.
           </p>
           <div>
             <div className="mb-2 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em] text-highlight/60">
               <span>{'// what a mission looks like'}</span>
-              <span>cve-response.cue</span>
+              <span>recon.cue</span>
             </div>
             <pre className="overflow-x-auto rounded-lg border border-highlight/25 bg-card/60 p-5 font-mono text-[10px] md:text-[11px] leading-[1.55] text-highlight/90">
-              <code>{cveMissionCue}</code>
+              <code>{reconMissionCue}</code>
             </pre>
           </div>
         </div>
