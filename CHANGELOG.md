@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/zeroroot-ai/www/compare/v1.1.0...v1.2.0) (2026-08-18)
+
+
+### Features
+
+* **ci:** publish the marketing site to s3 on a release tag ([#39](https://github.com/zeroroot-ai/www/issues/39)) ([5c89ad1](https://github.com/zeroroot-ai/www/commit/5c89ad16db2b6ede76109fdf3779e67b2031a915))
+
+
+### Bug Fixes
+
+* **404:** add a 404 page so unknown paths do not answer 403 ([#37](https://github.com/zeroroot-ai/www/issues/37)) ([3752566](https://github.com/zeroroot-ai/www/commit/37525669c19654082878c0e50018789c0bbed9a4))
+
 ## [1.1.0](https://github.com/zeroroot-ai/www/compare/v1.0.1...v1.1.0) (2026-08-18)
 
 
