@@ -26,8 +26,6 @@ const highlightTerms: readonly string[] = [
   "gibson mission submit",
   "gibson",
   // Recon / scan / triage tooling
-  "NVD",
-  "Dependabot",
   "amass",
   "httpx",
   "nuclei",
@@ -70,14 +68,6 @@ const messages: TypewriterMessage[] = [
     text: "Crush, build me a gibson agent that bumps stale dependencies, runs the test suite, and opens PRs only when green. Run it nightly from CI.",
   },
   {
-    label: "Platform",
-    text: "Claude, build me a gibson agent to watch NVD for CVEs affecting services in our graph and open the patch PR. Trigger it from a webhook.",
-  },
-  {
-    label: "AppSec",
-    text: "Run opencode inside a gibson sandbox with no prod credentials, so the coding agent can only touch what its grant allows.",
-  },
-  {
     label: "IR / SOC",
     text: "opencode, build me a gibson agent to sweep every new IOC across CloudTrail and k8s audit logs. Trigger it from our SIEM webhook.",
   },
@@ -103,19 +93,19 @@ const terminalLines: Array<[string, string, "cmd" | "ok" | "info" | "sandbox"]> 
   ["$", "gibson init --gibson-url https://api.zeroroot.ai", "cmd"],
   ["$", "gibson login", "cmd"],
   ["✔", "device-flow sign-in · short-lived session stored", "ok"],
-  ["$", "gibson component init cve-triage --kind agent", "cmd"],
-  ["$", "gibson agent enroll --name cve-triage --kind agent", "cmd"],
+  ["$", "gibson component init recon-agent --kind agent", "cmd"],
+  ["$", "gibson agent enroll --name recon-agent --kind agent", "cmd"],
   ["✔", "one-time bootstrap token minted", "ok"],
   ["$", "gibson component register --token …", "cmd"],
   ["✔", "capability-grant verified · runtime credential issued", "ok"],
-  ["$", "gibson mission submit cve-response.cue", "cmd"],
+  ["$", "gibson mission submit recon.cue", "cmd"],
   ["→", "mission queued · 2 nodes running", "info"],
-  ["↳", "untrusted component dispatched to setec microVM", "sandbox"],
-  ["✔", "graph: 9 services affected · patch PR opened", "ok"],
+  ["↳", "untrusted payload detonated in setec microVM", "sandbox"],
+  ["✔", "graph: 47 hosts · 12 findings indexed", "ok"],
 ];
 
 // Dracula terminal palette: commands in foreground, success in green,
-// info in cyan, sandbox dispatch in orange.
+// info in cyan, sandbox/detonation in orange.
 const lineColor: Record<"cmd" | "ok" | "info" | "sandbox", string> = {
   cmd: "text-dracula-fg",
   ok: "text-dracula-green",
