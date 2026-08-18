@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.0](https://github.com/zeroroot-ai/www/compare/v1.0.1...v1.1.0) (2026-08-18)
+
+
+### Features
+
+* **copy:** add the primitives section and widen the examples ([#34](https://github.com/zeroroot-ai/www/issues/34)) ([2090744](https://github.com/zeroroot-ai/www/commit/209074478775b36def4c2546e896d516d8d129e2)), closes [#28](https://github.com/zeroroot-ai/www/issues/28)
+* **copy:** move contact to consulting and state the FDE path ([#31](https://github.com/zeroroot-ai/www/issues/31)) ([bd9bf8a](https://github.com/zeroroot-ai/www/commit/bd9bf8adab4f62459415f54daafd722ae526b82a)), closes [#29](https://github.com/zeroroot-ai/www/issues/29)
+* **copy:** reposition Gibson as the ADK and runtime ([#30](https://github.com/zeroroot-ai/www/issues/30)) ([54d5f30](https://github.com/zeroroot-ai/www/commit/54d5f304e86296f5a22e4e14681ce94b9ba29bf8))
+* **pricing:** route every tier to contact-sales while app is down ([#36](https://github.com/zeroroot-ai/www/issues/36)) ([a7d28d8](https://github.com/zeroroot-ai/www/commit/a7d28d87baf1edc167ba5b3ff0357142929662e7))
+
+
+### Bug Fixes
+
+* **copy:** correct the isolation claims in TrustBar and WhyBlocked ([#32](https://github.com/zeroroot-ai/www/issues/32)) ([15c60a2](https://github.com/zeroroot-ai/www/commit/15c60a224822fe660a21c2766d3c83a2822399d5)), closes [#27](https://github.com/zeroroot-ai/www/issues/27)
+* **links:** point the hero quickstart at the docs host, and gate dead links ([#35](https://github.com/zeroroot-ai/www/issues/35)) ([bd42889](https://github.com/zeroroot-ai/www/commit/bd42889688c5c7a5f5d32c7fc436f3e942847961))
+
 ## [1.0.1](https://github.com/zeroroot-ai/www/compare/v1.0.0...v1.0.1) (2026-08-17)
 
 
