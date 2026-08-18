@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/zeroroot-ai/www/compare/v1.2.1...v1.2.2) (2026-08-18)
+
+
+### Bug Fixes
+
+* **contact:** post the lead to the same-origin endpoint ([#42](https://github.com/zeroroot-ai/www/issues/42)) ([e221709](https://github.com/zeroroot-ai/www/commit/e2217093ffe6158317dc79a417c8173f7f17d8ee))
+
 ## [1.2.1](https://github.com/zeroroot-ai/www/compare/v1.2.0...v1.2.1) (2026-08-18)
 
 
