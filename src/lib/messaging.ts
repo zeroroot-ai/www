@@ -41,8 +41,14 @@ interface Pillar {
  * most specific: WorldView (gibson internal/engine/harness/worldview.go, ADR-0012)
  * is a server-projected, mission-scope-limited read of the tenant World, where
  * every entity carries an opaque server-minted handle the agent cannot construct
- * or iterate. "Cannot name what it was not sent to find" is that property in
- * plain English, not a metaphor — enumerating past the slice is unrepresentable.
+ * or iterate. "Cannot read, or even name, anything outside the work you gave it"
+ * is that property in plain English, not a metaphor: enumerating past the
+ * projection is unrepresentable, so no prompt can widen the scope.
+ *
+ * The pillar copy carries NO internal vocabulary. "World", "WorldView" and
+ * "slice" are engine terms; a landing reader meets them for the first time here
+ * and has to learn them before the claim lands. State the guarantee instead and
+ * keep the names for the docs.
  *
  * Each claim here is code-backed: the World is per-tenant and long-lived
  * (brain/mission_projection.go), and the emit contract is append-only
@@ -50,16 +56,16 @@ interface Pillar {
  */
 export const pillars: readonly Pillar[] = [
   {
-    title: "A World, not a report",
-    body: "One model per tenant, not one per agent. Every asset, path and finding an agent turns up lands in the same place, and outlives the mission that found it.",
+    title: "Nothing is discovered twice",
+    body: "Every host, path and finding an agent turns up goes in one place and stays there. The next mission, and the next team, start from it instead of from zero.",
   },
   {
-    title: "Every agent gets a world view",
-    body: "An agent reads a slice of the World, never the whole thing. Its mission fixes the boundary and the server draws it, so an agent cannot name what it was not sent to find.",
+    title: "An agent sees only its job",
+    body: "The mission sets the boundary and the server holds it. An agent cannot read, or even name, anything outside the work you gave it. No prompt can talk it into more.",
   },
   {
-    title: "Replayable, move by move",
-    body: "Observations are append-only and attributed. Rewind a mission step by step and get the same answer twice.",
+    title: "Play back any move",
+    body: "Every prompt, tool call and finding is recorded and attributed. Rewind a mission move by move, and it comes back the same every time.",
   },
 ] as const;
 
@@ -91,7 +97,7 @@ export const personas: readonly Persona[] = [
 /** Approved outcome-first headline candidates. The hero leads with the first. */
 export const headlines: readonly string[] = [
   "Gibson thinks in paths, not checklists.",
-  "Autonomous security that maps how risk actually connects, for the teams breaking in and the teams locking down.",
+  "Every agent starts where the last one finished.",
   "Reachable risk, not a wall of findings.",
   "One engine. Both sides of the line.",
 ] as const;
@@ -119,8 +125,8 @@ export const hero = {
  */
 export const flagship = {
   eyebrow: "// the flagship",
-  heading: "Autonomous security that maps how risk connects",
-  body: "One model of your environment, built as agents work it. Each agent reads only its slice.",
+  heading: "Every agent starts where the last one finished.",
+  body: "Gibson keeps one live picture of your environment. Agents write what they find into it, read only the part their mission needs, and leave a record you can play back.",
 } as const;
 
 /** Closing lockup, reused by footer-adjacent and profile surfaces. */
