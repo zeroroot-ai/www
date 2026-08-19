@@ -37,7 +37,7 @@ const DEPLOY_TIER_ID = "enterprise-deploy";
  *
  * Every tier routes to /contact-sales while `app.zeroroot.ai` does not exist.
  * The steady state is unchanged and recorded in deploy/CONTEXT.md: paid tiers
- * link to `${APP}/signup?plan=<id>` labelled "Start trial", and only
+ * link to `${APP}/signup?plan=<id>` labeled "Start trial", and only
  * contact-sales tiers use the form.
  *
  * This is a constraint of the torn-down estate, not a go-to-market decision.

@@ -3,10 +3,14 @@
  * Where it runs — the two-plane picture.
  *
  * The schematic is carried over from the previous landing page, where it drew
- * the execution/runtime split better than any prose we have. What it no longer
- * does is report LIVE / READY / ARMED status: those were decoration on a
- * marketing page, and a status light that is always green is not a status
- * light. Each row now says what the thing is.
+ * the split between where agents run and where the runtime runs better than any
+ * prose we have. What it no longer does is report LIVE / READY / ARMED status:
+ * those were decoration on a marketing page, and a status light that is always
+ * green is not a status light. Each row now says what the thing is.
+ *
+ * The right-hand column is deliberately not labeled with a hostname. The
+ * runtime is hosted by us OR installed in your own cluster, and an earlier
+ * version that read "RUNTIME · api.zeroroot.ai" quietly said only the first.
  */
 import { surfaces } from "@/lib/messaging";
 ---
@@ -15,9 +19,10 @@ import { surfaces } from "@/lib/messaging";
   <div class="wrap">
     <p class="section-eyebrow">{surfaces.eyebrow}</p>
     <h2 class="section-h">{surfaces.heading}</h2>
+    <p class="section-sub">{surfaces.sub}</p>
 
     <div class="schematic">
-      <pre aria-label="An agent runs on your own machines and connects to the runtime over gRPC. Model keys are yours."><code> EXECUTION PLANE            <span class="c-mut">╎</span>    RUNTIME · api.zeroroot.ai
+      <pre aria-label="Agents run on your own machines and connect to the runtime over gRPC. The runtime is hosted by us or installed in your cluster. Model keys are yours."><code> WHERE AGENTS RUN           <span class="c-mut">╎</span>    THE RUNTIME  —  ours or yours
  ┌───────────────────┐      <span class="c-mut">╎</span>    ┌────────────────────────┐
  │ <span class="c-ok">●</span> your agent      │      <span class="c-mut">╎</span>    │ <span class="c-ok">●</span> identity + grants    │
  │   runs on:        │      <span class="c-mut">╎</span>    │ <span class="c-ok">●</span> missions             │
@@ -25,11 +30,12 @@ import { surfaces } from "@/lib/messaging";
  │   vps · k8s       │ gRPC <span class="c-mut">╎</span>    │ <span class="c-ok">●</span> timeline + replay    │
  └─────────┬─────────┘      <span class="c-mut">╎</span>    │ <span class="c-warn">◢</span> setec sandbox        │
            │                <span class="c-mut">╎</span>    └────────────────────────┘
+           │                <span class="c-mut">╎</span>    <span class="c-mut">hosted by us  ·  or your cluster</span>
            ▼                <span class="c-mut">╎</span>
  <span class="c-ok">●</span> your model keys ─▶ anthropic · openai · gemini · bedrock · ollama</code></pre>
     </div>
 
-    <div class="grid-4">
+    <div class="grid-3">
       {surfaces.items.map((s) => (
         <div class="card"><h3>{s.name}</h3><p>{s.body}</p></div>
       ))}
