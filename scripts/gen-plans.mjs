@@ -58,7 +58,7 @@ const MAIN_DASHBOARD_ROOT = isWorktree
 const REPO_ROOT = resolve(MAIN_DASHBOARD_ROOT, "..", "..", "..");
 // Open-core relocation (gibson#915 / ADR-0050): #915 ripped billing/plans out
 // of OSS gibson, so the canonical plans source is now `deploy`
-// (helm/gibson-operators/files/) — ELv2-readable by the dashboard; the closed
+// (helm/gibson-operators/files/): ELv2-readable by the dashboard; the closed
 // billing impl reads the same copy. (Previously gibson/operators/tenant/plans/.)
 const PLANS_YAML = resolve(
   REPO_ROOT,

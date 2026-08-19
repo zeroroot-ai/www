@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 /**
- * check-no-hardcoded-origins.mjs — functional cross-surface links must come
+ * check-no-hardcoded-origins.mjs: functional cross-surface links must come
  * from src/lib/origins.ts (www#15, epic env-derived-links).
  *
  * The app and docs origins are environment-derived: the Docker build bakes
  * sentinels and the nginx entrypoint substitutes the environment's real
  * origins at container start. A literal `https://app.zeroroot.ai` or
  * `https://docs.zeroroot.ai` anywhere else in src/ silently re-pins that
- * link to prod in every environment — exactly the staging bug this guard
+ * link to prod in every environment, exactly the staging bug this guard
  * exists to keep fixed.
  *
  * Scope: every file under src/ except src/lib/origins.ts (the one sanctioned
  * home of the literals, as prod defaults). Bare hostnames without a scheme
  * ("app.zeroroot.ai/dashboard" in terminal art) are display copy and stay
- * legal — only scheme-carrying origins can become links.
+ * legal: only scheme-carrying origins can become links.
  *
  * Usage:
  *   node scripts/check-no-hardcoded-origins.mjs            # scan src/
@@ -72,7 +72,7 @@ function selftest() {
     console.error("selftest FAILED: origin regex does not behave as specified");
     process.exit(1);
   }
-  // And the allowlisted module must actually contain the prod defaults —
+  // And the allowlisted module must actually contain the prod defaults,
   // if it moves, the exclusion above silently allowlists nothing.
   const origins = readFileSync(join(ROOT, ALLOWED), "utf8");
   if (!ORIGIN_RE.test(origins)) {

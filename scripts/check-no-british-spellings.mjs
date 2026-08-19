@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * check-no-british-spellings.mjs — this site is written in American English.
+ * check-no-british-spellings.mjs: this site is written in American English.
  *
  * Owner call, 2026-08-19. The copy had drifted into a mix: "artefact" and
  * "licence" in the messaging module, "colour" and "behaviour" in the comments
@@ -15,7 +15,7 @@
  * The list is deliberately short and high-confidence. It carries only the
  * classes that actually appeared or plausibly will: -our/-or, -ise/-ize on
  * words we use, -re/-er, doubled-l participles, and the handful of one-off
- * spellings. It does NOT try to be a dictionary — a guard that fires on
+ * spellings. It does NOT try to be a dictionary: a guard that fires on
  * something a writer believes is correct gets disabled, and then it protects
  * nothing.
  *
@@ -146,7 +146,7 @@ function main() {
       if (file.endsWith("check-no-british-spellings.mjs")) continue;
       const rel = relative(ROOT, file).split(sep).join("/");
       for (const h of scanContent(readFileSync(file, "utf8"))) {
-        violations.push(`${rel}:${h.line}: ${h.found} — this site writes American English: ${h.want}`);
+        violations.push(`${rel}:${h.line}: ${h.found}: this site writes American English: ${h.want}`);
       }
     }
   }

@@ -16,7 +16,7 @@
  *      exactly what production serves.
  *
  * Display copy (marketing prose, terminal art) deliberately does NOT go
- * through this module — it is owner-controlled writing, not a link.
+ * through this module: it is owner-controlled writing, not a link.
  */
 export const APP_ORIGIN: string =
   import.meta.env.PUBLIC_APP_ORIGIN ?? "https://app.zeroroot.ai";

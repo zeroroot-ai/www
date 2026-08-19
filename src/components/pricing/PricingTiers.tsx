@@ -17,8 +17,8 @@ import { pricingDisplays, type PricingTierDisplay } from "@/lib/pricing-display"
  *
  * The dashboard page rendered on a server, so it could fetch live Stripe
  * prices per request and fall back to the committed plans.yaml figure when
- * Stripe was unreachable. This site is a static build behind nginx — there is
- * no request-time server and no Stripe credential — so the price shown is
+ * Stripe was unreachable. This site is a static build behind nginx, there is
+ * no request-time server and no Stripe credential, so the price shown is
  * always the plans.yaml figure.
  *
  * That is the same number, not an approximation: plans.yaml is the canonical
@@ -33,7 +33,7 @@ const FEATURED_TIER_ID = "org";
 const DEPLOY_TIER_ID = "enterprise-deploy";
 
 /**
- * SALES-ASSISTED HOLDING PATTERN — reverting this commit IS the flip.
+ * SALES-ASSISTED HOLDING PATTERN: reverting this commit IS the flip.
  *
  * Every tier routes to /contact-sales while `app.zeroroot.ai` does not exist.
  * The steady state is unchanged and recorded in deploy/CONTEXT.md: paid tiers
@@ -42,7 +42,7 @@ const DEPLOY_TIER_ID = "enterprise-deploy";
  *
  * This is a constraint of the torn-down estate, not a go-to-market decision.
  * There is no app host to send a buyer to, so a "Start trial" button would be
- * a dead link — which is what it is on production right now.
+ * a dead link, which is what it is on production right now.
  *
  * Deliberately NOT a flag. ADR-0027 forbids a flag that gates a cutover, and a
  * build-time flag would need a rebuild to switch, which is exactly what

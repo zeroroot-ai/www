@@ -5,7 +5,7 @@
  * Tailwind `@theme` mapping that turns them into utilities (text-highlight,
  * text-dracula-green, ...), and the branded utilities (bg-zd-gradient,
  * text-zd-glow, zd-cursor). The landing components use those class names
- * directly, so this file must not redefine any of them — one source of truth,
+ * directly, so this file must not redefine any of them: one source of truth,
  * shared with the dashboard.
  */
 @import "tailwindcss";

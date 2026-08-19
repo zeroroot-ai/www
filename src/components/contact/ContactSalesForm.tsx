@@ -11,7 +11,7 @@
  *
  * It used to post to `${APP_ORIGIN}/api/contact-sales`, a route in the
  * dashboard. That host has no DNS record, so every submission failed in the
- * browser with "An error occurred" — a thrown fetch, not a error response,
+ * browser with "An error occurred": a thrown fetch, not a error response,
  * which is why nothing was logged anywhere. Do not reintroduce an absolute
  * origin here; scripts/check-contact-form-same-origin.mjs fails the build if
  * anyone does.

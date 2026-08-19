@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * check-contact-form-same-origin.mjs — the contact-sales submission must stay
+ * check-contact-form-same-origin.mjs: the contact-sales submission must stay
  * same-origin.
  *
  * The defect this exists to keep fixed: the form posted to
  * `${APP_ORIGIN}/api/contact-sales`, a route that lived in the dashboard.
  * `app.zeroroot.ai` has no DNS record, so in a real browser the fetch THREW
- * rather than returning a response — the form showed "An error occurred.
+ * rather than returning a response: the form showed "An error occurred.
  * Please try again." and nothing was logged, because no request ever reached
  * a server that could log it.
  *
@@ -20,7 +20,7 @@
  * every fetch to /api/ must use a root-relative literal.
  *
  * Deliberately NOT folded into check-no-hardcoded-origins.mjs. That guard's
- * job is the opposite — it insists cross-surface links go THROUGH
+ * job is the opposite: it insists cross-surface links go THROUGH
  * `@/lib/origins` so they stay environment-derived. This one insists the API
  * call does not go through it at all. Merging them would blur two rules that
  * disagree on purpose.
@@ -80,7 +80,7 @@ function selftest() {
     { line: "await fetch(`${APP}/api/contact-sales`, {", bad: true },
     { line: 'await fetch("https://app.zeroroot.ai/api/contact-sales", {', bad: true },
     { line: "await fetch(`${import.meta.env.PUBLIC_APP_ORIGIN}/api/x`)", bad: true },
-    // Not an /api/ call at all — must not be flagged.
+    // Not an /api/ call at all, must not be flagged.
     { line: 'await fetch("https://example.com/other")', bad: false },
   ];
 
@@ -108,7 +108,7 @@ if (process.argv.includes("--selftest")) {
   if (violations.length > 0) {
     console.error(
       "Cross-origin /api/ call found. The contact-sales endpoint is a second\n" +
-        "origin on this site's own distribution (deploy ADR-0009) — post to a\n" +
+        "origin on this site's own distribution (deploy ADR-0009); post to a\n" +
         "root-relative path so the request stays same-origin:\n",
     );
     for (const v of violations) console.error("  " + v);
