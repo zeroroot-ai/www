@@ -1,0 +1,89 @@
+---
+/**
+ * Footer. Columns resolve to the sections and pages that exist; cross-surface
+ * links come from the origins module so each environment points at its own
+ * hosts.
+ */
+import { platform, openSource, workloads, lockup } from "@/lib/messaging";
+import { DOCS_ORIGIN } from "@/lib/origins";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <div>
+      <p class="wordmark">zeroroot</p>
+      <p class="foot-line">{lockup.line}</p>
+    </div>
+    <div>
+      <p class="col-h">Platform</p>
+      {platform.map((p) => <a href="#products">{p.name}</a>)}
+      <a href="/pricing">Pricing</a>
+    </div>
+    <div>
+      <p class="col-h">Open source</p>
+      {openSource.map((o) => <a href="#open-source">{o.name}</a>)}
+      <a href="https://github.com/zeroroot-ai/adk" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+    <div>
+      <p class="col-h">Solutions</p>
+      {workloads.slice(0, 4).map((w) => <a href="/#workloads">{w.name}</a>)}
+      <a href={DOCS_ORIGIN}>Docs</a>
+    </div>
+  </div>
+  <div class="wrap foot-legal">&copy; {year} {lockup.signature}</div>
+</footer>
+
+<style>
+  .foot {
+    background: var(--ink);
+    color: var(--ink-muted);
+    padding: 3.5rem 0 1.625rem;
+  }
+  .foot-inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 1.625rem;
+  }
+  .wordmark {
+    color: var(--ink-foreground);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-size: 1.125rem;
+    margin: 0;
+  }
+  .foot-line {
+    font-size: 0.8rem;
+    margin: 0.5rem 0 0;
+  }
+  .col-h {
+    margin: 0 0 0.5rem;
+    font-family: var(--mono-family);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+  .foot a {
+    display: block;
+    color: var(--ink-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    padding: 0.3rem 0;
+  }
+  .foot a:hover {
+    color: var(--primary);
+  }
+  .foot-legal {
+    font-size: 0.72rem;
+    padding-top: 1.875rem;
+    margin-top: 1.875rem;
+    border-top: 1px solid var(--ink-border);
+  }
+  @media (max-width: 980px) {
+    .foot-inner {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
