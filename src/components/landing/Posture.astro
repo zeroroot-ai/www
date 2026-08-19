@@ -1,0 +1,103 @@
+---
+/**
+ * "Controls, not certificates."
+ *
+ * Every row is a mechanism in shipped code, stated with its boundary and marked
+ * as enforced, structural or conditional. `conditional` is not a softer word for
+ * enforced — it means the guarantee has a limit, and the limit is in the row.
+ *
+ * This table is the standing answer to the claims that previously shipped
+ * overstated. It makes honesty a design feature rather than a retreat: a reader
+ * who sees a vendor mark its own microVM isolation "conditional" has reason to
+ * believe the rows marked enforced.
+ */
+import { posture } from "@/lib/messaging";
+---
+
+<section class="band" id="posture">
+  <div class="wrap">
+    <p class="section-eyebrow">{posture.eyebrow}</p>
+    <h2 class="section-h">{posture.heading}</h2>
+    <p class="section-sub">{posture.sub}</p>
+
+    <table class="posture">
+      <caption class="sr-only">
+        Shipped controls, each with its boundary and whether it is enforced, structural or conditional
+      </caption>
+      <tbody>
+        {posture.rows.map((r) => (
+          <tr>
+            <th scope="row">{r.name}</th>
+            <td>{r.body}</td>
+            <td class="kind" data-kind={r.kind}>{r.kind}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<style>
+  .posture {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .posture th,
+  .posture td {
+    text-align: left;
+    padding: 1rem 0.75rem;
+    border-top: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .posture th {
+    font-size: 0.9rem;
+    font-weight: 700;
+    width: 22%;
+  }
+  .posture td {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    line-height: 1.55;
+  }
+  .kind {
+    width: 12%;
+    font-family: var(--mono-family);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .kind[data-kind="enforced"],
+  .kind[data-kind="structural"] {
+    color: var(--highlight);
+  }
+  /* Conditional rows carry the refusal colour on purpose: the boundary is the
+   * point of the row, not a footnote to it. */
+  .kind[data-kind="conditional"] {
+    color: var(--refused);
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  @media (max-width: 780px) {
+    .posture th,
+    .posture td {
+      display: block;
+      width: auto;
+      border-top: 0;
+      padding: 0.25rem 0;
+    }
+    .posture tr {
+      display: block;
+      border-top: 1px solid var(--border);
+      padding: 1rem 0;
+    }
+  }
+</style>

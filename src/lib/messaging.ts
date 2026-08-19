@@ -310,7 +310,7 @@ export const industries: readonly Entry[] = [
 ];
 
 export const workloads: readonly Entry[] = [
-  { slug: "ci-cd", name: "CI/CD & release management", line: "in production today" },
+  { slug: "ci-cd", name: "CI/CD & release management", line: "reviewable commits, never the deploy" },
   { slug: "cve-response", name: "Vulnerability & CVE response", line: "always-on" },
   { slug: "coding-agents", name: "Coding agents, under control", line: "grants, not vibes" },
   { slug: "security-testing", name: "Security testing", line: "offense and defense" },
@@ -372,23 +372,22 @@ export const posture = {
 /* Proof                                                                      */
 /* -------------------------------------------------------------------------- */
 
-/**
- * One worked case, not a logo wall. Every line here must be traceable to a real
- * artefact — the agent's manifest, its grant, its mission definition, or a
- * recorded run. Anything that cannot be traced is CUT, not softened.
+/*
+ * INTENTIONALLY EMPTY — see www#56.
+ *
+ * The proof section is one worked case: the release-pipeline agent. As of
+ * 2026-08-19 that agent exists in no repository — there is no component
+ * manifest, no mission definition and no recorded run for it. Every fact the
+ * section would carry (what it manages, what it was granted, what it was
+ * refused) is therefore untraceable, and www#56 says untraceable facts are
+ * removed rather than reworded.
+ *
+ * So the page ships without a proof section instead of with an invented one.
+ * When the agent is live, the facts come from its manifest, its grant, its
+ * mission definition and a recorded run — and the section lands then.
+ *
+ * Do not populate this from a plan, a demo or an intention.
  */
-export const proof = {
-  eyebrow: "the first one in production",
-  heading: "It manages our own release pipeline.",
-  sub: "The first agent we put into production on this runtime is the one that manages the pipeline this platform ships through. It was granted what it needs for that job and nothing else — and when it reached past the grant, it was refused.",
-  facts: [
-    { term: "Workload", body: "Reads and edits pipeline configuration, and opens the change as a reviewable commit." },
-    { term: "Granted", body: "Read on the repository and the pipeline, write on the pipeline, execute on CI." },
-    { term: "Not granted", body: "Production deploy — because the human who granted it does not hold that either." },
-    { term: "Validated", body: "Edits are language-server checked before they are applied, and rolled back when they fail." },
-    { term: "Recorded", body: "Every prompt, edit and refusal is on the timeline and replays identically." },
-  ],
-} as const;
 
 /* -------------------------------------------------------------------------- */
 /* The offer                                                                  */
@@ -544,7 +543,7 @@ export const workloadHub: readonly HubSection[] = [
   {
     slug: "ci-cd",
     name: "CI/CD & release management",
-    lede: "The first agent we put into production manages the pipeline this platform ships through.",
+    lede: "A pipeline change is a code change, and a code change an agent makes has to arrive the way any other one does — as a commit somebody reviews.",
     mechanisms: [
       "Mission-scoped git workspaces; changes arrive as reviewable commits",
       "Edits are language-server validated before they are applied",
