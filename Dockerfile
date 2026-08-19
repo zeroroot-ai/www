@@ -10,7 +10,13 @@ WORKDIR /app
 # resolved locally on 10 was rejected by the image on 11 — and PR CI never
 # caught it, because the docker job only runs on main.
 RUN corepack enable
-COPY package.json pnpm-lock.yaml .npmrc ./
+# pnpm-workspace.yaml carries the supply-chain policy decisions (allowBuilds,
+# minimumReleaseAgeExclude). It was NOT copied here, so the image silently made
+# no decision at all while the file's own comment claimed it kept CI, the image
+# and a workstation making the same one. That went unnoticed because
+# --ignore-scripts suppresses the allowBuilds error; the first release of a
+# first-party package inside the 24h quarantine window is what surfaced it.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 # pnpm deliberately ignores env-var auth tokens in the project-level .npmrc
 # ("environment variables are not expanded in registry credentials that come
 # from a project .npmrc"), so the committed .npmrc alone cannot authenticate
