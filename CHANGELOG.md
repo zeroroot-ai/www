@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.3](https://github.com/zeroroot-ai/www/compare/v1.5.2...v1.5.3) (2026-08-19)
+
+
+### Bug Fixes
+
+* **copy:** frame the integration as a wrapper, and drop every em-dash ([#72](https://github.com/zeroroot-ai/www/issues/72)) ([3b436dc](https://github.com/zeroroot-ai/www/commit/3b436dc644f828ca15a01bcf62a7669bd53d4fdf))
+
 ## [1.5.2](https://github.com/zeroroot-ai/www/compare/v1.5.1...v1.5.2) (2026-08-19)
 
 
