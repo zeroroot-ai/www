@@ -1,0 +1,117 @@
+---
+/**
+ * The hub layout, shared by the industry and workload pages.
+ *
+ * One section per entry, anchored on its slug so the mega-menu can deep-link
+ * into it. Deliberately plain: a hub's job is to answer the question the menu
+ * entry raised, then get out of the way.
+ */
+interface HubSection {
+  readonly slug: string;
+  readonly name: string;
+  readonly lede: string;
+  readonly mechanisms: readonly string[];
+}
+
+interface Props {
+  eyebrow: string;
+  heading: string;
+  sub: string;
+  sections: readonly HubSection[];
+}
+
+const { eyebrow, heading, sub, sections } = Astro.props;
+---
+
+<section class="band ink">
+  <div class="wrap">
+    <p class="section-eyebrow">{eyebrow}</p>
+    <h1 class="section-h">{heading}</h1>
+    <p class="section-sub">{sub}</p>
+    <nav class="jump" aria-label="On this page">
+      {sections.map((s) => <a href={`#${s.slug}`}>{s.name}</a>)}
+    </nav>
+  </div>
+</section>
+
+{
+  sections.map((s) => (
+    <section class="band" id={s.slug}>
+      <div class="wrap split">
+        <div>
+          <h2 class="section-h">{s.name}</h2>
+          <p class="lede">{s.lede}</p>
+        </div>
+        <ul class="ticks">
+          {s.mechanisms.map((m) => <li>{m}</li>)}
+        </ul>
+      </div>
+    </section>
+  ))
+}
+
+<section class="band final-band">
+  <div class="wrap">
+    <h2 class="section-h">Bring the workload you are not allowed to put an agent on.</h2>
+    <div class="cta-row">
+      <a class="btn" href="/contact-sales">Take a design partner slot</a>
+      <a class="btn-ghost" href="/">Back to the runtime</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .jump a {
+    font-family: var(--mono-family);
+    font-size: 0.72rem;
+    padding: 0.35rem 0.65rem;
+    border: 1px solid var(--ink-border);
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+  .jump a:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+  .lede {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--muted-foreground);
+    max-width: 46ch;
+  }
+  .ticks {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ticks li {
+    position: relative;
+    padding: 0.5rem 0 0.5rem 1.375rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    border-bottom: 1px solid var(--border);
+  }
+  .ticks li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--highlight);
+    font-weight: 700;
+  }
+  .final-band {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-bottom: 0;
+  }
+  .final-band .btn {
+    background: var(--primary-foreground);
+    color: var(--primary);
+    border-color: var(--primary-foreground);
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+/**
+ * Where it runs — the two-plane picture.
+ *
+ * The schematic is carried over from the previous landing page, where it drew
+ * the execution/runtime split better than any prose we have. What it no longer
+ * does is report LIVE / READY / ARMED status: those were decoration on a
+ * marketing page, and a status light that is always green is not a status
+ * light. Each row now says what the thing is.
+ */
+import { surfaces } from "@/lib/messaging";
+---
+
+<section class="band" id="where-it-runs">
+  <div class="wrap">
+    <p class="section-eyebrow">{surfaces.eyebrow}</p>
+    <h2 class="section-h">{surfaces.heading}</h2>
+
+    <div class="schematic">
+      <pre aria-label="An agent runs on your own machines and connects to the runtime over gRPC. Model keys are yours."><code> EXECUTION PLANE            <span class="c-mut">╎</span>    RUNTIME · api.zeroroot.ai
+ ┌───────────────────┐      <span class="c-mut">╎</span>    ┌────────────────────────┐
+ │ <span class="c-ok">●</span> your agent      │      <span class="c-mut">╎</span>    │ <span class="c-ok">●</span> identity + grants    │
+ │   runs on:        │      <span class="c-mut">╎</span>    │ <span class="c-ok">●</span> missions             │
+ │   laptop · ci ·   │ <span class="c-mut">═════╪═══►</span>│ <span class="c-ok">●</span> knowledge graph      │
+ │   vps · k8s       │ gRPC <span class="c-mut">╎</span>    │ <span class="c-ok">●</span> timeline + replay    │
+ └─────────┬─────────┘      <span class="c-mut">╎</span>    │ <span class="c-warn">◢</span> setec sandbox        │
+           │                <span class="c-mut">╎</span>    └────────────────────────┘
+           ▼                <span class="c-mut">╎</span>
+ <span class="c-ok">●</span> your model keys ─▶ anthropic · openai · gemini · bedrock · ollama</code></pre>
+    </div>
+
+    <div class="grid-4">
+      {surfaces.items.map((s) => (
+        <div class="card"><h3>{s.name}</h3><p>{s.body}</p></div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .schematic {
+    margin-bottom: 1.75rem;
+    border: 1px solid var(--ink-border);
+    background: var(--terminal-bg);
+    padding: 1.25rem 0.875rem;
+    overflow-x: auto;
+  }
+  .schematic pre {
+    margin: 0;
+    font-family: var(--mono-family);
+    font-size: 0.72rem;
+    line-height: 1.7;
+    color: var(--dracula-fg);
+  }
+  .c-mut { color: var(--dracula-comment); }
+  .c-ok { color: var(--primary); }
+  .c-warn { color: var(--warning); }
+  h3 { margin: 0 0 0.5rem; font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; }
+  p { margin: 0; font-size: 0.85rem; line-height: 1.6; color: var(--muted-foreground); }
+</style>

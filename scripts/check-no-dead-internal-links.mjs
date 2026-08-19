@@ -46,6 +46,17 @@ const PAGE_EXT = new Set([".astro", ".md", ".mdx"]);
 /** `href="/x"`, `href='/x'`, `href: "/x"`, `href={"/x"}` — literals only. */
 const HREF_RE = /href\s*[=:]\s*\{?\s*["'](\/[^"']*)["']/g;
 
+/**
+ * `href={`/workloads#${slug}`}` — a template literal with a static prefix.
+ *
+ * These were invisible to this guard, which meant a menu could link to a page
+ * that did not exist and the check stayed green (www#51). The interpolated tail
+ * still cannot be resolved statically, so only the prefix up to the first
+ * `${` is checked — enough to catch a link to a missing route, which is the
+ * failure that actually happens.
+ */
+const HREF_TEMPLATE_RE = /href\s*=\s*\{\s*`(\/[^`$]*)/g;
+
 function* walk(dir) {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
@@ -99,7 +110,7 @@ function scan(srcDir, routes) {
     const rel = relative(ROOT, file).split(sep).join("/");
     const lines = readFileSync(file, "utf8").split("\n");
     lines.forEach((line, i) => {
-      for (const m of line.matchAll(HREF_RE)) {
+      for (const m of [...line.matchAll(HREF_RE), ...line.matchAll(HREF_TEMPLATE_RE)]) {
         const path = normalise(m[1]);
         if (routes.has(path)) continue;
         violations.push(
@@ -133,11 +144,18 @@ function selftest() {
     { line: '<a href="/dashboard-preview.png">shot</a>', dead: false },
     { line: "<a href={cta.href}>go</a>", dead: false },
     { line: "<a href={`${APP}/signup?plan=${id}`}>start</a>", dead: false },
+    // Template literals with a static prefix. The first of these is the defect
+    // that shipped green in www#51: a menu linking to a page that did not exist.
+    { line: "<a href={`/nowhere#${s.slug}`}>x</a>", dead: true },
+    { line: "<a href={`/workloads#${w.slug}`}>x</a>", dead: false },
+    { line: "<a href={`/pricing#${t.id}`}>x</a>", dead: false },
   ];
 
   let failures = 0;
   for (const { line, dead } of cases) {
-    const hits = [...line.matchAll(HREF_RE)].filter((m) => !routes.has(normalise(m[1])));
+    const hits = [...line.matchAll(HREF_RE), ...line.matchAll(HREF_TEMPLATE_RE)].filter(
+      (m) => !routes.has(normalise(m[1])),
+    );
     if (dead && hits.length === 0) {
       console.error(`selftest FAILED: dead link not caught → ${line.trim()}`);
       failures += 1;

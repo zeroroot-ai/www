@@ -1,0 +1,22 @@
+---
+/**
+ * The industry hub. Each section leads with the constraint that decides the
+ * sale rather than with the vertical's name — "the data cannot leave" is what a
+ * reader recognises, not "healthcare".
+ */
+import Landing from "@/layouts/Landing.astro";
+import Hub from "@/components/landing/Hub.astro";
+import { industryHub } from "@/lib/messaging";
+---
+
+<Landing
+  title="Industries · zeroroot"
+  description="Where the boundary is the whole question: defense, federal, financial services, healthcare, critical infrastructure, consultancies and MSSPs."
+>
+  <Hub
+    eyebrow="by industry"
+    heading="Where the boundary is the whole question."
+    sub="Each of these is led by the constraint that decides it. No customer, certification or deployment is claimed on this page."
+    sections={industryHub}
+  />
+</Landing>

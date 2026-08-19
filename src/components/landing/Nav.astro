@@ -4,11 +4,10 @@
  *
  * Three mega-menus and two flat links.
  *
- * The Solutions entries point at the homepage bands until the industry and
- * workload hubs land (www#55), at which point each becomes a deep link to its
- * own section. They are deliberately NOT pointing at routes that do not exist
- * yet: the dead-link guard only reads literal hrefs, so a template-literal link
- * to a missing page would pass it in silence.
+ * Every Solutions entry deep-links into its own section on a hub page, so a
+ * menu that lists twelve things lands on twelve things. The dead-link guard now
+ * reads the static prefix of a template-literal href, so a link to a page that
+ * does not exist fails the build rather than passing in silence.
  *
  * Opens on hover AND on keyboard focus (`:focus-within`), so it is usable
  * without a pointer. No JavaScript: the panels are always in the DOM and CSS
@@ -29,13 +28,13 @@ import { APP_ORIGIN, DOCS_ORIGIN } from "@/lib/origins";
           <div>
             <p class="mega-h">By industry</p>
             {industries.map((i) => (
-              <a href="/#industries"><b>{i.name}</b><span>{i.line}</span></a>
+              <a href={`/industries#${i.slug}`}><b>{i.name}</b><span>{i.line}</span></a>
             ))}
           </div>
           <div>
             <p class="mega-h">By workload</p>
             {workloads.map((w) => (
-              <a href="/#workloads"><b>{w.name}</b><span>{w.line}</span></a>
+              <a href={`/workloads#${w.slug}`}><b>{w.name}</b><span>{w.line}</span></a>
             ))}
           </div>
         </div>

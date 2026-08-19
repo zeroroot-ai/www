@@ -1,0 +1,22 @@
+---
+/**
+ * The workload hub. One section per Solutions menu entry, deep-linked by
+ * anchor, so a menu that lists six jobs lands on a page that discusses them
+ * rather than on a homepage band that mentions them.
+ */
+import Landing from "@/layouts/Landing.astro";
+import Hub from "@/components/landing/Hub.astro";
+import { workloadHub } from "@/lib/messaging";
+---
+
+<Landing
+  title="Workloads · zeroroot"
+  description="What teams put on the runtime first: CI/CD and release management, CVE response, coding agents, security testing, incident response, compliance evidence."
+>
+  <Hub
+    eyebrow="by workload"
+    heading="What teams put on it first."
+    sub="Each of these is a job the runtime does today. The mechanisms under each one ship; none of them is a roadmap."
+    sections={workloadHub}
+  />
+</Landing>
