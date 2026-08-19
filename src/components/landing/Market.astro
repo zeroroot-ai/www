@@ -1,0 +1,65 @@
+---
+/**
+ * Workloads and industries.
+ *
+ * Workloads are jobs the runtime does; industries are led by the constraint
+ * that decides the sale, not by a vertical name. Both link into their hub page,
+ * so a menu entry lands on something that discusses it.
+ */
+import { workloads, industries } from "@/lib/messaging";
+---
+
+<section class="band" id="workloads">
+  <div class="wrap">
+    <p class="section-eyebrow">by workload</p>
+    <h2 class="section-h">What teams put on it first.</h2>
+    <div class="rows">
+      {workloads.map((w, i) => (
+        <a class="row" href={`/workloads#${w.slug}`}>
+          <span class="r-n">{String(i + 1).padStart(2, "0")}</span>
+          <b>{w.name}</b>
+          <span class="r-s">{w.line}</span>
+          <span class="r-go" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="band" id="industries">
+  <div class="wrap">
+    <p class="section-eyebrow">by industry</p>
+    <h2 class="section-h">Where the boundary is the whole question.</h2>
+    <div class="grid-3">
+      {industries.map((i) => (
+        <a class="card ind" href={`/industries#${i.slug}`}>
+          <h3>{i.name}</h3>
+          <p class="constraint">{i.line}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .rows { border-top: 1px solid var(--border); }
+  .row {
+    display: flex;
+    align-items: baseline;
+    gap: 1.125rem;
+    padding: 1.25rem 0.25rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+  }
+  .row:hover { background: var(--card); }
+  .r-n { font-family: var(--mono-family); font-size: 0.7rem; color: var(--muted-foreground); }
+  .row b { font-size: 1.1rem; letter-spacing: -0.02em; }
+  .r-s { font-size: 0.82rem; color: var(--muted-foreground); }
+  .r-go { margin-left: auto; color: var(--highlight); }
+
+  .ind { display: block; text-decoration: none; color: inherit; }
+  .ind:hover { border-color: var(--highlight); }
+  .ind h3 { margin: 0 0 0.5rem; font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; }
+  .constraint { margin: 0; font-family: var(--mono-family); font-size: 0.8rem; color: var(--highlight); }
+</style>

@@ -28,7 +28,7 @@ const year = new Date().getFullYear();
     </div>
     <div>
       <p class="col-h">Solutions</p>
-      {workloads.slice(0, 4).map((w) => <a href="/#workloads">{w.name}</a>)}
+      {workloads.slice(0, 4).map((w) => <a href={`/workloads#${w.slug}`}>{w.name}</a>)}
       <a href={DOCS_ORIGIN}>Docs</a>
     </div>
   </div>

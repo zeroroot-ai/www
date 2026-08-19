@@ -451,3 +451,160 @@ export const lockup = {
   line: "Your agents. Your cluster. A boundary they cannot cross.",
   signature: `${COMPANY}, the zero-trust agent runtime`,
 } as const;
+
+/* -------------------------------------------------------------------------- */
+/* Hubs                                                                       */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A hub section per menu entry, so every Solutions link lands somewhere that
+ * discusses the thing it named. Each is the constraint or the job, the
+ * mechanisms that answer it, and nothing else — an entry graduates to its own
+ * page when a customer story justifies one.
+ *
+ * `mechanisms` must name shipped behaviour. No row here is a roadmap.
+ */
+interface HubSection {
+  readonly slug: string;
+  readonly name: string;
+  readonly lede: string;
+  readonly mechanisms: readonly string[];
+}
+
+export const industryHub: readonly HubSection[] = [
+  {
+    slug: "defense",
+    name: "Defense & national security",
+    lede: "The workload cannot reach the internet, and the model cannot either. Both have to run inside the enclave you already hold.",
+    mechanisms: [
+      "The air-gapped install is the same chart as the hosted one",
+      "Local models — bring Ollama or a self-hosted endpoint; no call leaves the boundary",
+      "Every image pinned by digest at package time",
+      "Append-only timeline per tenant, exportable for review",
+    ],
+  },
+  {
+    slug: "federal",
+    name: "Federal & public sector",
+    lede: "The platform deploys inside your authorization boundary rather than asking you to extend it around someone else's cloud.",
+    mechanisms: [
+      "One Helm install into a cluster you already run",
+      "Your identity provider; agents act on 55-second credentials",
+      "Every action attributable to a named human's grant",
+      "Replay reconstructs a mission for a reviewer, step by step",
+    ],
+  },
+  {
+    slug: "financial-services",
+    name: "Financial services",
+    lede: "An agent that touches a regulated system has to be explainable afterwards, by someone who was not there.",
+    mechanisms: [
+      "Append-only timeline; replay returns the same result every time",
+      "An agent can never be granted more than the human who granted it",
+      "Deny wins wherever two policies disagree",
+      "A separate graph database per tenant, not a filter on a shared one",
+    ],
+  },
+  {
+    slug: "healthcare",
+    name: "Healthcare",
+    lede: "The question is not what the model is trained on. It is whether the data ever leaves your boundary.",
+    mechanisms: [
+      "Self-hosted install; your cluster, your keys, your region",
+      "Bring your own model, including one that runs locally",
+      "Declared egress, enforced at the sandbox boundary",
+      "Per-tenant isolation at the database, not the query",
+    ],
+  },
+  {
+    slug: "critical-infrastructure",
+    name: "Critical infrastructure",
+    lede: "Segmented networks, long-lived equipment, and no tolerance for an agent that improvises.",
+    mechanisms: [
+      "Runs without egress; no phone-home in the install path",
+      "Untrusted work runs in a microVM or is refused",
+      "Missions are typed at submit, so a malformed one never starts",
+      "Grants are explicit, reviewable and revocable",
+    ],
+  },
+  {
+    slug: "consultancies",
+    name: "Consultancies & MSSPs",
+    lede: "One engagement's data must never be visible from another's, and every client wants their own evidence.",
+    mechanisms: [
+      "A separate graph database per tenant — no cross-tenant query path exists",
+      "Per-client grants, revocable the day an engagement ends",
+      "Exportable timeline per client",
+      "The same artefact installs into their environment or yours",
+    ],
+  },
+];
+
+export const workloadHub: readonly HubSection[] = [
+  {
+    slug: "ci-cd",
+    name: "CI/CD & release management",
+    lede: "The first agent we put into production manages the pipeline this platform ships through.",
+    mechanisms: [
+      "Mission-scoped git workspaces; changes arrive as reviewable commits",
+      "Edits are language-server validated before they are applied",
+      "Rolled back automatically when validation fails",
+      "Granted the pipeline, never the deploy",
+    ],
+  },
+  {
+    slug: "cve-response",
+    name: "Vulnerability & CVE response",
+    lede: "An advisory lands, and the question is whether it is reachable in your estate — not whether it is severe in general.",
+    mechanisms: [
+      "Findings land in the shared graph, so the next run starts from them",
+      "Missions run on your trigger — CI, a webhook, or a scheduler you own",
+      "Scanner output is evidence in the timeline, not an inbox",
+      "Every conclusion replays to the step that produced it",
+    ],
+  },
+  {
+    slug: "coding-agents",
+    name: "Coding agents, under control",
+    lede: "The problem with a coding agent is not what it writes. It is what it is allowed to reach while writing it.",
+    mechanisms: [
+      "Grants at the repository, tool and data level",
+      "An agent can never exceed the engineer who granted it",
+      "Model-generated code that declares untrusted input runs in a microVM",
+      "Every prompt and edit attributable, and replayable",
+    ],
+  },
+  {
+    slug: "security-testing",
+    name: "Security testing",
+    lede: "Offense and defense on one runtime, writing into one picture of the environment.",
+    mechanisms: [
+      "Hosts, paths and findings accumulate in the tenant graph",
+      "Untrusted payloads detonate in a microVM sandbox",
+      "Declared egress, enforced at that boundary",
+      "A mission replays move by move for the report",
+    ],
+  },
+  {
+    slug: "incident-response",
+    name: "Incident response",
+    lede: "During an incident nobody has time to reconstruct what the automation did. Afterwards, everybody needs to.",
+    mechanisms: [
+      "Append-only timeline captured as the work happens",
+      "Replay returns the same sequence every time",
+      "Agents act on short-lived credentials that expire in 55 seconds",
+      "Grants revocable mid-incident without redeploying anything",
+    ],
+  },
+  {
+    slug: "compliance-evidence",
+    name: "Compliance evidence",
+    lede: "Evidence collection is the work nobody wants and everybody has to do twice a year.",
+    mechanisms: [
+      "Every action attributable to a named human's grant",
+      "Timeline exports for a reviewer",
+      "Missions are typed, so the same check runs the same way",
+      "Controls stated with their boundaries, not as a certification claim",
+    ],
+  },
+];
