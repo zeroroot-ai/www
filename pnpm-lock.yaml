@@ -21,8 +21,8 @@ importers:
         specifier: ^4.3.0
         version: 4.3.3(vite@6.4.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.0))
       '@zeroroot-ai/brand':
-        specifier: ^0.3.0
-        version: 0.3.0(tailwindcss@4.3.3)
+        specifier: ^0.3.1
+        version: 0.3.1(tailwindcss@4.3.3)
       astro:
         specifier: ^5.0.0
         version: 5.18.2(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.62.4)(typescript@5.9.3)(yaml@2.9.0)
@@ -1884,8 +1884,8 @@ packages:
   '@vscode/l10n@0.0.18':
     resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
 
-  '@zeroroot-ai/brand@0.3.0':
-    resolution: {integrity: sha512-Edcp9wSpinUn1G6CiACx3o79zGWzU/b48IML50CyTa+yCkudv+acdfEf1ITGr+nd1QuGH1n36mbvPnDHRAPO5Q==, tarball: https://npm.pkg.github.com/download/@zeroroot-ai/brand/0.3.0/a9fad9cf35a6a0d4eb356c2f30077b6380832ea4}
+  '@zeroroot-ai/brand@0.3.1':
+    resolution: {integrity: sha512-eDEd5vcpFwZQjxBxf/5MkxbwQfYuOIsRHWEtvU+cRML8966gdY74WZRATsVXynU2QT8G/tiuQfl6tvmgB2X71w==, tarball: https://npm.pkg.github.com/download/@zeroroot-ai/brand/0.3.1/ad50e9d5e43a47aad5a288a8a7d682cb508b71fc}
     peerDependencies:
       tailwindcss: '>=4.0.0'
 
@@ -5134,7 +5134,7 @@ snapshots:
 
   '@vscode/l10n@0.0.18': {}
 
-  '@zeroroot-ai/brand@0.3.0(tailwindcss@4.3.3)':
+  '@zeroroot-ai/brand@0.3.1(tailwindcss@4.3.3)':
     dependencies:
       tailwindcss: 4.3.3
 
