@@ -97,7 +97,7 @@ function buildableRoutes(pagesDir, publicDir) {
 }
 
 /** Drop the query and fragment; a link's identity is its path. */
-function normalise(href) {
+function normalize(href) {
   const path = href.split(/[?#]/)[0];
   if (path === "/") return "/";
   return path.replace(/\/$/, "");
@@ -111,7 +111,7 @@ function scan(srcDir, routes) {
     const lines = readFileSync(file, "utf8").split("\n");
     lines.forEach((line, i) => {
       for (const m of [...line.matchAll(HREF_RE), ...line.matchAll(HREF_TEMPLATE_RE)]) {
-        const path = normalise(m[1]);
+        const path = normalize(m[1]);
         if (routes.has(path)) continue;
         violations.push(
           `${rel}:${i + 1}: ${m[1]} — this site builds no such route. ` +
@@ -154,7 +154,7 @@ function selftest() {
   let failures = 0;
   for (const { line, dead } of cases) {
     const hits = [...line.matchAll(HREF_RE), ...line.matchAll(HREF_TEMPLATE_RE)].filter(
-      (m) => !routes.has(normalise(m[1])),
+      (m) => !routes.has(normalize(m[1])),
     );
     if (dead && hits.length === 0) {
       console.error(`selftest FAILED: dead link not caught → ${line.trim()}`);

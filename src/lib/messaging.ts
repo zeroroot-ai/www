@@ -45,13 +45,13 @@ export const COMPANY = "zeroroot.ai";
 export const hero = {
   eyebrow: "zero-trust agent runtime",
   headline: ["Install it today.", "Ship a production agent tomorrow."],
-  sub: "Gibson Runtime is the substrate your agents execute inside — installed in your own cluster, granted rights they can never exceed, and replayable move by move.",
+  sub: "Gibson Runtime is the substrate your agents execute inside. Let us host it or install it yourself, either way: agents granted rights they can never exceed, and replayable move by move.",
   ctaPrimary: "Take a design partner slot",
   ctaSecondary: "helm install gibson",
   stats: [
-    { value: "1 day", label: "install to first production agent" },
-    { value: "55s", label: "credential lifetime, never cached" },
-    { value: "0", label: "data leaves your boundary" },
+    { value: "1 day", label: "to your first production agent" },
+    { value: "Never", label: "more access than the human who granted it" },
+    { value: "Ours or yours", label: "we host the runtime, or you do" },
   ],
 } as const;
 
@@ -87,13 +87,13 @@ export const problem = {
       title: "It runs code nobody wrote",
       pain: "Model-generated code executing in your pipeline is an unreviewed change holding production credentials.",
       resolve:
-        "Work that declares untrusted input runs in a microVM, or the call is refused. There is no in-process fallback to fall back to.",
+        "The coding agent writes against a finding already in your graph, and its change arrives where every other change does — a commit on a branch, checked by a language server, waiting for a human. Nothing it writes reaches production without that review.",
     },
     {
       title: "The data cannot leave",
       pain: "For a bank, an agency or a hospital, the entire question is whether the workload can run inside the boundary that already exists.",
       resolve:
-        "One chart into your own cluster, your own models, your own keys. The air-gapped install is the same artefact as the hosted one.",
+        "One chart into your own cluster, your own models, your own keys. The air-gapped install is the same artifact as the hosted one.",
     },
   ] as readonly Blocker[],
 } as const;
@@ -116,10 +116,10 @@ export const spine = {
   steps: [
     {
       n: "01",
-      title: "Install",
-      sub: "one chart, your cluster",
-      body: "One umbrella chart into the environment you already run, with every first-party image pinned by digest at package time. Hosted, self-hosted and air-gapped install the same artefact.",
-      chips: ["helm install gibson", "digest-pinned", "runs without egress"],
+      title: "Pick where it runs",
+      sub: "ours, or yours",
+      body: "Start on the hosted runtime and there is nothing to stand up — point agents at it and go. When it has to be yours, the same platform installs into your own Kubernetes with one chart, every first-party image pinned by digest, down to a fully air-gapped enclave. The two are the same artifact, so the choice is not a fork in the road.",
+      chips: ["hosted, nothing to run", "helm install gibson", "air-gapped"],
     },
     {
       n: "02",
@@ -211,13 +211,13 @@ export const checkin = {
  */
 export const adapt = {
   eyebrow: "agents you already built",
-  heading: "Change one line. Keep the agent.",
-  sub: "Anything that watches an agent from outside can only report what came out of it. Sitting in the call path means the runtime can refuse the call instead — and you did not rewrite anything to get there.",
+  heading: "Keep the agent. Bring it under the boundary.",
+  sub: "There is integration work, and it is worth being straight about it: an agent has to check in and be granted before it has an identity to act under, and its tools have to be declared. What you do not do is rewrite its logic. Anything that watches an agent from outside can only report what came out of it — being in the call path is what lets the runtime refuse instead.",
   bullets: [
-    "Point any OpenAI-compatible client at the runtime — LangChain, CrewAI, AutoGen, LlamaIndex, or your own",
-    "Every call becomes an attributable record with a budget and a transcript",
-    "Bring MCP tools in as components with declared secrets and egress",
-    "Swap the model underneath without touching agent logic",
+    "Redirect an OpenAI-compatible client at the runtime — LangChain, CrewAI, AutoGen, LlamaIndex, or your own",
+    "Check it in once, so it acts under an identity and a grant like any agent built here",
+    "From then on every model call is an attributable record with a budget and a transcript",
+    "Bring its tools in over MCP as components, with declared secrets and egress",
   ],
 } as const;
 
@@ -228,32 +228,32 @@ export const adapt = {
 interface Product {
   readonly name: string;
   readonly body: string;
-  readonly licence: string;
+  readonly license: string;
 }
 
 export const platform: readonly Product[] = [
   {
     name: "Gibson Runtime",
-    body: "The substrate agents execute inside. Identity, grants, dispatch, missions and the timeline.",
-    licence: "Elastic License v2",
+    body: "The substrate agents execute inside. Identity, grants, dispatch, missions and the timeline — hosted by us, or installed in your own cluster.",
+    license: "Elastic License v2",
   },
   {
     name: "Gibson Console",
     body: "Missions in flight, grants and who holds them, traces, and replay of any run.",
-    licence: "Elastic License v2",
+    license: "Elastic License v2",
   },
   {
     name: "Enclave",
-    body: "Self-hosted and air-gapped install. Your cluster, your models, your keys, your region.",
-    licence: "Elastic License v2",
+    body: "The self-hosted end of that choice, up to fully air-gapped. Your cluster, your models, your keys, your region.",
+    license: "Elastic License v2",
   },
 ];
 
 export const openSource: readonly Product[] = [
-  { name: "ADK", body: "Build agents, tools and plugins. The gibson CLI.", licence: "Apache-2.0" },
-  { name: "Setec", body: "The Firecracker and Kata microVM sandbox untrusted work runs in.", licence: "Apache-2.0" },
-  { name: "Zerocool", body: "The coding agent, as opencode plugins and a TypeScript SDK.", licence: "MIT" },
-  { name: "Bridge", body: "Any MCP-compliant tool, brought in as a component.", licence: "Apache-2.0" },
+  { name: "ADK", body: "Build agents, tools and plugins. The gibson CLI.", license: "Apache-2.0" },
+  { name: "Setec", body: "The Firecracker and Kata microVM sandbox untrusted work runs in.", license: "Apache-2.0" },
+  { name: "Zerocool", body: "The coding agent, as opencode plugins and a TypeScript SDK.", license: "MIT" },
+  { name: "Bridge", body: "Any MCP-compliant tool, brought in as a component.", license: "Apache-2.0" },
 ];
 
 export const mechanisms: readonly string[] = [
@@ -268,15 +268,48 @@ export const mechanisms: readonly string[] = [
 /* Where it runs                                                              */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Where it runs, in two parts, because they are two independent choices and an
+ * earlier version of this section flattened them into one grid of five cards.
+ * That grid quietly implied a single answer. There are two:
+ *
+ *   agents  — run in ALL of these places at once, wherever the work is
+ *   runtime — is EITHER hosted by us OR installed by you. Both are first
+ *             class, both are the same platform, and the page has to say so
+ *             without leaning on either one.
+ */
 export const surfaces = {
   eyebrow: "where it runs",
-  heading: "Same agent. Same identity. Four places.",
-  items: [
-    { name: "Laptop", body: "The same agent, checked in with the same host key, granted only what you are actually doing." },
-    { name: "CI", body: "Runs as a first-class principal. Its actions are attributed to the pipeline, not to whoever owns the token." },
-    { name: "Your cluster", body: "One chart. In-cluster components upgrade to mTLS transport; the grant model is unchanged." },
-    { name: "Air-gapped enclave", body: "Your models, your keys, your region. The install artefact is identical to the hosted one." },
-  ],
+  heading: "Two independent choices, and both are yours.",
+  sub: "Agents run wherever the work already is. The runtime they check in to is either one we host and operate for you, or one you install and own — the same platform in both cases, and the same agents either way.",
+
+  agents: {
+    label: "Where your agents run",
+    note: "all of these, at once",
+    items: [
+      { name: "Laptop", body: "The same agent, checked in with the same host key, granted only what you are actually doing." },
+      { name: "CI", body: "Runs as a first-class principal. Its actions are attributed to the pipeline, not to whoever owns the token." },
+      { name: "Anywhere on your network", body: "A box behind your firewall, checked in over the network. No cluster, no install, no effort." },
+      { name: "Your cluster", body: "In-cluster components upgrade to mTLS transport. The grant model is unchanged." },
+    ],
+  },
+
+  runtime: {
+    label: "Where the runtime runs",
+    note: "either one — and you can change your mind",
+    options: [
+      {
+        name: "We host it",
+        body: "Managed by us. Point agents at it and start: nothing to stand up, nothing to operate, no cluster of your own required.",
+        chips: ["nothing to run", "start in minutes", "your model keys"],
+      },
+      {
+        name: "You host it",
+        body: "One chart into Kubernetes you already run, inside your own boundary — up to fully air-gapped, with your models, your keys and your region.",
+        chips: ["helm install gibson", "your boundary", "air-gapped"],
+      },
+    ],
+  },
 } as const;
 
 /* -------------------------------------------------------------------------- */
@@ -422,7 +455,7 @@ export const lockup = {
  * mechanisms that answer it, and nothing else — an entry graduates to its own
  * page when a customer story justifies one.
  *
- * `mechanisms` must name shipped behaviour. No row here is a roadmap.
+ * `mechanisms` must name shipped behavior. No row here is a roadmap.
  */
 interface HubSection {
   readonly slug: string;
@@ -495,7 +528,7 @@ export const industryHub: readonly HubSection[] = [
       "A separate graph database per tenant — no cross-tenant query path exists",
       "Per-client grants, revocable the day an engagement ends",
       "Exportable timeline per client",
-      "The same artefact installs into their environment or yours",
+      "The same artifact installs into their environment or yours",
     ],
   },
 ];
