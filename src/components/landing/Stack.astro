@@ -1,0 +1,241 @@
+---
+/**
+ * The seven steps, drawn as an isometric stack of plates.
+ *
+ * Step 01 is at the TOP and each lower plate is painted after the one above it,
+ * so the diagram reads in the order the work happens and still stacks with
+ * depth. An earlier pass had 01 at the bottom, which meant a reader met "replay"
+ * first — the last thing you do.
+ *
+ * Geometry: plate `i` is a rhombus centred on (CX, TOP + i*STEP), half-width W
+ * across, half-depth D front to back, extruded by T for thickness. D is
+ * deliberately much smaller than STEP; when it was not, each plate occluded the
+ * one above it and the stack collapsed into slivers.
+ *
+ * Progressive enhancement: every detail panel is server-rendered and visible.
+ * The script adds `is-live`, and only then does CSS collapse them to one at a
+ * time. With JavaScript off the section is a readable list of all seven steps,
+ * not an empty box.
+ */
+import { spine } from "@/lib/messaging";
+
+const CX = 172;
+const W = 148;
+const D = 44;
+const T = 7;
+const STEP = 52;
+const TOP = 62;
+const LX = 348;
+
+const plates = spine.steps.map((s, i) => {
+  const cy = TOP + i * STEP;
+  return {
+    ...s,
+    i,
+    cy,
+    top: `${CX - W},${cy} ${CX},${cy - D} ${CX + W},${cy} ${CX},${cy + D}`,
+    left: `${CX - W},${cy} ${CX},${cy + D} ${CX},${cy + D + T} ${CX - W},${cy + T}`,
+    right: `${CX + W},${cy} ${CX},${cy + D} ${CX},${cy + D + T} ${CX + W},${cy + T}`,
+    leader: `M${CX + W},${cy} L${LX - 10},${cy}`,
+  };
+});
+---
+
+<section class="band stack-band" id="stack">
+  <div class="wrap">
+    <p class="section-eyebrow">{spine.eyebrow}</p>
+    <h2 class="section-h">{spine.heading}</h2>
+
+    <div class="stack" data-active="2">
+      <div class="stage-wrap">
+        <svg class="stage" viewBox="0 0 620 440" role="img" aria-label="The seven steps, from install to replay">
+          {plates.map((p) => (
+            <g class="plate" data-i={p.i} tabindex="0" role="button" aria-label={`Step ${p.n}: ${p.title}`}>
+              <polygon class="p-side" points={p.left} />
+              <polygon class="p-side" points={p.right} />
+              <polygon class="p-top" points={p.top} />
+              <path class="leader" d={p.leader} />
+              <circle class="leader-dot" cx={CX + W} cy={p.cy} r="2.5" />
+              <text class="l-num" x={LX} y={p.cy - 1}>{p.n}</text>
+              <text class="l-name" x={LX + 28} y={p.cy - 1}>{p.title}</text>
+              <text class="l-sub" x={LX + 28} y={p.cy + 13}>{p.sub}</text>
+            </g>
+          ))}
+        </svg>
+
+        <div class="details">
+          {plates.map((p) => (
+            <div class="detail" data-i={p.i}>
+              <span class="d-num">step {p.n}</span>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+              <div class="chips">{p.chips.map((c) => <span class="chip">{c}</span>)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  for (const stack of document.querySelectorAll<HTMLElement>(".stack")) {
+    // Only now does CSS collapse the details to one at a time. Without this
+    // class the section is a readable list of all seven.
+    stack.classList.add("is-live");
+
+    const plates = [...stack.querySelectorAll<SVGGElement>(".plate")];
+    const details = [...stack.querySelectorAll<HTMLElement>(".detail")];
+
+    // The active step is marked on the plate and its panel, not tracked as an
+    // index on the container: one attribute toggle instead of a stylesheet
+    // carrying a selector per step.
+    const show = (i: string) => {
+      for (const el of [...plates, ...details]) {
+        el.toggleAttribute("data-active", el.dataset.i === i);
+      }
+    };
+
+    for (const plate of plates) {
+      const i = plate.dataset.i ?? "0";
+      plate.addEventListener("click", () => show(i));
+      plate.addEventListener("mouseenter", () => show(i));
+      plate.addEventListener("focus", () => show(i));
+      plate.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          show(i);
+        }
+      });
+    }
+
+    show(stack.dataset.active ?? "0");
+  }
+</script>
+
+<style>
+  .stack-band {
+    background: var(--secondary);
+  }
+  .stage-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.875rem;
+    align-items: center;
+  }
+  .stage {
+    width: 100%;
+    max-width: 35rem;
+    height: auto;
+    overflow: visible;
+  }
+
+  .plate {
+    cursor: pointer;
+    outline: none;
+  }
+  .p-top {
+    fill: var(--card);
+    stroke: var(--border);
+    stroke-width: 1;
+    transition: fill 0.16s ease, stroke 0.16s ease;
+  }
+  .p-side {
+    fill: var(--border);
+    opacity: 0.5;
+    transition: fill 0.16s ease, opacity 0.16s ease;
+  }
+  .leader {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 1;
+  }
+  .leader-dot {
+    fill: var(--border);
+  }
+  .l-num {
+    fill: var(--muted-foreground);
+    font-family: var(--mono-family);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+  }
+  .l-name {
+    fill: var(--foreground);
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .l-sub {
+    fill: var(--muted-foreground);
+    font-family: var(--mono-family);
+    font-size: 10.5px;
+  }
+
+  .plate:hover .p-top,
+  .plate:focus-visible .p-top {
+    stroke: var(--highlight);
+  }
+
+  /* The active plate. Acid fills it; the label uses the readable green, never
+   * the fill — that rule is enforced by a test in the brand package. */
+  .plate[data-active] .p-top {
+    fill: var(--primary);
+    stroke: var(--highlight);
+  }
+  .plate[data-active] .p-side {
+    fill: var(--highlight);
+    opacity: 0.85;
+  }
+  .plate[data-active] .l-name,
+  .plate[data-active] .l-num,
+  .plate[data-active] .leader {
+    fill: var(--highlight);
+    stroke: var(--highlight);
+    font-weight: 700;
+  }
+
+  .details {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.625rem 1.5rem;
+  }
+  .detail + .detail {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .stack.is-live .detail {
+    display: none;
+  }
+  .stack.is-live .detail[data-active] {
+    display: block;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .d-num {
+    font-family: var(--mono-family);
+    font-size: 0.66rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--highlight);
+  }
+  .detail h3 {
+    margin: 0.5rem 0 0.75rem;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    letter-spacing: -0.025em;
+    font-weight: 700;
+  }
+  .detail p {
+    margin: 0 0 1.125rem;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--muted-foreground);
+  }
+
+  @media (max-width: 980px) {
+    .stage-wrap {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
