@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/zeroroot-ai/www/compare/v1.3.0...v1.4.0) (2026-08-19)
+
+
+### Features
+
+* **landing:** rewrite the flagship section in plain words ([#48](https://github.com/zeroroot-ai/www/issues/48)) ([ac48072](https://github.com/zeroroot-ai/www/commit/ac4807202b1a35a654dd9f303b50472daa955b4a))
+
 ## [1.3.0](https://github.com/zeroroot-ai/www/compare/v1.2.3...v1.3.0) (2026-08-18)
 
 
