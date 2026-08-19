@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/zeroroot-ai/www/compare/v1.5.1...v1.5.2) (2026-08-19)
+
+
+### Bug Fixes
+
+* **nav:** give mobile the whole menu, not a logo and a button ([#70](https://github.com/zeroroot-ai/www/issues/70)) ([e9a96a5](https://github.com/zeroroot-ai/www/commit/e9a96a510b46ec883a0b5d96345abbc580502cf8))
+
 ## [1.5.1](https://github.com/zeroroot-ai/www/compare/v1.5.0...v1.5.1) (2026-08-19)
 
 
