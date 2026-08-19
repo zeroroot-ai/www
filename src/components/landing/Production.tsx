@@ -33,7 +33,7 @@ export function Production() {
           <span className="text-highlight">cat production.md</span>
         </h2>
         <p className="mb-8 max-w-2xl text-sm md:text-base leading-relaxed text-foreground/90">
-          Run on the hosted control plane at{" "}
+          Run on the hosted runtime at{" "}
           <code className="font-mono text-highlight">api.zeroroot.ai</code>,
           or deploy the entire platform into your own Kubernetes cluster with
           a single Helm install,{" "}

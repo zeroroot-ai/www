@@ -153,7 +153,7 @@ function Schematic() {
       <span aria-hidden="true" className="pointer-events-none absolute bottom-1.5 right-1.5 font-mono text-xs text-dracula-comment/60">┛</span>
 
       <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-dracula-comment">
-        <span className="text-dracula-purple">◆ split control plane</span>
+        <span className="text-dracula-purple">◆ two planes</span>
         <span className="flex items-center gap-1.5">
           <Pulse char="●" /> live
         </span>
@@ -161,7 +161,7 @@ function Schematic() {
 
       <pre className="overflow-x-auto font-mono text-[11px] md:text-xs leading-[1.7] text-dracula-fg/85">
         <code>
-{` EXECUTION PLANE           ╎    CONTROL PLANE · api.zeroroot.ai\n`}
+{` EXECUTION PLANE           ╎    RUNTIME · api.zeroroot.ai\n`}
 {` ┌──────────────────┐      ╎    ┌──────────────────────┐\n`}
 {` │ `}<Pulse />{` agent binary   │      ╎    │ `}<Pulse />{` gibson      LIVE   │\n`}
 {` │   runs on:       │      ╎    │ `}<Pulse />{` graph store READY  │\n`}
@@ -245,11 +245,11 @@ export function HeroSection() {
               marginBlock: 0,
             }}
           >
-            <span className="text-highlight">{hero.headlineHighlight}</span>{" "}
-            {hero.headlineRest}
+            {hero.headline[0]}{" "}
+            <span className="text-highlight">{hero.headline[1]}</span>
           </h1>
           <p className="mt-3 max-w-2xl font-mono text-sm md:text-base leading-relaxed text-muted-foreground">
-            {hero.subhead}
+            {hero.sub}
           </p>
         </div>
 
@@ -290,7 +290,7 @@ export function HeroSection() {
             href={DOCS_ORIGIN}
             className="font-mono text-xs text-muted-foreground underline-offset-4 hover:text-link hover:underline"
           >
-            {hero.quickstart} →
+            read the docs →
           </a>
         </div>
       </div>
