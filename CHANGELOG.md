@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/zeroroot-ai/www/compare/v1.5.0...v1.5.1) (2026-08-19)
+
+
+### Bug Fixes
+
+* **copy:** correct four overstated claims, and hold the site to American English ([#68](https://github.com/zeroroot-ai/www/issues/68)) ([6fbab31](https://github.com/zeroroot-ai/www/commit/6fbab3139cc843e890617fb1fb417dfba639c966))
+
 ## [1.5.0](https://github.com/zeroroot-ai/www/compare/v1.4.0...v1.5.0) (2026-08-19)
 
 
