@@ -1,15 +1,14 @@
 ---
 /**
- * Layout for the real landing page.
+ * Layout for the landing surfaces.
  *
- * Deliberately separate from Layout.astro: that one carries the scaffold's
- * hand-written global CSS, which would fight the Tailwind + brand-token
- * styling the real design is built on. Pages still on the scaffold keep
- * using it until they are ported too.
+ * Owns the page chrome — navigation, footer, and the shared rules every section
+ * is built from (the wrap, the two button shapes, the section rhythm). Sections
+ * bring their own layout; they do not restate these.
  */
 import "@/styles/global.css";
-import { Lockup } from "@/components/layout/logo";
-import { APP_ORIGIN as APP, DOCS_ORIGIN as DOCS } from "@/lib/origins";
+import Nav from "@/components/landing/Nav.astro";
+import Footer from "@/components/landing/Footer.astro";
 
 export interface Props {
   title: string;
@@ -18,13 +17,8 @@ export interface Props {
 
 const {
   title,
-  description = "Build any agent on a zero-trust substrate. Gibson, the flagship security engine, thinks in attack paths, builds a living model of your environment, and replays every move, for the teams breaking in and the teams locking down.",
+  description = "Gibson Runtime is the substrate your agents execute inside — installed in your own cluster, granted rights they can never exceed, and replayable move by move.",
 } = Astro.props;
-
-// Product and docs live on their own hosts (deploy ADR-0006): this site is
-// SaaS-only marketing. Absolute URLs, because a relative /docs or /login
-// would resolve against this host and 404. The origins come from
-// @/lib/origins so each environment links to its own hosts.
 ---
 
 <!doctype html>
@@ -35,22 +29,140 @@ const {
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
-  <body class="bg-zd-gradient relative min-h-screen text-foreground">
-    <header class="border-b border-border bg-background/80 backdrop-blur">
-      <div class="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
-        <a href="/" aria-label="Zero Root AI, home" class="inline-flex items-center">
-          <Lockup size="md" />
-        </a>
-        <nav class="flex items-center gap-6 font-mono text-sm" aria-label="Primary">
-          <a href={DOCS} class="text-foreground transition-colors hover:text-link">docs</a>
-          <a href="/pricing" class="text-foreground transition-colors hover:text-link">pricing</a>
-          <a href={`${APP}/login`} class="text-foreground transition-colors hover:text-link">sign in</a>
-        </nav>
-      </div>
-    </header>
-
+  <body>
+    <Nav />
     <main>
       <slot />
     </main>
+    <Footer />
+
+    <style is:global>
+      body {
+        background: var(--background);
+        color: var(--foreground);
+        margin: 0;
+      }
+
+      /* One measure for every section. */
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+
+      /* Section rhythm and heads. */
+      .band {
+        padding: 4.875rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .band.ink {
+        background: var(--ink);
+        color: var(--ink-foreground);
+        border-bottom-color: var(--ink-border);
+      }
+      .section-eyebrow {
+        margin: 0 0 0.875rem;
+        font-family: var(--mono-family);
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--highlight);
+      }
+      .band.ink .section-eyebrow {
+        color: var(--primary);
+      }
+      .section-h {
+        margin: 0 0 1.125rem;
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        line-height: 1.08;
+        letter-spacing: -0.035em;
+        font-weight: 700;
+        max-width: 24ch;
+      }
+      .section-sub {
+        margin: 0 0 2.375rem;
+        max-width: 66ch;
+        font-size: 1rem;
+        line-height: 1.65;
+        color: var(--muted-foreground);
+      }
+      .band.ink .section-sub {
+        color: var(--ink-muted);
+      }
+
+      /* Two button shapes, square-cornered, used everywhere. */
+      .btn {
+        display: inline-block;
+        padding: 0.7rem 1.2rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid var(--primary);
+        border-radius: var(--radius);
+      }
+      .btn:hover {
+        background: var(--highlight);
+        color: var(--card);
+        border-color: var(--highlight);
+      }
+      .btn-ghost {
+        display: inline-block;
+        padding: 0.7rem 1.2rem;
+        color: inherit;
+        font-size: 0.82rem;
+        font-weight: 500;
+        text-decoration: none;
+        border: 1px solid currentColor;
+        background: transparent;
+        border-radius: var(--radius);
+        opacity: 0.72;
+      }
+      .btn-ghost:hover {
+        opacity: 1;
+      }
+      .mono {
+        font-family: var(--mono-family);
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      /* Cards and chips. */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 1.375rem;
+      }
+      .band.ink .card {
+        background: color-mix(in oklch, var(--ink) 88%, var(--ink-foreground));
+        border-color: var(--ink-border);
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      .chip {
+        font-family: var(--mono-family);
+        font-size: 0.68rem;
+        padding: 0.3rem 0.6rem;
+        border: 1px solid var(--border);
+        color: var(--muted-foreground);
+        background: var(--background);
+      }
+
+      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+      .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+      .split  { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; align-items: start; }
+
+      @media (max-width: 980px) {
+        .grid-2, .grid-3, .grid-4, .split { grid-template-columns: 1fr; }
+      }
+    </style>
   </body>
 </html>

@@ -1,0 +1,74 @@
+---
+/**
+ * Hero. An inverted band cut into the page, so the first thing a reader meets
+ * is the material the rest of the site is made of.
+ *
+ * Static: no typewriter, no animation, no client JavaScript. The claim does the
+ * work. The stat row carries the one-day claim, which is a customer
+ * time-to-value claim — the release-pipeline agent in the proof section is its
+ * evidence, and the two ship together or neither does.
+ */
+import { hero } from "@/lib/messaging";
+---
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">{hero.eyebrow}</p>
+    <h1>{hero.headline[0]}<br />{hero.headline[1]}</h1>
+    <p class="sub">{hero.sub}</p>
+    <div class="cta-row">
+      <a class="btn" href="/contact-sales">{hero.ctaPrimary}</a>
+      <a class="btn-ghost mono" href="#products">{hero.ctaSecondary}</a>
+    </div>
+    <div class="stat-row">
+      {hero.stats.map((s) => (<span><b>{s.value}</b>{s.label}</span>))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: var(--ink);
+    color: var(--ink-foreground);
+    padding: 5.5rem 0 4.5rem;
+  }
+  .eyebrow {
+    margin: 0 0 1.625rem;
+    font-family: var(--mono-family);
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+  h1 {
+    margin: 0 0 1.5rem;
+    font-size: clamp(2.5rem, 5.4vw, 4.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+    max-width: 19ch;
+  }
+  .sub {
+    margin: 0 0 2rem;
+    max-width: 60ch;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+  .stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.25rem;
+    margin-top: 3.375rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--ink-border);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+  .stat-row b {
+    color: var(--ink-foreground);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-right: 0.45rem;
+  }
+</style>

@@ -14,3 +14,14 @@
 allowBuilds:
   esbuild: false
   sharp: false
+# pnpm 11 quarantines any package published in the last 24h. That protects
+# against a compromised third-party publish being pulled in before anyone
+# notices — which is not the risk profile of our own scope: we publish it, from
+# this org, and the release that produced it is the one we just merged.
+#
+# Excluded by scope rather than by version on purpose. A pinned
+# `@zeroroot-ai/brand@0.3.0` entry would have to be re-pinned on every single
+# brand release, and an allowlist that needs re-pinning after an unrelated
+# change is a defect in the allowlist, not a chore.
+minimumReleaseAgeExclude:
+  - '@zeroroot-ai/*'

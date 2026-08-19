@@ -2,60 +2,14 @@
 /**
  * The landing page.
  *
- * Section order and copy are the design that shipped from the dashboard's
- * app/page.tsx before dashboard#911 deleted it. All copy comes from
- * @/lib/messaging, the canonical messaging module, so this surface cannot
- * drift from the rest of the brand again.
- *
- * Only HeroSection is hydrated: it owns the Typewriter, the one component
- * that needs client JS. Every other section renders to static HTML and ships
- * no JavaScript.
+ * Composition only: every section is its own component and every word it
+ * renders comes from @/lib/messaging, so this file says what the page IS and
+ * nothing about what it says.
  */
 import Landing from "@/layouts/Landing.astro";
-import { HeroSection } from "@/components/landing/HeroSection";
-import { TrustBar } from "@/components/landing/TrustBar";
-import { DashboardShowcase } from "@/components/landing/DashboardShowcase";
-import { WhyBlocked } from "@/components/landing/WhyBlocked";
-import { WhatYouGet } from "@/components/landing/WhatYouGet";
-import { WhatYouRunItOn } from "@/components/landing/WhatYouRunItOn";
-import { Production } from "@/components/landing/Production";
-import { lockup } from "@/lib/messaging";
-import { DOCS_ORIGIN } from "@/lib/origins";
-
-const footerLinks = [
-  { label: "docs", href: DOCS_ORIGIN },
-  { label: "discord", href: "https://discord.gg/zeroroot-ai" },
-  { label: "github", href: "https://github.com/zeroroot-ai/adk" },
-  { label: "pricing", href: "/pricing" },
-];
-
-const year = new Date().getFullYear();
+import Hero from "@/components/landing/Hero.astro";
 ---
 
-<Landing title="zeroroot.ai: the zero-trust agent factory">
-  <HeroSection client:load />
-  <TrustBar />
-  <DashboardShowcase />
-  <WhyBlocked />
-  <WhatYouGet />
-  <WhatYouRunItOn />
-  <Production />
-
-  <section class="border-t border-border py-10">
-    <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-4 gap-y-3 px-4 font-mono text-sm">
-      {
-        footerLinks.map((link, i) => (
-          <span class="flex items-center gap-x-4">
-            {i > 0 && <span aria-hidden="true" class="text-border">·</span>}
-            <a href={link.href} class="text-foreground hover:text-link">{link.label}</a>
-          </span>
-        ))
-      }
-    </div>
-  </section>
-
-  <footer class="border-t border-border py-8 text-center font-mono text-xs text-foreground opacity-90">
-    <p class="mb-2 text-sm text-foreground/90">{lockup.line}</p>
-    <p>&copy; {year} {lockup.signature}</p>
-  </footer>
+<Landing title="zeroroot · the zero-trust agent runtime">
+  <Hero />
 </Landing>
