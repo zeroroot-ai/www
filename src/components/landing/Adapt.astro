@@ -1,0 +1,80 @@
+---
+/**
+ * Adapting an agent you already have.
+ *
+ * The claim is precise and must stay precise: the MODEL call path is redirected.
+ * That is not the same as registering a foreign agent, and there is no
+ * foreign-agent registry to register one in — implying otherwise would be the
+ * seventh false claim.
+ *
+ * The diff is the argument. Two lines, one of them changed.
+ */
+import { adapt } from "@/lib/messaging";
+---
+
+<section class="band" id="adapt">
+  <div class="wrap split">
+    <div>
+      <p class="section-eyebrow">{adapt.eyebrow}</p>
+      <h2 class="section-h">{adapt.heading}</h2>
+      <p class="section-sub">{adapt.sub}</p>
+      <ul class="ticks">{adapt.bullets.map((b) => <li>{b}</li>)}</ul>
+    </div>
+
+    <div class="term">
+      <div class="term-bar"><span>your existing agent</span></div>
+      <pre><code><span class="c-mut"># before</span>
+client = OpenAI(base_url=<span class="c-was">"https://api.openai.com/v1"</span>)
+
+<span class="c-mut"># after</span>
+client = OpenAI(base_url=<span class="c-now">"http://127.0.0.1:8787/v1"</span>)
+
+<span class="c-mut"># the agent did not change. every call it makes now has
+# an identity, a budget, a transcript and a ceiling.</span></code></pre>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ticks {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ticks li {
+    position: relative;
+    padding: 0.5rem 0 0.5rem 1.375rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .ticks li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--highlight);
+    font-weight: 700;
+  }
+  .term-bar {
+    font-family: var(--mono-family);
+    font-size: 0.66rem;
+    color: var(--muted-foreground);
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--ink-border);
+    border-bottom: none;
+    background: var(--terminal-bg);
+  }
+  .term pre {
+    margin: 0;
+    padding: 1.125rem 0.875rem;
+    overflow-x: auto;
+    border: 1px solid var(--ink-border);
+    background: var(--terminal-bg);
+    font-family: var(--mono-family);
+    font-size: 0.78rem;
+    line-height: 1.85;
+    color: var(--dracula-fg);
+  }
+  .c-mut { color: var(--dracula-comment); }
+  .c-was { color: var(--dracula-red); }
+  .c-now { color: var(--primary); }
+</style>
