@@ -1,17 +1,25 @@
 #!/usr/bin/env node
 /**
  * check-no-banned-marketing-phrases.mjs — landing copy must obey the brand
- * voice constraints from the copy-reposition PRD (dashboard#886 / #885).
+ * voice constraints.
  *
  * Banned in customer-facing landing copy:
  *   - probability jargon ("probabilistic model", "P(juicy|exploitable|reachable",
- *     "scores the (attack) surface", "belief field") — say "thinks in paths" /
- *     "reachable risk" instead.
- *   - the "no playbooks" wedge — lead with what Gibson does, not what it lacks.
- *   - competitor contrast ("unlike other/most/competing") — state what Gibson
- *     IS, positively.
+ *     "scores the (attack) surface", "belief field") — name the mechanism
+ *     instead, in the words a reader already has.
+ *   - the "no playbooks" wedge — lead with what the runtime does, not what it
+ *     lacks.
+ *   - competitor contrast ("unlike other/most/competing") — state what the
+ *     runtime IS, positively. The position is competitive; the copy is not.
  *   - overt game-engine framing ("game engine") — World / Scroller / tick are
  *     product-feature names, never the pitch.
+ *   - "control plane" as the product noun — it means billing, signup and tenant
+ *     provisioning inside the codebase, and it describes watching from outside,
+ *     which is the opposite of the claim. The product noun is "runtime".
+ *
+ * The remediation text below used to prescribe "thinks in paths", which the
+ * 2026-08-19 reposition retired — a guard that pushes authors toward dead
+ * vocabulary is worse than no guard.
  *
  * Detection contract (mirrors scripts/check-no-emdash.mjs):
  *   - TSX/TS: comments are stripped first (line numbers preserved), so only
@@ -53,12 +61,13 @@ const PROSE_EXT = new Set([".mdx", ".md"]);
 
 /** Each rule: a matcher and the fix to suggest. */
 const BANNED = [
-  { re: /probabilistic model/i, why: 'probability jargon — say "thinks in paths"' },
-  { re: /\bP\(\s*(juicy|exploitable|reachable)/i, why: 'probability jargon — reframe as reachable risk' },
-  { re: /scores?\s+the\s+(attack\s+)?surface/i, why: 'probability jargon — say "finds the paths that matter"' },
-  { re: /belief\s+field/i, why: 'internal term — reframe as "thinks in paths"' },
-  { re: /\bno\s+playbooks\b/i, why: 'dated wedge — lead with what Gibson does, not what it lacks' },
-  { re: /\bunlike\s+(other|most|competing)/i, why: 'competitor contrast — state what Gibson IS, positively' },
+  { re: /probabilistic model/i, why: 'probability jargon — name the mechanism instead' },
+  { re: /\bP\(\s*(juicy|exploitable|reachable)/i, why: 'probability jargon — say what the agent found and why it matters' },
+  { re: /scores?\s+the\s+(attack\s+)?surface/i, why: 'probability jargon — say what the mission actually does' },
+  { re: /belief\s+field/i, why: 'internal term — describe the outcome, not the engine' },
+  { re: /\bno\s+playbooks\b/i, why: 'dated wedge — lead with what the runtime does, not what it lacks' },
+  { re: /\bunlike\s+(other|most|competing)/i, why: 'competitor contrast — state what the runtime IS, positively' },
+  { re: /\bcontrol\s+plane\b/i, why: 'not the product noun — "control plane" means billing/signup/provisioning internally, and describes watching from outside. Say "runtime"' },
   { re: /game[-\s]?engine/i, why: 'keep game framing out of customer copy — World/Scroller/tick are feature names only' },
 ];
 
