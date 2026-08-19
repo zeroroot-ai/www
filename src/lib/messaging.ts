@@ -45,13 +45,13 @@ export const COMPANY = "zeroroot.ai";
 export const hero = {
   eyebrow: "zero-trust agent runtime",
   headline: ["Install it today.", "Ship a production agent tomorrow."],
-  sub: "Gibson Runtime is the substrate your agents execute inside — hosted by us or installed in your own cluster, granted rights they can never exceed, and replayable move by move.",
+  sub: "Gibson Runtime is the substrate your agents execute inside. Let us host it or install it yourself, either way: agents granted rights they can never exceed, and replayable move by move.",
   ctaPrimary: "Take a design partner slot",
   ctaSecondary: "helm install gibson",
   stats: [
     { value: "1 day", label: "to your first production agent" },
     { value: "Never", label: "more access than the human who granted it" },
-    { value: "Hosted or yours", label: "run it on ours, or in your own cluster" },
+    { value: "Ours or yours", label: "we host the runtime, or you do" },
   ],
 } as const;
 
@@ -268,17 +268,48 @@ export const mechanisms: readonly string[] = [
 /* Where it runs                                                              */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Where it runs, in two parts, because they are two independent choices and an
+ * earlier version of this section flattened them into one grid of five cards.
+ * That grid quietly implied a single answer. There are two:
+ *
+ *   agents  — run in ALL of these places at once, wherever the work is
+ *   runtime — is EITHER hosted by us OR installed by you. Both are first
+ *             class, both are the same platform, and the page has to say so
+ *             without leaning on either one.
+ */
 export const surfaces = {
   eyebrow: "where it runs",
-  heading: "Two halves, and you choose where each one lives.",
-  sub: "Agents run wherever the work is — a laptop on your own network needs no cluster and no install. The runtime they check in to is either ours, hosted and managed for you, or one you install yourself: same platform, same artifact, all the way down to a fully air-gapped enclave.",
-  items: [
-    { name: "Laptop", body: "The same agent, checked in with the same host key, granted only what you are actually doing." },
-    { name: "CI", body: "Runs as a first-class principal. Its actions are attributed to the pipeline, not to whoever owns the token." },
-    { name: "Anywhere on your network", body: "A laptop or a box behind your firewall, checked in over the network. No cluster required." },
-    { name: "Hosted runtime", body: "Ours, managed. Point agents at it and start — nothing to stand up, nothing to operate." },
-    { name: "Your own cluster", body: "One chart into Kubernetes you already run, up to a fully air-gapped enclave. The same artifact we host." },
-  ],
+  heading: "Two independent choices, and both are yours.",
+  sub: "Agents run wherever the work already is. The runtime they check in to is either one we host and operate for you, or one you install and own — the same platform in both cases, and the same agents either way.",
+
+  agents: {
+    label: "Where your agents run",
+    note: "all of these, at once",
+    items: [
+      { name: "Laptop", body: "The same agent, checked in with the same host key, granted only what you are actually doing." },
+      { name: "CI", body: "Runs as a first-class principal. Its actions are attributed to the pipeline, not to whoever owns the token." },
+      { name: "Anywhere on your network", body: "A box behind your firewall, checked in over the network. No cluster, no install, no effort." },
+      { name: "Your cluster", body: "In-cluster components upgrade to mTLS transport. The grant model is unchanged." },
+    ],
+  },
+
+  runtime: {
+    label: "Where the runtime runs",
+    note: "either one — and you can change your mind",
+    options: [
+      {
+        name: "We host it",
+        body: "Managed by us. Point agents at it and start: nothing to stand up, nothing to operate, no cluster of your own required.",
+        chips: ["nothing to run", "start in minutes", "your model keys"],
+      },
+      {
+        name: "You host it",
+        body: "One chart into Kubernetes you already run, inside your own boundary — up to fully air-gapped, with your models, your keys and your region.",
+        chips: ["helm install gibson", "your boundary", "air-gapped"],
+      },
+    ],
+  },
 } as const;
 
 /* -------------------------------------------------------------------------- */
