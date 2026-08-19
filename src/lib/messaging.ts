@@ -33,16 +33,6 @@
 /** The company / umbrella brand, as written in copy. */
 export const COMPANY = "zeroroot.ai";
 
-/** The runtime. Always a proper noun. */
-export const ENGINE = "Gibson";
-
-/** Umbrella positioning, shared across every surface. */
-export const umbrella = {
-  tagline: "The zero-trust agent runtime.",
-  supporting:
-    "Build any agent, or bring one you already have. It runs inside a boundary it cannot argue with.",
-} as const;
-
 /* -------------------------------------------------------------------------- */
 /* Hero                                                                       */
 /* -------------------------------------------------------------------------- */
@@ -415,35 +405,6 @@ export const finalCta = {
   ctaPrimary: "Take a design partner slot",
   ctaSecondary: "Read the docs",
 } as const;
-
-/* -------------------------------------------------------------------------- */
-/* Personas                                                                   */
-/* -------------------------------------------------------------------------- */
-
-/** Which side of the line a persona sits on. The runtime serves all four. */
-type PersonaSide = "offense" | "defense" | "purple" | "platform";
-
-interface Persona {
-  readonly label: string;
-  readonly side: PersonaSide;
-}
-
-/**
- * Side-neutral persona set, kept from the previous module. Security is one
- * example of what the runtime carries, not the whole of it — platform and
- * DevSecOps lead now because the first workload in production is a pipeline.
- */
-export const personas: readonly Persona[] = [
-  { label: "Platform", side: "platform" },
-  { label: "DevSecOps", side: "platform" },
-  { label: "SRE", side: "platform" },
-  { label: "Blue Team", side: "defense" },
-  { label: "SOC", side: "defense" },
-  { label: "Incident Response", side: "defense" },
-  { label: "Purple Team", side: "purple" },
-  { label: "Pentest", side: "offense" },
-  { label: "Red Team", side: "offense" },
-] as const;
 
 /** Closing lockup, reused by footer-adjacent and profile surfaces. */
 export const lockup = {

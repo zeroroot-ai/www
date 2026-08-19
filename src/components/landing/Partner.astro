@@ -1,0 +1,52 @@
+---
+/**
+ * The offer. Two halves, deliberately: what a partner gets, and what we ask.
+ *
+ * A one-sided offer reads as a sales page. Stating what is asked in return —
+ * including a real workload and access to the people who own the boundary — is
+ * what makes it an engagement rather than a trial.
+ */
+import { partner } from "@/lib/messaging";
+---
+
+<section class="band" id="design-partner">
+  <div class="wrap">
+    <p class="section-eyebrow">{partner.eyebrow}</p>
+    <h2 class="section-h">{partner.heading}</h2>
+    <p class="section-sub">{partner.sub}</p>
+
+    <div class="split">
+      <div class="card">
+        <h3>What you get</h3>
+        <ul class="ticks">{partner.gets.map((g) => <li>{g}</li>)}</ul>
+      </div>
+      <div class="card">
+        <h3>What we ask</h3>
+        <ul class="ticks">{partner.asks.map((a) => <li>{a}</li>)}</ul>
+      </div>
+    </div>
+
+    <div class="cta-row cta-pad">
+      <a class="btn" href="/contact-sales">Take a design partner slot</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  h3 { margin: 0 0 0.75rem; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; }
+  .ticks { margin: 0; padding: 0; list-style: none; }
+  .ticks li {
+    position: relative;
+    padding: 0.5rem 0 0.5rem 1.375rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .ticks li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--highlight);
+    font-weight: 700;
+  }
+  .cta-pad { margin-top: 1.75rem; }
+</style>

@@ -1,0 +1,45 @@
+---
+/**
+ * Resources, framed as verification rather than as content marketing. Every
+ * destination is somewhere a reader can check a claim made higher up the page.
+ */
+import { DOCS_ORIGIN } from "@/lib/origins";
+---
+
+<section class="band" id="resources">
+  <div class="wrap">
+    <p class="section-eyebrow">read the thing itself</p>
+    <h2 class="section-h">Nothing here is a claim you have to take on trust.</h2>
+    <div class="grid-3">
+      <a class="card res" href={DOCS_ORIGIN}>
+        <h3>Documentation</h3>
+        <p>Install, first agent, grants, missions, replay.</p>
+        <span class="go" aria-hidden="true">docs →</span>
+      </a>
+      <a class="card res" href="https://github.com/zeroroot-ai/adk" target="_blank" rel="noopener noreferrer">
+        <h3>The repositories</h3>
+        <p>The ADK, the sandbox, the executor, the SDKs. Read them before you talk to us.</p>
+        <span class="go" aria-hidden="true">github →</span>
+      </a>
+      <a class="card res" href="/pricing">
+        <h3>Pricing</h3>
+        <p>Two enforced quotas: missions in flight, and agents bound to a task. Idle agents do not count.</p>
+        <span class="go" aria-hidden="true">pricing →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .res { display: block; text-decoration: none; color: inherit; }
+  .res:hover { border-color: var(--highlight); }
+  h3 { margin: 0 0 0.5rem; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; }
+  p { margin: 0; font-size: 0.875rem; line-height: 1.6; color: var(--muted-foreground); }
+  .go {
+    display: block;
+    margin-top: 0.875rem;
+    font-family: var(--mono-family);
+    font-size: 0.7rem;
+    color: var(--highlight);
+  }
+</style>
