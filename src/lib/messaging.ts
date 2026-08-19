@@ -6,7 +6,7 @@
  *
  * The position (settled 2026-08-19, glossary in CONTEXT.md):
  *
- *   zeroroot sells the RUNTIME agents execute inside — where the boundary is a
+ *   zeroroot sells the RUNTIME agents execute inside, where the boundary is a
  *   property of execution rather than a check applied afterwards. An agent gets
  *   there by being built on the SDK, or by having its model traffic redirected
  *   into it. "Control plane" is retired from customer copy: inside the codebase
@@ -40,7 +40,7 @@ export const COMPANY = "zeroroot.ai";
 /**
  * The headline is deliberately two flat sentences. The one-day claim is a
  * customer time-to-value claim, and the release-pipeline agent in `proof` is
- * its evidence — the two move together or neither ships.
+ * its evidence, and the two move together or neither ships.
  */
 export const hero = {
   eyebrow: "zero-trust agent runtime",
@@ -75,7 +75,7 @@ export const problem = {
       title: "It can do anything its token can do",
       pain: "An agent handed a service account inherits every permission that account has, forever, with no way to see what it used.",
       resolve:
-        "A named human delegates read, write and execute — and cannot delegate more than they hold themselves. Deny wins wherever the two disagree.",
+        "A named human delegates read, write and execute, and cannot delegate more than they hold themselves. Deny wins wherever the two disagree.",
     },
     {
       title: "Nobody can say what it did",
@@ -87,7 +87,7 @@ export const problem = {
       title: "It runs code nobody wrote",
       pain: "Model-generated code executing in your pipeline is an unreviewed change holding production credentials.",
       resolve:
-        "The coding agent writes against a finding already in your graph, and its change arrives where every other change does — a commit on a branch, checked by a language server, waiting for a human. Nothing it writes reaches production without that review.",
+        "The coding agent writes against a finding already in your graph, and its change arrives where every other change does: a commit on a branch, checked by a language server, waiting for a human. Nothing it writes reaches production without that review.",
     },
     {
       title: "The data cannot leave",
@@ -99,7 +99,7 @@ export const problem = {
 } as const;
 
 /* -------------------------------------------------------------------------- */
-/* The spine — seven things an operator does, in order                        */
+/* The spine: seven things an operator does, in order                        */
 /* -------------------------------------------------------------------------- */
 
 interface Step {
@@ -118,14 +118,14 @@ export const spine = {
       n: "01",
       title: "Pick where it runs",
       sub: "ours, or yours",
-      body: "Start on the hosted runtime and there is nothing to stand up — point agents at it and go. When it has to be yours, the same platform installs into your own Kubernetes with one chart, every first-party image pinned by digest, down to a fully air-gapped enclave. The two are the same artifact, so the choice is not a fork in the road.",
+      body: "Start on the hosted runtime and there is nothing to stand up: point agents at it and go. When it has to be yours, the same platform installs into your own Kubernetes with one chart, every first-party image pinned by digest, down to a fully air-gapped enclave. The two are the same artifact, so the choice is not a fork in the road.",
       chips: ["hosted, nothing to run", "helm install gibson", "air-gapped"],
     },
     {
       n: "02",
       title: "Build or adapt",
       sub: "the SDK, or one base URL",
-      body: "Build agents on the ADK, or take an agent you already have and point its model traffic at the runtime. No rewrite — and from that call onward it is identified, budgeted and recorded.",
+      body: "Build agents on the ADK, or take an agent you already have and point its model traffic at the runtime. No rewrite, and from that call onward it is identified, budgeted and recorded.",
       chips: ["Go + TypeScript SDK", "OpenAI-compatible seam", "MCP tools"],
     },
     {
@@ -160,7 +160,7 @@ export const spine = {
       n: "07",
       title: "Replay any of it",
       sub: "move by move",
-      body: "Every prompt, tool call and write is attributed and kept. Rewind a mission step by step and it comes back the same every time — the difference between an audit answer and a shrug.",
+      body: "Every prompt, tool call and write is attributed and kept. Rewind a mission step by step and it comes back the same every time: the difference between an audit answer and a shrug.",
       chips: ["deterministic", "attributable", "exportable"],
     },
   ] as readonly Step[],
@@ -172,7 +172,7 @@ export const spine = {
 
 /**
  * The transcript is NOT here. It belongs to the component that renders it, and
- * every line of it has to be verified against the real CLI — the verbs are
+ * every line of it has to be verified against the real CLI: the verbs are
  * `gibson agent enroll` (mints the one-time bootstrap token),
  * `gibson component register --token …`, then `gibson mission submit`.
  */
@@ -195,7 +195,7 @@ export const checkin = {
     },
     {
       title: "Upgrade in cluster",
-      body: "Inside a SPIRE-enabled cluster the transport upgrades to mTLS. Identity does not change — the same grant still governs.",
+      body: "Inside a SPIRE-enabled cluster the transport upgrades to mTLS. Identity does not change: the same grant still governs.",
     },
   ],
 } as const;
@@ -206,15 +206,15 @@ export const checkin = {
 
 /**
  * States the seam accurately. Redirecting the MODEL call path is not the same
- * as registering a foreign agent, and this copy must never imply the latter —
+ * as registering a foreign agent, and this copy must never imply the latter:
  * there is no foreign-agent registry.
  */
 export const adapt = {
   eyebrow: "agents you already built",
   heading: "Keep the agent. Bring it under the boundary.",
-  sub: "There is integration work, and it is worth being straight about it: an agent has to check in and be granted before it has an identity to act under, and its tools have to be declared. What you do not do is rewrite its logic. Anything that watches an agent from outside can only report what came out of it — being in the call path is what lets the runtime refuse instead.",
+  sub: "The integration is a wrapper around the agent framework you already use: point its model client at the runtime, check the agent in so it has an identity, declare its tools. Its logic stays exactly as you wrote it. Anything that watches an agent from outside can only report what came out of it, and sitting in the call path is what lets the runtime refuse instead.",
   bullets: [
-    "Redirect an OpenAI-compatible client at the runtime — LangChain, CrewAI, AutoGen, LlamaIndex, or your own",
+    "Wraps an OpenAI-compatible client: LangChain, CrewAI, AutoGen, LlamaIndex, or your own",
     "Check it in once, so it acts under an identity and a grant like any agent built here",
     "From then on every model call is an attributable record with a budget and a transcript",
     "Bring its tools in over MCP as components, with declared secrets and egress",
@@ -234,7 +234,7 @@ interface Product {
 export const platform: readonly Product[] = [
   {
     name: "Gibson Runtime",
-    body: "The substrate agents execute inside. Identity, grants, dispatch, missions and the timeline — hosted by us, or installed in your own cluster.",
+    body: "The substrate agents execute inside. Identity, grants, dispatch, missions and the timeline: hosted by us, or installed in your own cluster.",
     license: "Elastic License v2",
   },
   {
@@ -273,15 +273,15 @@ export const mechanisms: readonly string[] = [
  * earlier version of this section flattened them into one grid of five cards.
  * That grid quietly implied a single answer. There are two:
  *
- *   agents  — run in ALL of these places at once, wherever the work is
- *   runtime — is EITHER hosted by us OR installed by you. Both are first
+ *   agents  = run in ALL of these places at once, wherever the work is
+ *   runtime = is EITHER hosted by us OR installed by you. Both are first
  *             class, both are the same platform, and the page has to say so
  *             without leaning on either one.
  */
 export const surfaces = {
   eyebrow: "where it runs",
   heading: "Two independent choices, and both are yours.",
-  sub: "Agents run wherever the work already is. The runtime they check in to is either one we host and operate for you, or one you install and own — the same platform in both cases, and the same agents either way.",
+  sub: "Agents run wherever the work already is. The runtime they check in to is either one we host and operate for you, or one you install and own: the same platform in both cases, and the same agents either way.",
 
   agents: {
     label: "Where your agents run",
@@ -296,7 +296,7 @@ export const surfaces = {
 
   runtime: {
     label: "Where the runtime runs",
-    note: "either one — and you can change your mind",
+    note: "either one, and you can change your mind",
     options: [
       {
         name: "We host it",
@@ -305,7 +305,7 @@ export const surfaces = {
       },
       {
         name: "You host it",
-        body: "One chart into Kubernetes you already run, inside your own boundary — up to fully air-gapped, with your models, your keys and your region.",
+        body: "One chart into Kubernetes you already run, inside your own boundary, up to fully air-gapped, with your models, your keys and your region.",
         chips: ["helm install gibson", "your boundary", "air-gapped"],
       },
     ],
@@ -347,7 +347,7 @@ export const workloads: readonly Entry[] = [
 
 /**
  * `kind` is the honesty of the page made structural. "conditional" is not a
- * weaker word for enforced — it means the guarantee has a boundary, and the
+ * weaker word for enforced: it means the guarantee has a boundary, and the
  * boundary is stated in `body`. Marking these correctly is what stops the page
  * from re-shipping the claims that were previously overstated.
  */
@@ -396,10 +396,10 @@ export const posture = {
 /* -------------------------------------------------------------------------- */
 
 /*
- * INTENTIONALLY EMPTY — see www#56.
+ * INTENTIONALLY EMPTY. See www#56.
  *
  * The proof section is one worked case: the release-pipeline agent. As of
- * 2026-08-19 that agent exists in no repository — there is no component
+ * 2026-08-19 that agent exists in no repository: there is no component
  * manifest, no mission definition and no recorded run for it. Every fact the
  * section would carry (what it manages, what it was granted, what it was
  * refused) is therefore untraceable, and www#56 says untraceable facts are
@@ -407,7 +407,7 @@ export const posture = {
  *
  * So the page ships without a proof section instead of with an invented one.
  * When the agent is live, the facts come from its manifest, its grant, its
- * mission definition and a recorded run — and the section lands then.
+ * mission definition and a recorded run, and the section lands then.
  *
  * Do not populate this from a plan, a demo or an intention.
  */
@@ -423,7 +423,7 @@ export const partner = {
   gets: [
     "Your first agents live in your own environment",
     "Our engineers alongside your team, not behind a ticket queue",
-    "Everything built is yours — open protocols, your cluster, no exit penalty",
+    "Everything built is yours: open protocols, your cluster, no exit penalty",
     "A direct line into what gets built next",
   ],
   asks: [
@@ -452,7 +452,7 @@ export const lockup = {
 /**
  * A hub section per menu entry, so every Solutions link lands somewhere that
  * discusses the thing it named. Each is the constraint or the job, the
- * mechanisms that answer it, and nothing else — an entry graduates to its own
+ * mechanisms that answer it, and nothing else. An entry graduates to its own
  * page when a customer story justifies one.
  *
  * `mechanisms` must name shipped behavior. No row here is a roadmap.
@@ -471,7 +471,7 @@ export const industryHub: readonly HubSection[] = [
     lede: "The workload cannot reach the internet, and the model cannot either. Both have to run inside the enclave you already hold.",
     mechanisms: [
       "The air-gapped install is the same chart as the hosted one",
-      "Local models — bring Ollama or a self-hosted endpoint; no call leaves the boundary",
+      "Local models: bring Ollama or a self-hosted endpoint; no call leaves the boundary",
       "Every image pinned by digest at package time",
       "Append-only timeline per tenant, exportable for review",
     ],
@@ -525,7 +525,7 @@ export const industryHub: readonly HubSection[] = [
     name: "Consultancies & MSSPs",
     lede: "One engagement's data must never be visible from another's, and every client wants their own evidence.",
     mechanisms: [
-      "A separate graph database per tenant — no cross-tenant query path exists",
+      "A separate graph database per tenant. No cross-tenant query path exists",
       "Per-client grants, revocable the day an engagement ends",
       "Exportable timeline per client",
       "The same artifact installs into their environment or yours",
@@ -537,7 +537,7 @@ export const workloadHub: readonly HubSection[] = [
   {
     slug: "ci-cd",
     name: "CI/CD & release management",
-    lede: "A pipeline change is a code change, and a code change an agent makes has to arrive the way any other one does — as a commit somebody reviews.",
+    lede: "A pipeline change is a code change, and a code change an agent makes has to arrive the way any other one does: as a commit somebody reviews.",
     mechanisms: [
       "Mission-scoped git workspaces; changes arrive as reviewable commits",
       "Edits are language-server validated before they are applied",
@@ -548,10 +548,10 @@ export const workloadHub: readonly HubSection[] = [
   {
     slug: "cve-response",
     name: "Vulnerability & CVE response",
-    lede: "An advisory lands, and the question is whether it is reachable in your estate — not whether it is severe in general.",
+    lede: "An advisory lands, and the question is whether it is reachable in your estate, not whether it is severe in general.",
     mechanisms: [
       "Findings land in the shared graph, so the next run starts from them",
-      "Missions run on your trigger — CI, a webhook, or a scheduler you own",
+      "Missions run on your trigger: CI, a webhook, or a scheduler you own",
       "Scanner output is evidence in the timeline, not an inbox",
       "Every conclusion replays to the step that produced it",
     ],

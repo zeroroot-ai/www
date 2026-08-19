@@ -5,7 +5,7 @@
  * Step 01 is at the TOP and each lower plate is painted after the one above it,
  * so the diagram reads in the order the work happens and still stacks with
  * depth. An earlier pass had 01 at the bottom, which meant a reader met "replay"
- * first — the last thing you do.
+ * first: the last thing you do.
  *
  * Geometry: plate `i` is a rhombus centered on (CX, TOP + i*STEP), half-width W
  * across, half-depth D front to back, extruded by T for thickness. D is
@@ -177,7 +177,7 @@ const plates = spine.steps.map((s, i) => {
   }
 
   /* The active plate. Acid fills it; the label uses the readable green, never
-   * the fill — that rule is enforced by a test in the brand package. */
+   * the fill. That rule is enforced by a test in the brand package. */
   .plate[data-active] .p-top {
     fill: var(--primary);
     stroke: var(--highlight);

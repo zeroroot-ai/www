@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 /**
- * check-no-dead-internal-links.mjs — every root-relative link must resolve to
+ * check-no-dead-internal-links.mjs: every root-relative link must resolve to
  * something this site actually builds.
  *
  * The defect this exists to catch: `HeroSection.tsx` linked to `/docs`. Docs
  * live on their own host (deploy ADR-0006), this site emits no `/docs` page,
- * and nginx.conf deliberately has no catch-all — so the link 404'd in
+ * and nginx.conf deliberately has no catch-all, so the link 404'd in
  * production, on the landing page, for as long as it shipped.
  *
  * check-no-hardcoded-origins.mjs did not catch it and could not: that guard
  * matches SCHEME-carrying literals (`https://docs.zeroroot.ai`), because its
  * job is to stop a link being pinned to prod in every environment. A bare
  * `/docs` carries no scheme, so it is invisible to that regex. The two guards
- * are complementary — one asks "is this cross-surface link environment-
+ * are complementary: one asks "is this cross-surface link environment-
  * derived?", this one asks "does this local link exist at all?".
  *
  * Deliberately NOT an allowlist of foreign path prefixes (`/docs`, `/login`,
@@ -22,7 +22,7 @@
  * brand-new dead link is caught without anyone updating this file.
  *
  * Scope: string literals in `href=` / `href:` position under `src/`.
- * Non-literal hrefs (`href={cta.href}`) are skipped — they cannot be resolved
+ * Non-literal hrefs (`href={cta.href}`) are skipped: they cannot be resolved
  * statically, and their literals are caught where they are written.
  *
  * Usage:
@@ -43,16 +43,16 @@ const PUBLIC = join(ROOT, "public");
 const SCANNED_EXT = new Set([".astro", ".ts", ".tsx", ".js", ".jsx", ".md", ".mdx"]);
 const PAGE_EXT = new Set([".astro", ".md", ".mdx"]);
 
-/** `href="/x"`, `href='/x'`, `href: "/x"`, `href={"/x"}` — literals only. */
+/** `href="/x"`, `href='/x'`, `href: "/x"`, `href={"/x"}`, literals only. */
 const HREF_RE = /href\s*[=:]\s*\{?\s*["'](\/[^"']*)["']/g;
 
 /**
- * `href={`/workloads#${slug}`}` — a template literal with a static prefix.
+ * `href={`/workloads#${slug}`}`, a template literal with a static prefix.
  *
  * These were invisible to this guard, which meant a menu could link to a page
  * that did not exist and the check stayed green (www#51). The interpolated tail
  * still cannot be resolved statically, so only the prefix up to the first
- * `${` is checked — enough to catch a link to a missing route, which is the
+ * `${` is checked, enough to catch a link to a missing route, which is the
  * failure that actually happens.
  */
 const HREF_TEMPLATE_RE = /href\s*=\s*\{\s*`(\/[^`$]*)/g;
@@ -114,7 +114,7 @@ function scan(srcDir, routes) {
         const path = normalize(m[1]);
         if (routes.has(path)) continue;
         violations.push(
-          `${rel}:${i + 1}: ${m[1]} — this site builds no such route. ` +
+          `${rel}:${i + 1}: ${m[1]}: this site builds no such route. ` +
             `If it lives on another host, import APP_ORIGIN / DOCS_ORIGIN from @/lib/origins.`,
         );
       }
@@ -175,7 +175,7 @@ if (process.argv.includes("--selftest")) {
 } else {
   const violations = scan(SRC, buildableRoutes(PAGES, PUBLIC));
   if (violations.length > 0) {
-    console.error("Dead internal links found — these 404 in production.\n");
+    console.error("Dead internal links found: these 404 in production.\n");
     for (const v of violations) console.error("  " + v);
     console.error("");
     process.exit(1);

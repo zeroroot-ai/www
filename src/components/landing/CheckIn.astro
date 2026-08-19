@@ -3,7 +3,7 @@
  * How an agent checks in: four steps in prose, beside the commands that do it.
  *
  * EVERY LINE OF THE TRANSCRIPT IS VERIFIED against the real CLI. The verbs are
- * `gibson agent enroll` (AgentIdentityService.CreateAgentIdentity — prints the
+ * `gibson agent enroll` (AgentIdentityService.CreateAgentIdentity, which prints the
  * one-time bootstrap token) and `gibson component register --token` (the
  * Capability-Grant Discover → Register handshake), then `gibson mission submit`.
  * The printed field names and the runtime-credential path are the ones the CLI
@@ -11,7 +11,7 @@
  *
  * What is NOT here, deliberately: a rendered refusal. A denied capability
  * surfaces as a gRPC PERMISSION_DENIED at the gateway, not as a line of CLI
- * output — so showing one would mean inventing program output, which is exactly
+ * output, so showing one would mean inventing program output, which is exactly
  * how this site previously shipped claims that were not true. It belongs in the
  * proof section, described as something that happened, once there is a run to
  * describe (www#56).
