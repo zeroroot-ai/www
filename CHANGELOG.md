@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.5.0](https://github.com/zeroroot-ai/www/compare/v1.4.0...v1.5.0) (2026-08-19)
+
+
+### Features
+
+* **copy:** reposition the messaging module around the runtime ([#58](https://github.com/zeroroot-ai/www/issues/58)) ([cdf4448](https://github.com/zeroroot-ai/www/commit/cdf4448b700f567a8fdfebffe539c76ebc24c78d))
+* **landing:** design partner, resources, final CTA and footer ([#66](https://github.com/zeroroot-ai/www/issues/66)) ([fd76e4c](https://github.com/zeroroot-ai/www/commit/fd76e4c7d46b7f801a0368b7c0c4588f3c5f9f2c))
+* **landing:** new page shell, mega-menu navigation and hero ([#60](https://github.com/zeroroot-ai/www/issues/60)) ([9dd39f1](https://github.com/zeroroot-ai/www/commit/9dd39f11378ad623e13b5a65406808263b0cdc23))
+* **landing:** problem, adapt, products and open-source sections ([#63](https://github.com/zeroroot-ai/www/issues/63)) ([e37cde2](https://github.com/zeroroot-ai/www/commit/e37cde2818a9c9d45e7051e56f2b51ca74a0f303))
+* **landing:** the check-in walkthrough ([#62](https://github.com/zeroroot-ai/www/issues/62)) ([c776708](https://github.com/zeroroot-ai/www/commit/c776708505807ccfd29c2e4d90269fabfed9c008))
+* **landing:** the posture table, and no proof section ([#65](https://github.com/zeroroot-ai/www/issues/65)) ([a5c9187](https://github.com/zeroroot-ai/www/commit/a5c9187ce666b89ff52dc4de82c1d5c571365129))
+* **landing:** the seven-step stack ([#61](https://github.com/zeroroot-ai/www/issues/61)) ([ca484ca](https://github.com/zeroroot-ai/www/commit/ca484cad40541989f6b8f88cd06297bdaa5fd1e8))
+* **landing:** where it runs, workloads, industries and the two hubs ([#64](https://github.com/zeroroot-ai/www/issues/64)) ([87ae50a](https://github.com/zeroroot-ai/www/commit/87ae50a1556a5f05d5d1d26bc6e6fb76353afa7e))
+
+
+### Bug Fixes
+
+* **brand:** take brand 0.3.1 ([#67](https://github.com/zeroroot-ai/www/issues/67)) ([a382edb](https://github.com/zeroroot-ai/www/commit/a382edb99508abb4c0da0060cabe99aac068ebea))
+
 ## [1.4.0](https://github.com/zeroroot-ai/www/compare/v1.3.0...v1.4.0) (2026-08-19)
 
 
