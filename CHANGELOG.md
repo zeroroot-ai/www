@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/zeroroot-ai/www/compare/v1.6.0...v1.6.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* **landing:** plain-voice copy, accurate adapt claims, hands moved up, GitHub icon on hero CTA ([#76](https://github.com/zeroroot-ai/www/issues/76)) ([86b9d85](https://github.com/zeroroot-ai/www/commit/86b9d8586894d0c1da8cbd4aa26eeb61b7c0fba3))
+
 ## [1.6.0](https://github.com/zeroroot-ai/www/compare/v1.5.3...v1.6.0) (2026-08-20)
 
 
