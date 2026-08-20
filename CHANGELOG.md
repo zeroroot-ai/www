@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.2](https://github.com/zeroroot-ai/www/compare/v1.6.1...v1.6.2) (2026-08-20)
+
+
+### Bug Fixes
+
+* **rework:** say the whyUs contrast in plain technical words ([#78](https://github.com/zeroroot-ai/www/issues/78)) ([dabc5ef](https://github.com/zeroroot-ai/www/commit/dabc5ef8cdf7da8d8d3e6b4d4f7d72582e459c44))
+
 ## [1.6.1](https://github.com/zeroroot-ai/www/compare/v1.6.0...v1.6.1) (2026-08-20)
 
 
