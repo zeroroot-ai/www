@@ -31,9 +31,11 @@ client = OpenAI(base_url=<span class="c-was">"https://api.openai.com/v1"</span>)
 <span class="c-mut"># after</span>
 client = OpenAI(base_url=<span class="c-now">"http://127.0.0.1:8787/v1"</span>)
 
-<span class="c-mut"># its logic did not change. once the agent is checked in,
-# every call it makes has an identity, a budget, a
-# transcript, and a ceiling it cannot argue with.</span></code></pre>
+<span class="c-mut"># its logic did not change. its model calls now go
+# through the runtime: the model resolves to a slot
+# the runtime configured, spend counts against a
+# budget that refuses the call when it runs out, and
+# no provider key lives in the agent.</span></code></pre>
     </div>
   </div>
 </section>

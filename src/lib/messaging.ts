@@ -104,20 +104,20 @@ interface Contrast {
  */
 export const whyUs = {
   eyebrow: "what this is",
-  heading: "Not another way to build agents.",
-  sub: "It is what lets the agent you already built run where you are not allowed to run it today. Keep your framework, your prompts, your logic. What changes is where the agent executes, and what it can reach once it is there.",
+  heading: "Not another agent framework.",
+  sub: "You keep the agent you already built. Same framework, same prompts, same logic. What changes is where it runs, and what it can reach while it runs.",
   contrast: [
     {
-      title: "It sits in the call path",
-      body: "Every model call, every tool call and every write goes through the runtime. Standing there is what makes refusal possible: a call outside the grant does not happen and get reported, it is denied at the moment it is made.",
+      title: "The runtime is in the call path",
+      body: "Every model call, tool call and write goes through it. That is the whole point: because it is in the path, it can say no. A call outside the grant is refused before it runs, not written up after.",
     },
     {
-      title: "Not alongside it",
-      body: "Anything that watches an agent from outside can only report what already came out of it. That is a record of the incident, written after the incident, by something that was never able to stop it.",
+      title: "Monitoring is not",
+      body: "A tool that watches from outside sees what the agent already did. It can give you a record of the incident. It was never in a position to stop it.",
     },
   ] as readonly Contrast[],
   outcome:
-    "So the workload nobody will let you automate runs tonight: inside your own boundary, holding only what a named human granted it, and replayable move by move when someone asks what it did.",
+    "That is what gets a blocked workload approved. It runs inside your boundary, it holds only what a named person granted it, and when someone asks what it did, you replay the run and show them.",
 } as const;
 
 /* -------------------------------------------------------------------------- */
@@ -294,7 +294,7 @@ export const spine = {
  */
 export const checkin = {
   eyebrow: "how an agent checks in",
-  heading: "Four seconds of setup, and a ceiling it cannot argue with.",
+  heading: "Two commands, and the agent has an identity.",
   sub: "An agent's first act is to prove which host it is. Every act after that is signed, short-lived, and bounded by the person who granted it.",
   steps: [
     {
@@ -328,11 +328,11 @@ export const checkin = {
 export const adapt = {
   eyebrow: "agents you already built",
   heading: "Keep the agent. Bring it under the boundary.",
-  sub: "The integration is a wrapper around the agent framework you already use: point its model client at the runtime, check the agent in so it has an identity, declare its tools. Its logic stays exactly as you wrote it. Anything that watches an agent from outside can only report what came out of it, and sitting in the call path is what lets the runtime refuse instead.",
+  sub: "Point the agent's model client at the runtime, check it in so it has an identity, declare its tools. That is the integration. Its logic stays exactly as you wrote it.",
   bullets: [
     "Wraps an OpenAI-compatible client: LangChain, CrewAI, AutoGen, LlamaIndex, or your own",
     "Check it in once, so it acts under an identity and a grant like any agent built here",
-    "From then on every model call is an attributable record with a budget and a transcript",
+    "From then on every model call carries its identity and spends against its budget",
     "Bring its tools in over MCP as components, with declared secrets and egress",
   ],
 } as const;
