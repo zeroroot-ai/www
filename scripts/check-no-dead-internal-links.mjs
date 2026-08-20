@@ -115,7 +115,7 @@ function scan(srcDir, routes) {
         if (routes.has(path)) continue;
         violations.push(
           `${rel}:${i + 1}: ${m[1]}: this site builds no such route. ` +
-            `If it lives on another host, import APP_ORIGIN / DOCS_ORIGIN from @/lib/origins.`,
+            `If it lives on another host, import DOCS_ORIGIN from @/lib/origins.`,
         );
       }
     });

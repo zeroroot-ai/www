@@ -89,7 +89,7 @@ if (process.argv.includes("--selftest")) {
   if (violations.length > 0) {
     console.error(
       "Hardcoded app/docs origins found outside src/lib/origins.ts.\n" +
-        "Import APP_ORIGIN / DOCS_ORIGIN from @/lib/origins instead:\n",
+        "Import DOCS_ORIGIN from @/lib/origins instead:\n",
     );
     for (const v of violations) console.error("  " + v);
     process.exit(1);
