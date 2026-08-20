@@ -101,23 +101,27 @@ interface Contrast {
  * `outcome` is the capability claim and it is deliberately unquantified. There
  * are no customers in production, so any number here would be a projection.
  * Every clause of it is true today.
+ *
+ * Clarity bar (owner-set, 2026-08-20): each contrast title must parse on its
+ * own, every pronoun must have one referent, and the mechanism is stated as
+ * standing between the agent and the API, never as a metaphor.
  */
 export const whyUs = {
   eyebrow: "what this is",
-  heading: "Not another agent framework.",
-  sub: "You keep the agent you already built. Same framework, same prompts, same logic. What changes is where it runs, and what it can reach while it runs.",
+  heading: "Not a way to build agents. A place to run them.",
+  sub: "You already built it. The hard part is that nobody will let it near production until someone can say what it will never do. The runtime is how you say that. Your framework, your prompts and your logic stay exactly as you wrote them. What changes is what happens when the agent reaches for something it was not granted.",
   contrast: [
     {
-      title: "The runtime is in the call path",
-      body: "Every model call, tool call and write goes through it. That is the whole point: because it is in the path, it can say no. A call outside the grant is refused before it runs, not written up after.",
+      title: "The runtime sees the call before it runs",
+      body: "Every model call, tool call and write goes through the runtime first. A call outside the grant is denied right there and never executes. Not flagged, not logged for later. Denied.",
     },
     {
-      title: "Monitoring is not",
-      body: "A tool that watches from outside sees what the agent already did. It can give you a record of the incident. It was never in a position to stop it.",
+      title: "A monitoring tool sees it after it ran",
+      body: "Monitoring sits outside the agent and reads its output. By the time it sees a bad call, that call has already executed. It can log exactly what happened. It cannot block anything, because it was never between the agent and the API.",
     },
   ] as readonly Contrast[],
   outcome:
-    "That is what gets a blocked workload approved. It runs inside your boundary, it holds only what a named person granted it, and when someone asks what it did, you replay the run and show them.",
+    "That difference is what turns a security review from no into yes. The agent runs inside your boundary. It holds what a named person granted it and nothing else. And when someone asks what it did, you do not summarize from memory: you replay the run, move by move, and let them watch.",
 } as const;
 
 /* -------------------------------------------------------------------------- */
