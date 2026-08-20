@@ -93,7 +93,6 @@ jobs:
         run: |
           docker build -t www-smoke --secret id=npm_token,env=NPM_TOKEN .
           docker run -d --name www-smoke -p 8080:8080 \
-            -e APP_ORIGIN=https://app.staging.example \
             -e DOCS_ORIGIN=https://docs.staging.example \
             www-smoke
           for i in $(seq 1 30); do
@@ -102,7 +101,6 @@ jobs:
           done
           docker logs www-smoke
           H=$(curl -fsm5 http://localhost:8080/)
-          echo "$H" | grep -q 'https://app.staging.example/login' || { echo "FAIL: substituted app origin missing"; exit 1; }
           echo "$H" | grep -q 'https://docs.staging.example' || { echo "FAIL: substituted docs origin missing"; exit 1; }
-          if echo "$H" | grep -q '__APP_ORIGIN__\|__DOCS_ORIGIN__'; then echo "FAIL: sentinels leaked"; exit 1; fi
+          if echo "$H" | grep -q '__DOCS_ORIGIN__'; then echo "FAIL: sentinels leaked"; exit 1; fi
           echo "smoke OK: substituted origins served"

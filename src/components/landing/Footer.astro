@@ -4,7 +4,7 @@
  * links come from the origins module so each environment points at its own
  * hosts.
  */
-import { platform, openSource, workloads, lockup } from "@/lib/messaging";
+import { platform, openSource, workloads, lockup, repos } from "@/lib/messaging";
 import { DOCS_ORIGIN } from "@/lib/origins";
 
 const year = new Date().getFullYear();
@@ -24,7 +24,7 @@ const year = new Date().getFullYear();
     <div>
       <p class="col-h">Open source</p>
       {openSource.map((o) => <a href="#open-source">{o.name}</a>)}
-      <a href="https://github.com/zeroroot-ai/adk" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href={repos.ADK} target="_blank" rel="noopener noreferrer">GitHub</a>
     </div>
     <div>
       <p class="col-h">Solutions</p>

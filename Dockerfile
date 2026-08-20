@@ -35,10 +35,10 @@ RUN --mount=type=secret,id=npm_token \
 COPY . .
 # Origin sentinels, not real hosts (www#15): src/lib/origins.ts reads these at
 # build time, and docker/40-substitute-origins.sh rewrites them to the
-# environment's APP_ORIGIN / DOCS_ORIGIN when the container starts. One image
+# environment's DOCS_ORIGIN when the container starts. One image
 # therefore serves every environment; a plain `pnpm build` outside Docker
 # still bakes the prod origins.
-RUN PUBLIC_APP_ORIGIN=__APP_ORIGIN__ PUBLIC_DOCS_ORIGIN=__DOCS_ORIGIN__ pnpm build
+RUN PUBLIC_DOCS_ORIGIN=__DOCS_ORIGIN__ pnpm build
 
 # Stage 2: serve
 #
@@ -59,7 +59,7 @@ RUN rm -rf /usr/share/nginx/html && install -d -o 101 -g 101 /usr/share/nginx/ht
 USER 101
 COPY --from=builder --chown=101:101 /app/dist /usr/share/nginx/html
 # Runs before nginx starts (stock entrypoint executes /docker-entrypoint.d/*.sh
-# in lexical order): substitutes the __APP_ORIGIN__/__DOCS_ORIGIN__ build
+# in lexical order): substitutes the __DOCS_ORIGIN__ build
 # sentinels with this environment's origins, defaulting to prod.
 COPY --chmod=755 docker/40-substitute-origins.sh /docker-entrypoint.d/40-substitute-origins.sh
 # templates/ (not conf.d/): the entrypoint runs envsubst over
