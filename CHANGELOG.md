@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/zeroroot-ai/www/compare/v1.5.3...v1.6.0) (2026-08-20)
+
+
+### Features
+
+* **landing:** say what this is, who holds what, and fix three CTAs ([#74](https://github.com/zeroroot-ai/www/issues/74)) ([82ee11a](https://github.com/zeroroot-ai/www/commit/82ee11a381428ddd74b1aaf033178460cf9ad8c8))
+
 ## [1.5.3](https://github.com/zeroroot-ai/www/compare/v1.5.2...v1.5.3) (2026-08-19)
 
 
