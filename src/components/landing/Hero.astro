@@ -6,12 +6,17 @@
  * Static: no typewriter, no animation, no client JavaScript. The claim does the
  * work.
  *
+ * The second action is a link, not a command. It used to read
+ * "helm install gibson" in monospace and scroll to #products: it looked
+ * copyable, was not, and promised an install a visitor cannot perform today.
+ * It now says what the click does and does exactly that.
+ *
  * The stat row carries the one-day claim. It is a customer time-to-value claim
  *, what an install can reach, not a report of something already done, and it
  * is the owner's call. It is currently unaccompanied: the worked case that
  * would evidence it is not shipping until the agent exists (www#56).
  */
-import { hero } from "@/lib/messaging";
+import { hero, repos } from "@/lib/messaging";
 ---
 
 <section class="hero">
@@ -21,7 +26,7 @@ import { hero } from "@/lib/messaging";
     <p class="sub">{hero.sub}</p>
     <div class="cta-row">
       <a class="btn" href="/contact-sales">{hero.ctaPrimary}</a>
-      <a class="btn-ghost mono" href="#products">{hero.ctaSecondary}</a>
+      <a class="btn-ghost" href={repos.ADK} target="_blank" rel="noopener noreferrer">{hero.ctaSecondary}</a>
     </div>
     <div class="stat-row">
       {hero.stats.map((s) => (<span><b>{s.value}</b>{s.label}</span>))}

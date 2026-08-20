@@ -6,15 +6,10 @@
  * licensing: it is the shape of the product: the half you build on is open and
  * stays open, and the half that operates the platform is not.
  */
-import { platform, openSource } from "@/lib/messaging";
+import { platform, openSource, repos } from "@/lib/messaging";
 
-const repo = (name: string) =>
-  ({
-    ADK: "https://github.com/zeroroot-ai/adk",
-    Setec: "https://github.com/zeroroot-ai/setec",
-    Zerocool: "https://github.com/zeroroot-ai/zerocool-plugins",
-    Bridge: "https://github.com/zeroroot-ai/sdk",
-  })[name];
+const repo = (name: string): string | undefined =>
+  (repos as Record<string, string>)[name];
 ---
 
 <section class="band" id="products">

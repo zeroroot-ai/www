@@ -3,6 +3,7 @@
  * Resources, framed as verification rather than as content marketing. Every
  * destination is somewhere a reader can check a claim made higher up the page.
  */
+import { repos } from "@/lib/messaging";
 import { DOCS_ORIGIN } from "@/lib/origins";
 ---
 
@@ -16,7 +17,7 @@ import { DOCS_ORIGIN } from "@/lib/origins";
         <p>Install, first agent, grants, missions, replay.</p>
         <span class="go" aria-hidden="true">docs →</span>
       </a>
-      <a class="card res" href="https://github.com/zeroroot-ai/adk" target="_blank" rel="noopener noreferrer">
+      <a class="card res" href={repos.ADK} target="_blank" rel="noopener noreferrer">
         <h3>The repositories</h3>
         <p>The ADK, the sandbox, the executor, the SDKs. Read them before you talk to us.</p>
         <span class="go" aria-hidden="true">github →</span>

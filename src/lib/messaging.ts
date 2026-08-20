@@ -47,12 +47,128 @@ export const hero = {
   headline: ["Install it today.", "Ship a production agent tomorrow."],
   sub: "Gibson Runtime is the substrate your agents execute inside. Let us host it or install it yourself, either way: agents granted rights they can never exceed, and replayable move by move.",
   ctaPrimary: "Take a design partner slot",
-  ctaSecondary: "helm install gibson",
+  ctaSecondary: "Read the source",
   stats: [
     { value: "1 day", label: "to your first production agent" },
     { value: "Never", label: "more access than the human who granted it" },
     { value: "Ours or yours", label: "we host the runtime, or you do" },
   ],
+} as const;
+
+/* -------------------------------------------------------------------------- */
+/* Repositories                                                               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Where each open-source name actually lives.
+ *
+ * One record, because the ADK URL had reached four call sites: the products
+ * grid, the resources card, the footer, and now the hero's second action. Four
+ * literals is three chances to rename a repository and miss one, and a dead
+ * GitHub link is invisible to the internal-link guard, which only walks routes
+ * on this site.
+ */
+export const repos = {
+  ADK: "https://github.com/zeroroot-ai/adk",
+  Setec: "https://github.com/zeroroot-ai/setec",
+  Zerocool: "https://github.com/zeroroot-ai/zerocool-plugins",
+  Bridge: "https://github.com/zeroroot-ai/sdk",
+} as const satisfies Record<string, string>;
+
+/* -------------------------------------------------------------------------- */
+/* What this is                                                               */
+/* -------------------------------------------------------------------------- */
+
+interface Contrast {
+  readonly title: string;
+  readonly body: string;
+}
+
+/**
+ * The category answer, stated before the page starts arguing.
+ *
+ * A reader arriving from a comparison is asking which platform to build their
+ * agents on. The honest answer is that this is not on that list: they keep the
+ * builder they have, and what changes is where the agent executes and what it
+ * can do when it gets there. Answering the question they asked, on the terms
+ * they asked it, loses. Leaving the category wins.
+ *
+ * The proof is mechanical and it is the one thing a builder cannot copy
+ * without becoming a runtime: sitting in the call path is what makes refusal
+ * possible. It names no competitor, and it does not need to. The distinction
+ * is architectural, so it holds against a whole class rather than a company.
+ *
+ * `outcome` is the capability claim and it is deliberately unquantified. There
+ * are no customers in production, so any number here would be a projection.
+ * Every clause of it is true today.
+ */
+export const whyUs = {
+  eyebrow: "what this is",
+  heading: "Not another way to build agents.",
+  sub: "It is what lets the agent you already built run where you are not allowed to run it today. Keep your framework, your prompts, your logic. What changes is where the agent executes, and what it can reach once it is there.",
+  contrast: [
+    {
+      title: "It sits in the call path",
+      body: "Every model call, every tool call and every write goes through the runtime. Standing there is what makes refusal possible: a call outside the grant does not happen and get reported, it is denied at the moment it is made.",
+    },
+    {
+      title: "Not alongside it",
+      body: "Anything that watches an agent from outside can only report what already came out of it. That is a record of the incident, written after the incident, by something that was never able to stop it.",
+    },
+  ] as readonly Contrast[],
+  outcome:
+    "So the workload nobody will let you automate runs tonight: inside your own boundary, holding only what a named human granted it, and replayable move by move when someone asks what it did.",
+} as const;
+
+/* -------------------------------------------------------------------------- */
+/* One agent, four hands                                                      */
+/* -------------------------------------------------------------------------- */
+
+interface Hand {
+  readonly role: string;
+  readonly holds: string;
+  readonly body: string;
+}
+
+/**
+ * Who actually has to say yes.
+ *
+ * Written as one agent crossing four desks rather than four cards describing
+ * four audiences. Four cards about one product restate it four times and argue
+ * breadth; a single object passing through four pairs of hands shows the
+ * division of control, which is the thing that makes an agent shippable.
+ *
+ * Every `holds` value is a real control with a real holder in the product, not
+ * a role we imagine: the grant model (problem #1), the two placement choices
+ * (surfaces), and the budget and timeline (posture). If a control here ever
+ * stops being enforced, this section is wrong, not merely stale.
+ */
+export const hands = {
+  eyebrow: "one agent, four hands",
+  heading: "Everyone who has to say yes holds a different piece.",
+  sub: "One agent crosses four desks before it runs, and crosses them again every day it keeps running. Nobody is asked to trust anyone else's judgment, because nobody is holding anyone else's control.",
+  roles: [
+    {
+      role: "Developer",
+      holds: "the agent",
+      body: "Writes it in the framework they already use and checks it in once. The logic stays theirs. Nothing about the path back to production runs through us.",
+    },
+    {
+      role: "Security",
+      holds: "the grant",
+      body: "Delegates read, write and execute by name, and cannot delegate more than they hold themselves. Deny wins wherever two grants disagree.",
+    },
+    {
+      role: "Platform",
+      holds: "the boundary",
+      body: "Chooses where the runtime lives, hosted or their own cluster, up to fully air-gapped, and where agents run: a laptop, CI, a box on the network, or in-cluster.",
+    },
+    {
+      role: "Operations",
+      holds: "the budget and the trail",
+      body: "Sets what an agent may spend before it stops, and reads an append-only timeline of what it did. Any run replays move by move.",
+    },
+  ] as readonly Hand[],
 } as const;
 
 /* -------------------------------------------------------------------------- */
