@@ -125,6 +125,37 @@ export const whyUs = {
 } as const;
 
 /* -------------------------------------------------------------------------- */
+/* The world system                                                           */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Replay, stated as the mechanism that makes it possible.
+ *
+ * The claim is exact and must stay exact (ADR-0001): the World is not stored
+ * state, it is a fold of one append-only per-tenant Timeline, so any past
+ * moment is reconstructable by folding the log to that point. The shipped read
+ * path is WorldService.GetFrameAt(seq) in the daemon; `fold` states the
+ * invariant verbatim, and the section's interactive globe drives that same
+ * fold over a sample Timeline.
+ *
+ * `note` is load-bearing and must not be removed. There is no customer run to
+ * draw from (see the intentionally-empty proof section), so the globe shows a
+ * SAMPLE mission and says so. This section illustrates the mechanism; it never
+ * claims a real run. The event names it renders are real gibson domain-event
+ * kinds, so they must stay real if the demo Timeline is ever edited.
+ */
+export const world = {
+  eyebrow: "the world system",
+  heading: "Rewind the whole run to any tick, and watch the world rebuild.",
+  lit: "any tick",
+  sub: "Every act an agent takes lands as one event on your tenant's append-only Timeline. The World, every host it found, every path it proved, every token it spent, is never stored on its own. It is a fold of that log. So a reviewer does not grep scattered logs: they drag to a moment, and the exact state that stood there folds back into view.",
+  fold: "World = fold(Timeline)",
+  note: "Illustrative fold of a sample mission Timeline. The mechanism ships in the daemon as GetFrameAt(seq); the globe shows demo data, not a customer run.",
+  mission: "prove an exploitable path to the tenant key store",
+  hint: "Drag the playhead, press play, or use the arrow keys. Scrub back and a finding un-happens, because it only ever existed as a folded event.",
+} as const;
+
+/* -------------------------------------------------------------------------- */
 /* One agent, four hands                                                      */
 /* -------------------------------------------------------------------------- */
 
