@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/zeroroot-ai/www/compare/v1.6.2...v1.7.0) (2026-08-21)
+
+
+### Features
+
+* **landing:** add the World Replay section, third down ([#80](https://github.com/zeroroot-ai/www/issues/80)) ([addf364](https://github.com/zeroroot-ai/www/commit/addf364c18875379dd0d24d6ad05ce0c14a3dfe7))
+
 ## [1.6.2](https://github.com/zeroroot-ai/www/compare/v1.6.1...v1.6.2) (2026-08-20)
 
 
