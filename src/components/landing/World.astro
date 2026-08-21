@@ -1,0 +1,575 @@
+---
+/**
+ * The world system: replay grounded in the mechanism.
+ *
+ * A light acid-concrete section framing one dark terminal instrument. The
+ * instrument is the honest part: a globe (the tenant World), a Timeline log,
+ * and a scrubber. Dragging the scrubber folds the first `seq` events and the
+ * whole World rebuilds, exactly as WorldService.GetFrameAt(seq) does in the
+ * daemon (ADR-0001: World == fold(Timeline)).
+ *
+ * The framing copy comes from @/lib/messaging (`world`). The demo Timeline
+ * lives HERE, not in messaging, because it is illustration, not a claim: the
+ * same rule that keeps the transcript out of CheckIn/Adapt. Every `k` is a real
+ * gibson domain-event kind; keep them real. The terminal palette (Dracula ramp)
+ * is brand-sanctioned scoped to terminal panels, so a transcript reads as a
+ * transcript on a light page.
+ */
+import { world } from "@/lib/messaging";
+
+// Hosts placed on the visible hemisphere (lat, lon in degrees).
+const HOSTS = {
+  "edge-gw":      { addr: "10.0.0.1",  lat:  32, lon: -38, label: "edge-gw" },
+  "web-01":       { addr: "10.0.2.5",  lat:  12, lon: -12, label: "web-01" },
+  "web-02":       { addr: "10.0.2.6",  lat:  -6, lon: -30, label: "web-02" },
+  "api-01":       { addr: "10.0.3.10", lat:  22, lon:  20, label: "api-01" },
+  "db-primary":   { addr: "10.0.4.2",  lat:  -4, lon:  40, label: "db-primary" },
+  "ad-dc":        { addr: "10.0.6.1",  lat: -28, lon:   4, label: "ad-dc" },
+  "vault-broker": { addr: "10.0.5.7",  lat:   4, lon:  62, label: "vault-broker" },
+};
+
+// A sample offensive-security mission. Every `k` is a real gibson event kind.
+const TIMELINE = [
+  { k: "mission.started",    c: "pink",   s: "mission: prove an exploitable path to the tenant key store" },
+  { k: "host.observed",      c: "cyan",   s: "edge-gw (10.0.0.1): perimeter gateway", host: "edge-gw" },
+  { k: "decision.requested", c: "orange", s: "brain: 1 host, no services, what next?" },
+  { k: "llm_call.observed",  c: "purple", s: "decider, claude, 1 completion" },
+  { k: "token.used",         c: "yellow", s: "+1,180 tokens", tok: 1180 },
+  { k: "decision.completed", c: "orange", s: "chose: enumerate services behind edge-gw" },
+  { k: "work.dispatched",    c: "green",  s: "tool: portscan edge-gw", work: "scan edge-gw" },
+  { k: "host.observed",      c: "cyan",   s: "web-01 (10.0.2.5): reachable via edge-gw", host: "web-01", edge: ["edge-gw","web-01"] },
+  { k: "host.observed",      c: "cyan",   s: "web-02 (10.0.2.6): reachable via edge-gw", host: "web-02", edge: ["edge-gw","web-02"] },
+  { k: "work.completed",     c: "green",  s: "scan complete: 2 web hosts, ports 80/443", done: "scan edge-gw" },
+  { k: "belief.scored",      c: "purple", s: "belief: web-01 juicy 0.18 up to 0.34", host: "web-01", belief: 0.34 },
+  { k: "decision.requested", c: "orange", s: "brain: which surface first?" },
+  { k: "llm_call.observed",  c: "purple", s: "decider, claude, 1 completion" },
+  { k: "token.used",         c: "yellow", s: "+1,540 tokens", tok: 1540 },
+  { k: "decision.completed", c: "orange", s: "chose: probe web-01 app surface" },
+  { k: "work.dispatched",    c: "green",  s: "agent: recon web-01", work: "recon web-01" },
+  { k: "host.observed",      c: "cyan",   s: "api-01 (10.0.3.10): internal, linked from web-01", host: "api-01", edge: ["web-01","api-01"] },
+  { k: "belief.scored",      c: "purple", s: "belief: api-01 juicy 0.20 up to 0.52", host: "api-01", belief: 0.52 },
+  { k: "credential.observed",c: "orange", s: "reused service credential exposed on web-01", host: "web-01" },
+  { k: "work.completed",     c: "green",  s: "recon complete: api-01 proxies internal metadata", done: "recon web-01" },
+  { k: "finding.raised",     c: "red",    s: "SSRF on api-01 /proxy reaches cloud metadata", host: "api-01", finding: { sev: "high" } },
+  { k: "decision.requested", c: "orange", s: "brain: pivot from api-01?" },
+  { k: "llm_call.observed",  c: "purple", s: "decider, claude, 1 completion" },
+  { k: "token.used",         c: "yellow", s: "+2,020 tokens", tok: 2020 },
+  { k: "decision.completed", c: "orange", s: "chose: reach data tier with recovered cred" },
+  { k: "work.dispatched",    c: "green",  s: "agent: pivot to data tier", work: "pivot db" },
+  { k: "host.observed",      c: "cyan",   s: "db-primary (10.0.4.2): reachable from api-01", host: "db-primary", edge: ["api-01","db-primary"] },
+  { k: "belief.scored",      c: "purple", s: "belief: db-primary juicy 0.30 up to 0.64", host: "db-primary", belief: 0.64 },
+  { k: "finding.raised",     c: "red",    s: "reused DB credential grants read on db-primary", host: "db-primary", finding: { sev: "high" } },
+  { k: "host.observed",      c: "cyan",   s: "ad-dc (10.0.6.1): observed, off the goal path", host: "ad-dc" },
+  { k: "work.completed",     c: "green",  s: "pivot complete: broker endpoint referenced in db", done: "pivot db" },
+  { k: "belief.scored",      c: "purple", s: "belief: vault-broker juicy 0.40 up to 0.88 (goal)", host: "vault-broker", belief: 0.88, appear: true, edge: ["db-primary","vault-broker"] },
+  { k: "decision.requested", c: "orange", s: "brain: can the key store be reached?" },
+  { k: "llm_call.observed",  c: "purple", s: "decider, claude, 1 completion" },
+  { k: "token.used",         c: "yellow", s: "+2,460 tokens", tok: 2460 },
+  { k: "decision.completed", c: "orange", s: "chose: prove reach to vault-broker" },
+  { k: "work.dispatched",    c: "green",  s: "agent: reach key store", work: "reach vault" },
+  { k: "credential.observed",c: "orange", s: "broker token recoverable via db read", host: "vault-broker" },
+  { k: "work.completed",     c: "green",  s: "reach proven end to end", done: "reach vault" },
+  { k: "finding.raised",     c: "red",    s: "critical: path to tenant key store proven", host: "vault-broker", finding: { sev: "critical" }, proven: true },
+  { k: "mission.done",       c: "pink",   s: "goal reached: exploitable path proven, 3 findings" },
+];
+
+const KIND_COLOR: Record<string, string> = {
+  cyan: "var(--dracula-cyan)", green: "var(--dracula-green)", orange: "var(--dracula-orange)",
+  yellow: "var(--dracula-yellow)", purple: "var(--dracula-purple)", pink: "var(--dracula-pink)", red: "var(--dracula-red)",
+};
+
+const N = TIMELINE.length;
+const li = world.heading.indexOf(world.lit);
+const headBefore = li >= 0 ? world.heading.slice(0, li) : world.heading;
+const headAfter = li >= 0 ? world.heading.slice(li + world.lit.length) : "";
+---
+
+<section class="band world" id="world">
+  <div class="wrap">
+    <p class="section-eyebrow">{world.eyebrow}</p>
+    <h2 class="section-h world-h">{headBefore}<span class="lit">{world.lit}</span>{headAfter}</h2>
+    <p class="section-sub world-sub">{world.sub}</p>
+    <p class="world-eq"><span class="eq">{world.fold}</span></p>
+    <p class="world-note">{world.note}</p>
+
+    <div class="console">
+      <div class="console-bar">
+        <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="rpc">gibson world replay · <b>GetFrameAt</b>(seq)</span>
+        <span class="scope"><b>tenant world · isolated</b></span>
+      </div>
+
+      <div class="stage">
+        <div class="globe-pane">
+          <canvas id="w-globe" aria-label="A globe of the tenant world: hosts discovered, exploit paths proven, and the belief score, reconstructed as of the current tick."></canvas>
+          <div class="goal-flag"><b>mission:</b> {world.mission}</div>
+          <div class="globe-legend" aria-hidden="true">
+            <span><b style="background:#cdd6d0"></b> host observed</span>
+            <span><b style="background:var(--primary);box-shadow:0 0 8px var(--primary)"></b> high belief</span>
+            <span><b style="background:var(--dracula-red)"></b> finding, refused</span>
+            <span><b style="background:var(--dracula-green)"></b> path, granted</span>
+          </div>
+        </div>
+
+        <div class="log-panel">
+          <div class="log-head">
+            <span>timeline</span>
+            <span class="count">folded <b id="w-folded">0</b> / {N}</span>
+          </div>
+          <div class="log-scroll" id="w-log">
+            {TIMELINE.map((e, i) => (
+              <div class="log-row" data-i={i} style={`--k:${KIND_COLOR[e.c]}`}>
+                <span class="seq">{String(i).padStart(2, "0")}</span>
+                <span><span class="kind">{e.k}</span> <span class="sum">{e.s}</span></span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div class="scrub">
+        <div class="scrub-top">
+          <button class="play" id="w-play" aria-label="Play the replay forward">
+            <svg id="w-play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+          </button>
+          <div class="frame-readout">
+            <span class="fold">frame <span class="n" id="w-seq">0</span> <b>= fold(</b>timeline, <span class="n" id="w-seq2">0</span><b>)</b></span>
+            <span class="now" id="w-now">mission not yet started</span>
+          </div>
+          <div class="stat-strip">
+            <div class="stat"><div class="v" id="w-hosts" style="--cv:#5a6b5f">0</div><div class="l">hosts</div></div>
+            <div class="stat"><div class="v" id="w-findings" style="--cv:var(--dracula-red)">0</div><div class="l">findings</div></div>
+            <div class="stat"><div class="v" id="w-tokens" style="--cv:var(--dracula-orange)">0</div><div class="l">tokens</div></div>
+          </div>
+        </div>
+
+        <div class="track-wrap">
+          <div class="track-marks" aria-hidden="true">
+            {TIMELINE.map((e, i) => {
+              const big = e.k === "finding.raised" || e.k.startsWith("mission");
+              return (
+                <i
+                  class="mark"
+                  style={`left:${((i + 0.5) / N) * 100}%;background:${KIND_COLOR[e.c]};height:${big ? "1.25rem" : "0.7rem"};opacity:${big ? 0.95 : 0.55}`}
+                ></i>
+              );
+            })}
+          </div>
+          <input type="range" id="w-scrub" min="0" max={N} value="0" step="1"
+                 aria-label="Scrub through the mission timeline tick by tick" />
+        </div>
+        <div class="track-axis">
+          <span>mission.started</span>
+          <span>live world · {N}</span>
+        </div>
+
+        <p class="world-hint">{world.hint}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Local aliases and helpers. These NAME NEW tokens; they never redefine a
+     brand token, so the one-source-of-truth rule holds. */
+  .world {
+    --d-red: var(--dracula-red);
+    --d-orange: var(--dracula-orange);
+    --d-yellow: var(--dracula-yellow);
+    --d-green: var(--dracula-green);
+    --d-cyan: var(--dracula-cyan);
+    --d-pink: var(--dracula-pink);
+    --d-purple: var(--dracula-purple);
+    --primary-fg: var(--primary-foreground);
+    --w-faint: color-mix(in oklch, var(--foreground) 42%, var(--background));
+    --w-term-2: color-mix(in oklch, var(--terminal-bg) 84%, var(--ink-foreground));
+    --w-ink-hair: color-mix(in oklch, var(--ink-border) 78%, var(--terminal-bg));
+    --w-ink-faint: var(--ink-muted);
+  }
+
+  .world-h { max-width: 20ch; }
+  .lit {
+    color: var(--highlight);
+    box-shadow: inset 0 -0.3em 0 color-mix(in oklch, var(--primary) 35%, transparent);
+  }
+  .world-eq {
+    margin: -1.5rem 0 1rem;
+  }
+  .world-eq .eq {
+    display: inline-block;
+    font-family: var(--mono-family);
+    font-size: 0.98rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--highlight);
+    background: color-mix(in oklch, var(--primary) 16%, transparent);
+    border: 1px solid color-mix(in oklch, var(--primary) 42%, transparent);
+    border-radius: var(--radius);
+    padding: 0.3rem 0.7rem;
+  }
+  .world-note {
+    margin: 0 0 2.375rem;
+    font-family: var(--mono-family);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--w-faint);
+  }
+
+  /* the dark instrument */
+  .console {
+    border: 1px solid var(--ink-border);
+    border-radius: var(--radius);
+    background: var(--terminal-bg);
+    overflow: hidden;
+  }
+  .console-bar {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.6rem 0.95rem;
+    border-bottom: 1px solid var(--w-ink-hair);
+    background: var(--w-term-2);
+    font-family: var(--mono-family);
+    font-size: 0.72rem; color: var(--ink-muted);
+  }
+  .dots { display: flex; gap: 0.4rem; }
+  .dots i { width: 0.58rem; height: 0.58rem; border-radius: 50%; background: var(--ink-border); display: block; }
+  .rpc { color: var(--ink-foreground); }
+  .rpc b { color: var(--d-green); font-weight: 700; }
+  .scope { margin-left: auto; display: inline-flex; align-items: center; }
+  .scope b {
+    color: var(--primary-fg); background: var(--primary);
+    font-weight: 700; font-size: 0.64rem; letter-spacing: 0.03em;
+    padding: 0.12rem 0.5rem; border-radius: var(--radius);
+  }
+
+  .stage { display: grid; grid-template-columns: 1.55fr 1fr; min-height: 430px; }
+
+  .globe-pane { position: relative; border-right: 1px solid var(--w-ink-hair); overflow: hidden; }
+  .globe-pane::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    background: repeating-linear-gradient(to bottom,
+      transparent 0, transparent 2px,
+      color-mix(in oklch, var(--primary) 3%, transparent) 3px, transparent 4px);
+    mix-blend-mode: screen;
+  }
+  #w-globe { display: block; width: 100%; height: 100%; position: relative; }
+
+  .globe-legend {
+    position: absolute; left: 0.8rem; bottom: 0.8rem; z-index: 2;
+    display: flex; flex-direction: column; gap: 0.3rem;
+    font-family: var(--mono-family); font-size: 0.64rem; color: var(--ink-muted);
+    background: color-mix(in oklch, var(--terminal-bg) 72%, transparent);
+    border: 1px solid var(--w-ink-hair); border-radius: var(--radius); padding: 0.48rem 0.58rem;
+    backdrop-filter: blur(3px);
+  }
+  .globe-legend span { display: inline-flex; align-items: center; gap: 0.45rem; }
+  .globe-legend b { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
+
+  .goal-flag {
+    position: absolute; right: 0.8rem; top: 0.8rem; z-index: 2;
+    font-family: var(--mono-family); font-size: 0.64rem; color: var(--w-ink-faint);
+    text-align: right; max-width: 15rem; line-height: 1.45;
+  }
+  .goal-flag b { color: var(--ink-muted); font-weight: 500; }
+
+  .log-panel { display: flex; flex-direction: column; background: var(--terminal-bg); min-width: 0; }
+  .log-head {
+    padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--w-ink-hair);
+    font-family: var(--mono-family); font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--w-ink-faint); display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .log-head .count { color: var(--ink-muted); letter-spacing: 0; text-transform: none; }
+  .log-head .count b { color: var(--d-green); font-variant-numeric: tabular-nums; }
+
+  .log-scroll {
+    flex: 1; overflow-y: auto; padding: 0.32rem 0; max-height: 430px;
+    scrollbar-width: thin; scrollbar-color: var(--ink-border) transparent;
+    font-family: var(--mono-family);
+  }
+  .log-row {
+    display: grid; grid-template-columns: 2.5rem 1fr; gap: 0.5rem; align-items: baseline;
+    padding: 0.2rem 0.9rem; font-size: 0.72rem;
+    border-left: 2px solid transparent; opacity: 0.4;
+    transition: opacity 0.25s, background 0.25s, border-color 0.25s;
+  }
+  .log-row.on { opacity: 1; }
+  .log-row.cur { background: color-mix(in oklch, var(--primary) 9%, transparent); border-left-color: var(--primary); }
+  .log-row .seq { color: var(--w-ink-faint); font-variant-numeric: tabular-nums; text-align: right; }
+  .log-row.cur .seq { color: var(--d-green); }
+  .log-row .kind { color: var(--k, var(--ink-muted)); font-weight: 500; }
+  .log-row .sum { color: var(--ink-muted); }
+
+  .scrub { border-top: 1px solid var(--ink-border); background: var(--w-term-2); padding: 1rem 1.1rem 1.1rem; }
+  .scrub-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.85rem; }
+
+  .play {
+    flex: none; width: 2.4rem; height: 2.4rem; border-radius: var(--radius);
+    border: none; background: var(--primary); color: var(--primary-fg);
+    cursor: pointer; display: grid; place-items: center; transition: filter 0.15s, transform 0.1s;
+  }
+  .play:hover { filter: brightness(1.08); }
+  .play:active { transform: scale(0.95); }
+  .play:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+  .play svg { width: 1rem; height: 1rem; fill: currentColor; }
+
+  .frame-readout { display: flex; flex-direction: column; gap: 0.14rem; font-family: var(--mono-family); font-size: 0.74rem; min-width: 0; }
+  .fold { color: var(--ink-muted); }
+  .fold b { color: var(--ink-foreground); font-weight: 500; }
+  .fold .n { color: var(--d-green); font-variant-numeric: tabular-nums; font-weight: 700; }
+  .now { color: var(--w-ink-faint); font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .now .live { color: var(--primary-fg); background: var(--primary); padding: 0.02rem 0.36rem; border-radius: var(--radius); font-weight: 700; }
+
+  .stat-strip { margin-left: auto; display: flex; gap: 0.5rem; flex: none; }
+  .stat {
+    border: 1px solid var(--w-ink-hair); border-radius: var(--radius);
+    padding: 0.36rem 0.65rem; background: var(--terminal-bg); text-align: right; min-width: 4.8rem;
+  }
+  .stat .v { font-family: var(--mono-family); font-size: 1.02rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; color: var(--cv, var(--ink-foreground)); }
+  .stat .l { font-family: var(--mono-family); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--w-ink-faint); margin-top: 0.3rem; }
+
+  .track-wrap { position: relative; padding: 0.5rem 0 0.1rem; }
+  .track-marks { position: absolute; left: 0; right: 0; top: 0.5rem; height: 1.9rem; pointer-events: none; }
+  .mark { position: absolute; top: 0; width: 2px; height: 0.7rem; transform: translateX(-1px); }
+
+  #w-scrub { -webkit-appearance: none; appearance: none; width: 100%; height: 1.9rem; background: transparent; cursor: pointer; position: relative; z-index: 2; margin: 0; }
+  #w-scrub::-webkit-slider-runnable-track {
+    height: 4px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary) var(--pct, 0%), var(--ink-border) var(--pct, 0%), var(--ink-border) 100%);
+  }
+  #w-scrub::-moz-range-track { height: 4px; border-radius: 2px; background: var(--ink-border); }
+  #w-scrub::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--primary); }
+  #w-scrub::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 1.05rem; height: 1.05rem; border-radius: var(--radius);
+    margin-top: -0.5rem; background: var(--primary); border: 2px solid var(--w-term-2); box-shadow: 0 0 0 1px var(--primary);
+  }
+  #w-scrub::-moz-range-thumb { width: 1.05rem; height: 1.05rem; border-radius: var(--radius); background: var(--primary); border: 2px solid var(--w-term-2); box-shadow: 0 0 0 1px var(--primary); }
+  #w-scrub:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--ink-foreground); outline-offset: 2px; }
+
+  .track-axis { display: flex; justify-content: space-between; font-family: var(--mono-family); font-size: 0.62rem; color: var(--w-ink-faint); margin-top: 0.15rem; font-variant-numeric: tabular-nums; }
+
+  .world-hint { margin: 1.4rem 0 0; font-size: 0.82rem; line-height: 1.55; color: var(--w-faint); max-width: 70ch; }
+
+  @media (max-width: 980px) {
+    .stage { grid-template-columns: 1fr; }
+    .log-panel { display: none; }
+  }
+  @media (max-width: 560px) {
+    .stat-strip { display: none; }
+    .world-note { margin-top: -0.75rem; }
+  }
+</style>
+
+<script is:inline define:vars={{ TL: TIMELINE, HS: HOSTS, N }}>
+  (() => {
+    "use strict";
+    const root = document.getElementById("world");
+    if (!root) return;
+    const canvas = root.querySelector("#w-globe");
+    const ctx = canvas.getContext("2d");
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let W = 0, H = 0, R = 0, cx = 0, cy = 0, dpr = 1;
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = Math.max(320, rect.width); H = Math.max(300, rect.height);
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx = W / 2; cy = H / 2; R = Math.min(W, H) * 0.36;
+    }
+
+    function project(latDeg, lonDeg, rot) {
+      const lat = latDeg * Math.PI / 180, lon = lonDeg * Math.PI / 180 + rot;
+      return { x: cx + Math.cos(lat) * Math.sin(lon) * R, y: cy - Math.sin(lat) * R, z: Math.cos(lat) * Math.cos(lon) };
+    }
+
+    const GOAL_PATH = [["edge-gw","web-01"],["web-01","api-01"],["api-01","db-primary"],["db-primary","vault-broker"]];
+    const onGoal = (a, b) => GOAL_PATH.some(([x, y]) => x === a && y === b);
+
+    function foldTo(seq) {
+      const hosts = new Map(), edges = [], findings = [];
+      let tokens = 0, goalProven = false;
+      for (let i = 0; i < seq; i++) {
+        const e = TL[i];
+        if (e.host && (e.k === "host.observed" || e.appear) && !hosts.has(e.host)) hosts.set(e.host, { belief: 0.12 });
+        if (e.belief != null) { if (!hosts.has(e.host)) hosts.set(e.host, { belief: 0.12 }); hosts.get(e.host).belief = e.belief; }
+        if (e.edge) edges.push(e.edge);
+        if (e.finding) findings.push({ ...e.finding, host: e.host });
+        if (e.tok) tokens += e.tok;
+        if (e.proven) goalProven = true;
+      }
+      return { hosts, edges, findings, tokens, goalProven };
+    }
+
+    function hexA(c, a) {
+      if (c[0] !== "#") return c;
+      const h = c.slice(1);
+      return `rgba(${parseInt(h.slice(0,2),16)},${parseInt(h.slice(2,4),16)},${parseInt(h.slice(4,6),16)},${a})`;
+    }
+
+    function drawArc(a, b, rot, proven) {
+      ctx.beginPath();
+      let moved = false;
+      for (let i = 0; i <= 32; i++) {
+        const f = i / 32;
+        const lift = 1 + Math.sin(f * Math.PI) * 0.06;
+        const p = project(a.lat + (b.lat - a.lat) * f, a.lon + (b.lon - a.lon) * f, rot);
+        const x = cx + (p.x - cx) * lift, y = cy + (p.y - cy) * lift;
+        if (p.z < -0.1) { moved = false; continue; }
+        moved ? ctx.lineTo(x, y) : (ctx.moveTo(x, y), moved = true);
+      }
+      ctx.strokeStyle = proven ? hexA("#50fa7b", 0.6) : hexA("#c9d1c4", 0.28);
+      ctx.lineWidth = proven ? 1.8 : 1.1;
+      ctx.setLineDash(proven ? [] : [3, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Canvas 2D does not reliably parse oklch(); use rgb/hex for every ctx color.
+    const ACID = "163,230,53"; // acid lime, ~ --primary in sRGB
+
+    function drawGlobe(state, rot, t) {
+      ctx.clearRect(0, 0, W, H);
+      const grd = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.35, R * 0.1, cx, cy, R);
+      grd.addColorStop(0, "#2a2925");
+      grd.addColorStop(0.7, "#1f1e1b");
+      grd.addColorStop(1, "#191816");
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = grd; ctx.fill();
+      ctx.lineWidth = 1; ctx.strokeStyle = `rgba(${ACID},0.22)`; ctx.stroke();
+
+      ctx.strokeStyle = "rgba(160,180,120,0.10)"; ctx.lineWidth = 1;
+      for (let latL = -60; latL <= 60; latL += 30) {
+        ctx.beginPath();
+        for (let lon = -180; lon <= 180; lon += 6) {
+          const p = project(latL, lon, rot);
+          if (p.z < 0) { ctx.moveTo(NaN, NaN); continue; }
+          lon === -180 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+      }
+      for (let lonL = -180; lonL < 180; lonL += 30) {
+        ctx.beginPath(); let s = false;
+        for (let lat = -90; lat <= 90; lat += 6) {
+          const p = project(lat, lonL, rot);
+          if (p.z < 0) { s = false; continue; }
+          s ? ctx.lineTo(p.x, p.y) : (ctx.moveTo(p.x, p.y), s = true);
+        }
+        ctx.stroke();
+      }
+
+      for (const [from, to] of state.edges) {
+        const a = HS[from], b = HS[to];
+        if (a && b) drawArc(a, b, rot, state.goalProven && (to === "vault-broker" || onGoal(from, to)));
+      }
+
+      const pts = [];
+      state.hosts.forEach((h, id) => { const m = HS[id]; if (m) pts.push({ id, m, p: project(m.lat, m.lon, rot), belief: h.belief }); });
+      pts.sort((a, b) => a.p.z - b.p.z);
+
+      for (const pt of pts) {
+        const front = pt.p.z > 0, fade = front ? 1 : 0.16;
+        const finding = state.findings.find((f) => f.host === pt.id);
+        const goal = pt.id === "vault-broker";
+
+        if (pt.belief > 0.2 && front) {
+          const gr = 6 + pt.belief * 34;
+          const glow = ctx.createRadialGradient(pt.p.x, pt.p.y, 0, pt.p.x, pt.p.y, gr);
+          glow.addColorStop(0, `rgba(${ACID},${0.1 + pt.belief * 0.44})`);
+          glow.addColorStop(1, `rgba(${ACID},0)`);
+          ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(pt.p.x, pt.p.y, gr, 0, Math.PI * 2); ctx.fill();
+        }
+
+        let col = "#cdd6d0";
+        if (finding) col = finding.sev === "critical" ? "#ff5555" : "#ffb86c";
+        if (goal && state.goalProven) col = "#50fa7b";
+        const rad = goal ? 5.2 : 3.6;
+
+        if (finding && front && !reduce) {
+          const pulse = (Math.sin(t / 380 + pt.p.x) + 1) / 2;
+          ctx.beginPath(); ctx.arc(pt.p.x, pt.p.y, rad + 3 + pulse * 6, 0, Math.PI * 2);
+          ctx.strokeStyle = hexA(col, 0.25 + pulse * 0.4); ctx.lineWidth = 1.4; ctx.stroke();
+        }
+        if (goal && state.goalProven && front) {
+          ctx.beginPath(); ctx.arc(pt.p.x, pt.p.y, rad + 7, 0, Math.PI * 2);
+          ctx.strokeStyle = hexA("#50fa7b", 0.6); ctx.lineWidth = 1.5; ctx.stroke();
+        }
+        ctx.beginPath(); ctx.arc(pt.p.x, pt.p.y, rad, 0, Math.PI * 2); ctx.fillStyle = hexA(col, fade); ctx.fill();
+        if (front) { ctx.strokeStyle = hexA("#0d0d0a", 0.5); ctx.lineWidth = 1; ctx.stroke(); }
+        if (front) {
+          ctx.font = "500 10.5px 'JetBrains Mono', monospace";
+          ctx.fillStyle = hexA("#e8ecdf", 0.9);
+          ctx.textAlign = pt.p.x > cx ? "left" : "right";
+          ctx.fillText(pt.m.label, pt.p.x + (pt.p.x > cx ? rad + 6 : -(rad + 6)), pt.p.y + 3.5);
+        }
+      }
+    }
+
+    // interactivity over the server-rendered rows
+    const rows = Array.from(root.querySelectorAll(".log-row"));
+    const logScroll = root.querySelector("#w-log");
+    const scrub = root.querySelector("#w-scrub");
+    const playBtn = root.querySelector("#w-play");
+    const playIcon = root.querySelector("#w-play-icon");
+    const el = {
+      folded: root.querySelector("#w-folded"), seq: root.querySelector("#w-seq"), seq2: root.querySelector("#w-seq2"),
+      now: root.querySelector("#w-now"), hosts: root.querySelector("#w-hosts"),
+      findings: root.querySelector("#w-findings"), tokens: root.querySelector("#w-tokens"),
+    };
+
+    let seq = 0, playing = false, lastStep = 0;
+
+    function render() {
+      const st = foldTo(seq);
+      el.folded.textContent = String(seq);
+      el.seq.textContent = String(seq);
+      el.seq2.textContent = String(seq);
+      el.hosts.textContent = String(st.hosts.size);
+      el.findings.textContent = String(st.findings.length);
+      el.tokens.textContent = st.tokens.toLocaleString();
+
+      if (seq === 0) el.now.textContent = "mission not yet started";
+      else if (seq >= N) el.now.innerHTML = '<span class="live">live world</span> ' + TL[N - 1].s;
+      else el.now.textContent = TL[seq - 1].k + " · " + TL[seq - 1].s;
+
+      scrub.value = String(seq);
+      scrub.style.setProperty("--pct", (seq / N) * 100 + "%");
+
+      rows.forEach((r, i) => { r.classList.toggle("on", i < seq); r.classList.toggle("cur", i === seq - 1); });
+      if (seq > 0 && seq <= N) {
+        const cur = rows[seq - 1];
+        logScroll.scrollTo({ top: cur.offsetTop - logScroll.clientHeight / 2 + cur.clientHeight, behavior: reduce ? "auto" : "smooth" });
+      }
+    }
+
+    function setSeq(v) { seq = Math.max(0, Math.min(N, v)); render(); }
+    scrub.addEventListener("input", () => { pause(); setSeq(parseInt(scrub.value, 10)); });
+
+    function play() {
+      if (seq >= N) seq = 0;
+      playing = true; lastStep = performance.now();
+      playIcon.innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"></path>';
+      playBtn.setAttribute("aria-label", "Pause the replay");
+    }
+    function pause() {
+      playing = false;
+      playIcon.innerHTML = '<path d="M8 5v14l11-7z"></path>';
+      playBtn.setAttribute("aria-label", "Play the replay forward");
+    }
+    playBtn.addEventListener("click", () => (playing ? pause() : play()));
+
+    root.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { pause(); setSeq(seq + 1); e.preventDefault(); }
+      else if (e.key === "ArrowLeft") { pause(); setSeq(seq - 1); e.preventDefault(); }
+    });
+
+    let rot = 0;
+    function frame(t) {
+      if (playing && t - lastStep > 620) { lastStep = t; seq >= N ? pause() : setSeq(seq + 1); }
+      if (!reduce) rot += 0.0016;
+      drawGlobe(foldTo(seq), rot, t);
+      requestAnimationFrame(frame);
+    }
+
+    new ResizeObserver(resize).observe(canvas.parentElement);
+    resize(); render(); requestAnimationFrame(frame);
+  })();
+</script>
