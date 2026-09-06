@@ -1,0 +1,43 @@
+---
+/**
+ * The landing page.
+ *
+ * Composition only: every section is its own component and every word it
+ * renders comes from @/lib/messaging, so this file says what the page IS and
+ * nothing about what it says.
+ */
+import Landing from "@/layouts/Landing.astro";
+import Hero from "@/components/landing/Hero.astro";
+import WhyUs from "@/components/landing/WhyUs.astro";
+import World from "@/components/landing/World.astro";
+import Stack from "@/components/landing/Stack.astro";
+import CheckIn from "@/components/landing/CheckIn.astro";
+import Problem from "@/components/landing/Problem.astro";
+import Adapt from "@/components/landing/Adapt.astro";
+import Hands from "@/components/landing/Hands.astro";
+import Products from "@/components/landing/Products.astro";
+import Surfaces from "@/components/landing/Surfaces.astro";
+import Market from "@/components/landing/Market.astro";
+import Posture from "@/components/landing/Posture.astro";
+import Partner from "@/components/landing/Partner.astro";
+import Resources from "@/components/landing/Resources.astro";
+import FinalCta from "@/components/landing/FinalCta.astro";
+---
+
+<Landing title="zeroroot · the zero-trust agent runtime">
+  <Hero />
+  <WhyUs />
+  <World />
+  <Problem />
+  <Hands />
+  <Stack />
+  <CheckIn />
+  <Adapt />
+  <Products />
+  <Surfaces />
+  <Market />
+  <Posture />
+  <Partner />
+  <Resources />
+  <FinalCta />
+</Landing>

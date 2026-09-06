@@ -1,0 +1,86 @@
+---
+/**
+ * Adapting an agent you already have.
+ *
+ * The claim is precise and must stay precise: the MODEL call path is redirected.
+ * That is not the same as registering a foreign agent, and there is no
+ * foreign-agent registry to register one in.
+ *
+ * It is also not the whole job, and the copy says so. Redirecting the base URL
+ * is one line; the agent still has to check in to have an identity, and its
+ * tools still have to be declared. An earlier version of this section read
+ * "Change one line. Keep the agent." and implied the integration was free.
+ */
+import { adapt } from "@/lib/messaging";
+---
+
+<section class="band" id="adapt">
+  <div class="wrap split">
+    <div>
+      <p class="section-eyebrow">{adapt.eyebrow}</p>
+      <h2 class="section-h">{adapt.heading}</h2>
+      <p class="section-sub">{adapt.sub}</p>
+      <ul class="ticks">{adapt.bullets.map((b) => <li>{b}</li>)}</ul>
+    </div>
+
+    <div class="term">
+      <div class="term-bar"><span>one integration pass</span></div>
+      <pre><code><span class="c-p">$</span> gibson component init my-agent <span class="c-f">--kind</span> agent
+<span class="c-p">$</span> claude
+<span class="c-mut">&gt; Wrap our LangChain agent as a Gibson component.
+&gt; Read AGENTS.md first.</span>
+
+<span class="c-mut"># the coding agent reads the contract, adds the
+# check-in, routes model calls through the runtime,
+# and declares the tools. your logic is untouched.</span>
+
+<span class="c-p">$</span> gibson component validate
+<span class="c-p">$</span> gibson component register <span class="c-f">--token</span> -
+<span class="c-p">$</span> gibson component run</code></pre>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ticks {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ticks li {
+    position: relative;
+    padding: 0.5rem 0 0.5rem 1.375rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .ticks li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--highlight);
+    font-weight: 700;
+  }
+  .term-bar {
+    font-family: var(--mono-family);
+    font-size: 0.66rem;
+    color: var(--muted-foreground);
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--ink-border);
+    border-bottom: none;
+    background: var(--terminal-bg);
+  }
+  .term pre {
+    margin: 0;
+    padding: 1.125rem 0.875rem;
+    overflow-x: auto;
+    border: 1px solid var(--ink-border);
+    background: var(--terminal-bg);
+    font-family: var(--mono-family);
+    font-size: 0.78rem;
+    line-height: 1.85;
+    color: var(--dracula-fg);
+  }
+  .c-mut { color: var(--dracula-comment); }
+  .c-p { color: var(--primary); }
+  .c-f { color: var(--dracula-cyan); }
+</style>

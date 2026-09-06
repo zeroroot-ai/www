@@ -1,0 +1,19 @@
+---
+/**
+ * The Google tag (gtag.js), verbatim from the GA4 property, with the
+ * Measurement ID read from one place. Both scripts are `is:inline` so Astro
+ * ships them as written and does not bundle or defer them.
+ */
+import { GA_MEASUREMENT_ID } from "@/lib/analytics";
+const src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+---
+
+<script is:inline async src={src}></script>
+<script is:inline define:vars={{ id: GA_MEASUREMENT_ID }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", id);
+</script>

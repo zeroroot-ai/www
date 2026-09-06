@@ -1,0 +1,73 @@
+---
+/**
+ * What this is, immediately under the hero.
+ *
+ * A cold reader needs the category before the argument. The page used to open
+ * with "why agents stall", which only lands once you already know what is
+ * being offered to stop the stalling.
+ *
+ * Two panels of equal weight: what the ADK gives each team, and what the
+ * runtime gives the company. Both are affirmative, so neither is styled as a
+ * foil.
+ */
+import { whyUs, repos } from "@/lib/messaging";
+---
+
+<section class="band why" id="why">
+  <div class="wrap">
+    <p class="section-eyebrow">{whyUs.eyebrow}</p>
+    <h2 class="section-h">{whyUs.heading}</h2>
+    <p class="section-sub">{whyUs.sub}</p>
+
+    <div class="grid-2 why-grid">
+      {whyUs.contrast.map((c) => (
+        <div class="card why-card">
+          <h3>{c.title}</h3>
+          <ul>
+            {c.items.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <p class="outcome">{whyUs.outcome}</p>
+
+    <div class="cta-row">
+      <a class="btn" href="/contact-sales">Apply as a design partner</a>
+      <a class="btn-ghost" href={repos.ADK} target="_blank" rel="noopener noreferrer">Read the source</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why-grid {
+    margin-bottom: 2.25rem;
+  }
+  .why-card h3 {
+    margin: 0 0 0.625rem;
+    font-size: 1rem;
+    letter-spacing: -0.015em;
+  }
+  .why-card h3 {
+    color: var(--highlight);
+  }
+  .why-card ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--muted-foreground);
+  }
+  .why-card li + li {
+    margin-top: 0.4rem;
+  }
+  .outcome {
+    margin: 0 0 2rem;
+    max-width: 62ch;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    padding-left: 1.125rem;
+    border-left: 2px solid var(--highlight);
+  }
+</style>

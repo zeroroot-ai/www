@@ -1,0 +1,68 @@
+---
+/**
+ * The problem, stated as four refusals a platform team is right to make.
+ *
+ * Pain first, then the mechanism that resolves it, and the resolve must name
+ * something that ships. "We handle that" is not a resolve.
+ */
+import { problem } from "@/lib/messaging";
+---
+
+<section class="band" id="problem">
+  <div class="wrap">
+    <p class="section-eyebrow">{problem.eyebrow}</p>
+    <h2 class="section-h">{problem.heading}</h2>
+    <p class="section-sub">{problem.sub}</p>
+    <div class="grid-2">
+      {problem.items.map((it) => (
+        <div class="card">
+          <h3>{it.title}</h3>
+          <p class="label">{problem.labels.today}</p>
+          <p class="pain">{it.pain}</p>
+          <p class="label label-gibson">{problem.labels.gibson}</p>
+          <p class="resolve"><span aria-hidden="true">→</span>{it.resolve}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  h3 {
+    margin: 0 0 0.625rem;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  .label {
+    margin: 0 0 0.25rem;
+    font-family: var(--mono-family);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+  .label-gibson {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    color: var(--highlight);
+  }
+  .pain {
+    margin: 0 0 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+  .resolve {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .resolve span {
+    color: var(--highlight);
+    font-weight: 700;
+  }
+</style>

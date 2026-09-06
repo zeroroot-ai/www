@@ -1,0 +1,18 @@
+---
+/**
+ * Contact sales, ported from the dashboard's app/(public)/contact-sales page.
+ *
+ * The form is the one interactive surface on this site, so it hydrates. It
+ * posts to the product host's /api/contact-sales, which owns the rate limiter
+ * and the email provider.
+ */
+import Landing from "@/layouts/Landing.astro";
+import { ContactSalesForm } from "@/components/contact/ContactSalesForm";
+---
+
+<Landing
+  title="Talk to our team | zeroroot.ai"
+  description="Learn about Enterprise features, on-prem deployment, and custom pricing."
+>
+  <ContactSalesForm client:load />
+</Landing>

@@ -1,0 +1,95 @@
+---
+/**
+ * Hero. An inverted band cut into the page, so the first thing a reader meets
+ * is the material the rest of the site is made of.
+ *
+ * Static: no typewriter, no animation, no client JavaScript. The claim does the
+ * work.
+ *
+ * The second action is a link, not a command. It used to read
+ * "helm install gibson" in monospace and scroll to #products: it looked
+ * copyable, was not, and promised an install a visitor cannot perform today.
+ * It now says what the click does and does exactly that.
+ *
+ * The stat row carries the one-day claim. It is a customer time-to-value claim
+ *, what an install can reach, not a report of something already done, and it
+ * is the owner's call. It is currently unaccompanied: the worked case that
+ * would evidence it is not shipping until the agent exists (www#56).
+ */
+import { hero, repos } from "@/lib/messaging";
+---
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">{hero.eyebrow}</p>
+    <h1>{hero.headline[0]}<br />{hero.headline[1]}</h1>
+    <p class="sub">{hero.sub}</p>
+    <div class="cta-row">
+      <a class="btn" href="/contact-sales">{hero.ctaPrimary}</a>
+      <a class="btn-ghost" href={repos.ADK} target="_blank" rel="noopener noreferrer">
+        <svg class="gh" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+        </svg>
+        {hero.ctaSecondary}
+      </a>
+    </div>
+    <div class="stat-row">
+      {hero.stats.map((s) => (<span><b>{s.value}</b>{s.label}</span>))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: var(--ink);
+    color: var(--ink-foreground);
+    padding: 5.5rem 0 4.5rem;
+  }
+  .eyebrow {
+    margin: 0 0 1.625rem;
+    font-family: var(--mono-family);
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+  h1 {
+    margin: 0 0 1.5rem;
+    font-size: clamp(2.5rem, 5.4vw, 4.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+    max-width: 19ch;
+  }
+  .sub {
+    margin: 0 0 2rem;
+    max-width: 60ch;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .gh {
+    flex: none;
+  }
+  .stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.25rem;
+    margin-top: 3.375rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--ink-border);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+  .stat-row b {
+    color: var(--ink-foreground);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-right: 0.45rem;
+  }
+</style>

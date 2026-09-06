@@ -1,0 +1,453 @@
+---
+/**
+ * Primary navigation.
+ *
+ * Three mega-menus and two flat links.
+ *
+ * "Sign in" points at /pricing, not at a login screen. app.zeroroot.ai does
+ * not resolve, so the link was dead on the live site; every other action was
+ * repointed at contact-sales when the estate came down and this one was
+ * missed. Pricing is the honest next step, and each tier routes on to
+ * contact-sales from there. The label outlives the destination: it goes back
+ * to a real sign-in the day there is one to go to.
+ *
+ * Every Solutions entry deep-links into its own section on a hub page, so a
+ * menu that lists twelve things lands on twelve things. The dead-link guard now
+ * reads the static prefix of a template-literal href, so a link to a page that
+ * does not exist fails the build rather than passing in silence.
+ *
+ * Opens on hover AND on keyboard focus (`:focus-within`), so it is usable
+ * without a pointer. No JavaScript: the panels are always in the DOM and CSS
+ * decides whether they are shown.
+ *
+ * Below 980px that whole mechanism is useless, there is no hover, so the
+ * mobile markup is a separate tree built from <details>, which gives a real
+ * disclosure widget with keyboard support and no script. It carries the SAME
+ * entries as the desktop menu, from the same data; a mobile menu that is a
+ * subset of the desktop one is how a phone visitor ends up unable to reach
+ * half the site.
+ *
+ * Both trees exist in the DOM and CSS picks one. That is a deliberate trade:
+ * the alternative is a single tree restyled at the breakpoint, and every
+ * attempt at that ends up with a hover-only affordance surviving into the
+ * touch layout.
+ */
+import { platform, openSource, mechanisms, industries, workloads } from "@/lib/messaging";
+import { DOCS_ORIGIN } from "@/lib/origins";
+/**
+ * The CRT mark, inlined rather than referenced. It paints in currentColor, so
+ * through <img src> it would render black: an external document has no
+ * currentColor to inherit. Inlining is what makes one file serve both themes.
+ */
+import crtMark from "@zeroroot-ai/brand/marks/crt.svg?raw";
+---
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="lockup" href="/" aria-label="zeroroot, home">
+      <span class="mark" aria-hidden="true" set:html={crtMark} />
+      <span class="wordmark">zeroroot</span>
+    </a>
+
+    <nav class="menu" aria-label="Primary">
+      <div class="menu-item">
+        <button type="button">Solutions</button>
+        <div class="mega mega-2">
+          <div>
+            <p class="mega-h">By industry</p>
+            {industries.map((i) => (
+              <a href={`/industries#${i.slug}`}><b>{i.name}</b><span>{i.line}</span></a>
+            ))}
+          </div>
+          <div>
+            <p class="mega-h">By workload</p>
+            {workloads.map((w) => (
+              <a href={`/workloads#${w.slug}`}><b>{w.name}</b><span>{w.line}</span></a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <button type="button">Platform</button>
+        <div class="mega mega-2">
+          <div>
+            <p class="mega-h">Platform</p>
+            {platform.map((p) => (
+              <a href="/#products"><b>{p.name}</b><span>{p.body}</span></a>
+            ))}
+          </div>
+          <div>
+            <p class="mega-h">{mechanisms.heading}</p>
+            {mechanisms.items.map((m) => (
+              <a href={m.href}><b>{m.question} <em>{m.name}</em></b><span>{m.line}</span></a>
+            ))}
+            <p class="mega-h mega-h-2">{mechanisms.controls.heading}</p>
+            <a href={mechanisms.controls.href}><b>{mechanisms.controls.question} <em>{mechanisms.controls.name}</em></b><span>{mechanisms.controls.line}</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <button type="button">Open source</button>
+        <div class="mega mega-1">
+          <div>
+            <p class="mega-h">Build and execute</p>
+            {openSource.map((o) => (
+              <a href="/#open-source"><b>{o.name} <em>{o.license}</em></b><span>{o.body}</span></a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <a class="menu-flat" href="/pricing">Pricing</a>
+      <a class="menu-flat" href={DOCS_ORIGIN}>Docs</a>
+    </nav>
+
+    <div class="nav-cta">
+      <a class="btn-ghost" href="/pricing">Sign in</a>
+      <a class="btn" href="/contact-sales">Design partner</a>
+    </div>
+
+    <details class="mobile">
+      <summary aria-label="Menu">
+        <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      </summary>
+
+      <div class="sheet">
+        <details class="m-group">
+          <summary>Solutions</summary>
+          <p class="m-h">By industry</p>
+          {industries.map((i) => (
+            <a href={`/industries#${i.slug}`}><b>{i.name}</b><span>{i.line}</span></a>
+          ))}
+          <p class="m-h">By workload</p>
+          {workloads.map((w) => (
+            <a href={`/workloads#${w.slug}`}><b>{w.name}</b><span>{w.line}</span></a>
+          ))}
+        </details>
+
+        <details class="m-group">
+          <summary>Platform</summary>
+          {platform.map((p) => (
+            <a href="/#products"><b>{p.name}</b><span>{p.body}</span></a>
+          ))}
+          <p class="m-h">{mechanisms.heading}</p>
+          {mechanisms.items.map((m) => (
+            <a href={m.href}><b>{m.question} <em>{m.name}</em></b><span>{m.line}</span></a>
+          ))}
+          <p class="m-h">{mechanisms.controls.heading}</p>
+          <a href={mechanisms.controls.href}><b>{mechanisms.controls.question} <em>{mechanisms.controls.name}</em></b><span>{mechanisms.controls.line}</span></a>
+        </details>
+
+        <details class="m-group">
+          <summary>Open source</summary>
+          {openSource.map((o) => (
+            <a href="/#open-source"><b>{o.name} <em>{o.license}</em></b><span>{o.body}</span></a>
+          ))}
+        </details>
+
+        <a class="m-flat" href="/pricing">Pricing</a>
+        <a class="m-flat" href={DOCS_ORIGIN}>Docs</a>
+        <a class="m-flat" href="/pricing">Sign in</a>
+        <a class="btn m-cta" href="/contact-sales">Design partner</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<script>
+  // Close the sheet after a tap that navigates. Without this a same-page anchor
+  // scrolls behind a menu that is still covering the screen. Progressive: with
+  // no JS the sheet simply stays open, which is annoying rather than broken.
+  for (const sheet of document.querySelectorAll<HTMLDetailsElement>("details.mobile")) {
+    sheet.addEventListener("click", (e) => {
+      if ((e.target as HTMLElement).closest("a")) sheet.open = false;
+    });
+  }
+</script>
+
+<style>
+  .nav {
+    position: relative;
+    z-index: 30;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+  }
+  /* The lockup is the mark plus the wordmark. The wordmark rules below are
+     unchanged: the mark was added beside the type, not in place of it. */
+  .lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .mark {
+    display: inline-flex;
+    color: var(--primary);
+  }
+  .mark :global(svg) {
+    display: block;
+    width: 1.55rem;
+    height: 1.55rem;
+    /* Phosphor halo in dark, nothing in light: --glow-strength is 0 there. */
+    filter: drop-shadow(
+      0 0 calc(5px * var(--glow-strength, 0))
+      color-mix(in oklch, currentColor 45%, transparent)
+    );
+  }
+  .wordmark {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-size: 1.125rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .menu {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .menu-item {
+    position: relative;
+  }
+  .menu-item > button,
+  .menu-flat {
+    font-family: var(--mono-family);
+    font-size: 0.78rem;
+    background: none;
+    border: 0;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    display: inline-block;
+  }
+  .menu-item:hover > button,
+  .menu-item:focus-within > button,
+  .menu-flat:hover {
+    color: var(--foreground);
+  }
+  .mega {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.375rem;
+    gap: 2rem;
+    min-width: 22rem;
+    box-shadow: 0 18px 40px color-mix(in oklch, var(--foreground) 10%, transparent);
+  }
+  .mega-2 {
+    grid-template-columns: 1fr 1fr;
+    min-width: 39rem;
+  }
+  .menu-item:hover .mega,
+  .menu-item:focus-within .mega {
+    display: grid;
+  }
+  .mega-h {
+    margin: 0 0 0.75rem;
+    font-family: var(--mono-family);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--highlight);
+  }
+  .mega-h-2 {
+    margin-top: 1.25rem;
+  }
+  .mega a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.4rem 0;
+  }
+  .mega a b {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .mega a em {
+    font-style: normal;
+    font-family: var(--mono-family);
+    font-size: 0.62rem;
+    color: var(--muted-foreground);
+  }
+  .mega a span {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--muted-foreground);
+  }
+  .mega a:hover b {
+    color: var(--highlight);
+  }
+  .nav-cta {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* ── mobile ─────────────────────────────────────────────────────────
+   * Hidden above the breakpoint so the desktop nav is untouched. */
+  .mobile {
+    display: none;
+    margin-left: auto;
+  }
+  .mobile > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin: -0.5rem;
+    display: flex;
+    align-items: center;
+  }
+  .mobile > summary::-webkit-details-marker {
+    display: none;
+  }
+  .bars {
+    display: block;
+    width: 1.25rem;
+  }
+  .bars i {
+    display: block;
+    height: 2px;
+    background: var(--foreground);
+    border-radius: 1px;
+  }
+  .bars i + i {
+    margin-top: 4px;
+  }
+  .mobile[open] > summary .bars i:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .mobile[open] > summary .bars i:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile[open] > summary .bars i:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+  .bars i {
+    transition: transform 0.16s ease, opacity 0.16s ease;
+  }
+
+  .sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 64px;
+    bottom: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--background);
+    border-top: 1px solid var(--border);
+    padding: 0.5rem 1.5rem 2.5rem;
+  }
+  .m-group {
+    border-bottom: 1px solid var(--border);
+  }
+  .m-group > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1rem 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .m-group > summary::-webkit-details-marker {
+    display: none;
+  }
+  .m-group > summary::after {
+    content: "+";
+    font-family: var(--mono-family);
+    font-size: 1.1rem;
+    color: var(--highlight);
+  }
+  .m-group[open] > summary::after {
+    content: "–";
+  }
+  .m-h {
+    margin: 0.75rem 0 0.25rem;
+    font-family: var(--mono-family);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--highlight);
+  }
+  .m-group a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.6rem 0;
+  }
+  .m-group a b {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .m-group a em {
+    font-style: normal;
+    font-family: var(--mono-family);
+    font-size: 0.62rem;
+    color: var(--muted-foreground);
+  }
+  .m-group a span {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+  }
+  .m-flat {
+    display: block;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .m-cta {
+    display: block;
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    padding: 0.9rem 1.2rem;
+  }
+
+  @media (max-width: 980px) {
+    .menu,
+    .nav-cta {
+      display: none;
+    }
+    .mobile {
+      display: block;
+    }
+  }
+
+  /* The sheet is a full-height overlay; a shorter header on small screens
+   * means it has to start lower or leave a gap. Keep the two in step. */
+  @media (max-width: 520px) {
+    .nav-inner {
+      height: 56px;
+    }
+    .sheet {
+      top: 56px;
+    }
+  }
+</style>

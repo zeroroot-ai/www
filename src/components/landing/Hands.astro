@@ -1,0 +1,131 @@
+---
+/**
+ * One agent, four hands.
+ *
+ * Written as a single agent crossing four desks rather than four cards
+ * describing four audiences. Four cards about one product restate it four
+ * times and argue breadth; one object passing through four pairs of hands
+ * shows the division of control, which is the thing that actually makes an
+ * agent shippable inside an organization.
+ *
+ * The rail is an SVG because the relationship is the message: one path, four
+ * gates, in order, each held by someone different. The text lives in HTML
+ * beneath it rather than inside the SVG, so it reflows on a phone, stays
+ * selectable, and is read in order by a screen reader. The SVG is therefore
+ * decorative and marked aria-hidden: everything it says is said again in the
+ * cards, and a duplicate reading is worse than none.
+ */
+import { hands } from "@/lib/messaging";
+
+/**
+ * Gate centers along a 960-wide rail.
+ *
+ * The spacing leaves room at BOTH ends for the caps and, at the right, for the
+ * longest `holds` label to sit centered under its gate without reaching the
+ * "runs" cap. Widen a holds value and this is the thing that breaks.
+ */
+const GATES = hands.roles.map((r, i) => ({ ...r, x: 160 + i * 200, i }));
+---
+
+<section class="band hands" id="hands">
+  <div class="wrap">
+    <p class="section-eyebrow">{hands.eyebrow}</p>
+    <h2 class="section-h">{hands.heading}</h2>
+    <p class="section-sub">{hands.sub}</p>
+
+    <svg class="rail" viewBox="0 0 960 120" aria-hidden="true" focusable="false">
+      <line class="track" x1="40" y1="60" x2="920" y2="60" />
+
+      <g class="cap">
+        <circle cx="40" cy="60" r="9" />
+        <text x="40" y="92">agent</text>
+      </g>
+
+      {GATES.map((g) => (
+        <g class="gate">
+          <line class="post" x1={g.x} y1="34" x2={g.x} y2="86" />
+          <rect x={g.x - 7} y="53" width="14" height="14" rx="1" />
+          <text x={g.x} y="26">{g.role}</text>
+          <text class="holds" x={g.x} y="102">{g.holds}</text>
+        </g>
+      ))}
+
+      <g class="cap run">
+        <path d="M 912 54 L 926 60 L 912 66 Z" />
+        <text x="919" y="92">runs</text>
+      </g>
+    </svg>
+
+    <div class="grid-4 hand-grid">
+      {hands.roles.map((r) => (
+        <div class="card hand">
+          <p class="role">{r.role}</p>
+          <p class="holds">holds {r.holds}</p>
+          <p class="body">{r.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .rail {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 0 2rem;
+    overflow: visible;
+  }
+  .track,
+  .post {
+    stroke: var(--border);
+    stroke-width: 1;
+  }
+  .cap circle,
+  .cap path {
+    fill: var(--highlight);
+  }
+  .gate rect {
+    fill: var(--background);
+    stroke: var(--highlight);
+    stroke-width: 1.5;
+  }
+  .rail text {
+    font-family: var(--mono-family);
+    font-size: 12px;
+    fill: var(--foreground);
+    text-anchor: middle;
+  }
+  .rail .holds,
+  .cap text {
+    font-size: 10px;
+    fill: var(--muted-foreground);
+  }
+
+  .hand .role {
+    margin: 0 0 0.125rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+  .hand .holds {
+    margin: 0 0 0.75rem;
+    font-family: var(--mono-family);
+    font-size: 0.68rem;
+    color: var(--highlight);
+  }
+  .hand .body {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+
+  /* Below the grid breakpoint the rail is unreadable at four gates across a
+     phone, and the cards already carry every word it contains. */
+  @media (max-width: 980px) {
+    .rail {
+      display: none;
+    }
+  }
+</style>
