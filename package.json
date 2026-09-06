@@ -13,12 +13,12 @@
     "test": "node scripts/check-no-banned-marketing-phrases.mjs && node scripts/check-no-british-spellings.mjs && node scripts/check-no-british-spellings.mjs --selftest && node scripts/check-no-emdash.mjs && node scripts/check-no-emdash.mjs --selftest && node scripts/check-no-hardcoded-origins.mjs && node scripts/check-no-hardcoded-origins.mjs --selftest && node scripts/check-no-dead-internal-links.mjs && node scripts/check-no-dead-internal-links.mjs --selftest && node scripts/check-contact-form-same-origin.mjs && node scripts/check-contact-form-same-origin.mjs --selftest"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.0.0",
-    "@astrojs/react": "^4.2.0",
+    "@astrojs/mdx": "^8.0.0",
+    "@astrojs/react": "^6.0.5",
     "@hookform/resolvers": "^5.4.0",
     "@tailwindcss/vite": "^4.3.0",
     "@zeroroot-ai/brand": "^0.4.0",
-    "astro": "^5.0.0",
+    "astro": "^7.3.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.522.0",
