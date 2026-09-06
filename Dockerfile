@@ -17,21 +17,9 @@ RUN corepack enable
 # --ignore-scripts suppresses the allowBuilds error; the first release of a
 # first-party package inside the 24h quarantine window is what surfaced it.
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-# pnpm deliberately ignores env-var auth tokens in the project-level .npmrc
-# ("environment variables are not expanded in registry credentials that come
-# from a project .npmrc"), so the committed .npmrc alone cannot authenticate
-# the private @zeroroot-ai/brand fetch from GitHub Packages inside this stage
-# (ERR_PNPM_FETCH_401 — issue #3). CI passes the token as a BuildKit secret;
-# we write it as a literal user-level ~/.npmrc (which pnpm DOES honor) for the
-# install step only, then remove it within the same RUN so the token is never
-# baked into a layer. Without the secret (plain local `docker build`) the
-# install still runs and succeeds if ambient registry auth exists.
-RUN --mount=type=secret,id=npm_token \
-    if [ -s /run/secrets/npm_token ]; then \
-      printf '//npm.pkg.github.com/:_authToken=%s\n' "$(cat /run/secrets/npm_token)" > "$HOME/.npmrc"; \
-    fi \
-    && pnpm install --frozen-lockfile --ignore-scripts \
-    && rm -f "$HOME/.npmrc"
+# @zeroroot-ai/brand comes from registry.npmjs.org (attic#17): no registry
+# credential, so a stranger's `docker build` runs the same command CI does.
+RUN pnpm install --frozen-lockfile --ignore-scripts
 COPY . .
 # Origin sentinels, not real hosts (www#15): src/lib/origins.ts reads these at
 # build time, and docker/40-substitute-origins.sh rewrites them to the

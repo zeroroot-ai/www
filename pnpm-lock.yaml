@@ -1885,9 +1885,12 @@ packages:
     resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
 
   '@zeroroot-ai/brand@0.4.0':
-    resolution: {integrity: sha512-nNcLzhhl7Uw+CvVVr3iGJGwiEu7D+mtCoENge0z9VT39iMTFNBEyticYi+v09UZDi+wxYx1WvPWLRWVP3U7rPQ==, tarball: https://npm.pkg.github.com/download/@zeroroot-ai/brand/0.4.0/0c6aed086a63ccb759eace24b21ec5bd497b873c}
+    resolution: {integrity: sha512-TuVKjatGBLtr49P3KgKZXNCmkrkJOXsxLi2T9TaViUogyegd0FnXYpr6vZLEIhn0px32twS2H+IwhDSFd8aD6w==}
     peerDependencies:
       tailwindcss: '>=4.0.0'
+    peerDependenciesMeta:
+      tailwindcss:
+        optional: true
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -5135,7 +5138,7 @@ snapshots:
   '@vscode/l10n@0.0.18': {}
 
   '@zeroroot-ai/brand@0.4.0(tailwindcss@4.3.3)':
-    dependencies:
+    optionalDependencies:
       tailwindcss: 4.3.3
 
   acorn-jsx@5.3.2(acorn@8.18.0):
