@@ -18,6 +18,18 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
+      # ---- Node version guard (.github#23, epic #20) ----
+      # One version file per repo; the Dockerfile FROM and every workflow
+      # agree with it. The guard lives in the org repo, checked out at main.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: zeroroot-ai/.github
+          ref: main
+          path: .org-dot-github
+      - name: Node version file, image and workflows agree
+        run: bash .org-dot-github/scripts/check-node-version.sh --dir . --version-file .tool-versions
+
+
       # No `version:` here on purpose. The action reads package.json's
       # `packageManager` field instead, so CI, the Docker image and a
       # workstation all run the identical pnpm. They did not before: CI
@@ -28,7 +40,7 @@ jobs:
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 22
+          node-version-file: .tool-versions
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
