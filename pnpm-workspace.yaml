@@ -25,3 +25,10 @@ allowBuilds:
 # change is a defect in the allowlist, not a chore.
 minimumReleaseAgeExclude:
   - '@zeroroot-ai/*'
+# fast-uri < 3.1.6 carries four host-confusion and SSRF advisories
+# (GHSA-5jgf-p345-68v8, GHSA-f65p-4m7j-42xc, GHSA-fph4-wmhf-6fwf,
+# GHSA-jqff-g426-hqxp; www#3). Its only parent here is ajv, whose latest
+# release still declares `^3.0.1`, so a parent bump cannot move it. The floor
+# stays inside the major ajv declares, so a later 3.x needs no edit here.
+overrides:
+  fast-uri: '>=3.1.6 <4'

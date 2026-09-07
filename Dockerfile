@@ -1,5 +1,5 @@
 # Stage 1: build
-FROM node:22-alpine AS builder
+FROM node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32 AS builder
 WORKDIR /app
 # `corepack enable` alone, deliberately: corepack then reads the exact pnpm
 # version from package.json's `packageManager` field. The previous
@@ -35,7 +35,7 @@ RUN PUBLIC_DOCS_ORIGIN=__DOCS_ORIGIN__ pnpm build
 # with ALL capabilities dropped, so nginx cannot bind a privileged port and
 # cannot write to the stock /var/cache/nginx and /var/run paths. The
 # unprivileged variant is built for exactly that, and defaults to :8080.
-FROM nginxinc/nginx-unprivileged:alpine AS runner
+FROM nginxinc/nginx-unprivileged:alpine@sha256:2ddec616f1cb58bcac057aa388f28cb81e35137641ef4226d321714499329bd1 AS runner
 # Recreate the html tree owned by the runtime uid: the base image ships
 # /usr/share/nginx/html owned by root (with a stock 50x.html), and
 # 40-substitute-origins.sh sed-edits in place as uid 101 — sed's temp file
