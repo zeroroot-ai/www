@@ -1,0 +1,10 @@
+# The Dockerfile pins its two base images by digest (Scorecard
+# Pinned-Dependencies, www#3). A digest pin is fixed on purpose, so this entry
+# is what moves it: Dependabot opens a PR when the tag behind the digest
+# points at a new image.
+version: 2
+updates:
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
