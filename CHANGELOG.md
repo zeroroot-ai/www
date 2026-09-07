@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/zeroroot-ai/www/compare/v1.0.0...v1.0.1) (2026-09-07)
+
+
+### Bug Fixes
+
+* **ci:** one Node version file, read by setup-node, guarded against the image ([#9](https://github.com/zeroroot-ai/www/issues/9)) ([098e0d0](https://github.com/zeroroot-ai/www/commit/098e0d099bc1686b392e82e853b492f0de355ef1))
+
 ## 1.0.0 (2026-09-07)
 
 
