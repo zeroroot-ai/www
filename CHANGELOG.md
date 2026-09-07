@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 (2026-09-07)
+
+
+### Bug Fixes
+
+* **ci:** pin Dockerfile bases, scope token permissions, fix fast-uri advisories ([#6](https://github.com/zeroroot-ai/www/issues/6)) ([c88f130](https://github.com/zeroroot-ai/www/commit/c88f1309af8865f94c95f308f580e254f25d843d))
+
 ## [1.8.1](https://github.com/zeroroot-ai/www/compare/v1.8.0...v1.8.1) (2026-08-25)
 
 
