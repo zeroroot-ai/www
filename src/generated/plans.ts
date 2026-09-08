@@ -1,7 +1,7 @@
 // GENERATED FILE, do not edit.
-// Source: enterprise/deploy/helm/gibson-operators/files/plans.yaml
-// Generator: enterprise/platform/dashboard/scripts/gen-plans.mjs
-// Run `npm run build` (or the `prebuild` hook) to regenerate.
+// Source: zeroroot-ai/charts helm/gibson-operators/files/plans.yaml
+// Generator: scripts/gen-plans.mjs
+// Run `node scripts/gen-plans.mjs` to regenerate.
 
 export type PlanID =
   | "team"

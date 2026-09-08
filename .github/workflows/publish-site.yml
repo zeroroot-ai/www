@@ -5,7 +5,7 @@
 # In plain words: this is what makes a released change visible on
 # www.zeroroot.ai, and on the apex, which 301s here.
 #
-# TAG TRIGGER, NOT MAIN. This site is an off-cluster surface (deploy ADR-0009):
+# TAG TRIGGER, NOT MAIN. This site is an off-cluster surface (ADR-0009):
 # no chart deploys it in either audience, so a release tag is the only thing
 # that still says "this is a deliberate publish" rather than "this is whatever
 # main happens to hold". It also means the pricing flip — reverting the

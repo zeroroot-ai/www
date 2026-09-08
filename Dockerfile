@@ -30,11 +30,11 @@ RUN PUBLIC_DOCS_ORIGIN=__DOCS_ORIGIN__ pnpm build
 
 # Stage 2: serve
 #
-# nginx-unprivileged (not plain nginx): the deploy chart
-# (zeroroot-ai/deploy helm/saas-overlay/www-svc) runs this image as uid 101
-# with ALL capabilities dropped, so nginx cannot bind a privileged port and
-# cannot write to the stock /var/cache/nginx and /var/run paths. The
-# unprivileged variant is built for exactly that, and defaults to :8080.
+# nginx-unprivileged (not plain nginx): the hosting environment runs this
+# image as uid 101 with ALL capabilities dropped, so nginx cannot bind a
+# privileged port and cannot write to the stock /var/cache/nginx and /var/run
+# paths. The unprivileged variant is built for exactly that, and defaults
+# to :8080.
 FROM nginxinc/nginx-unprivileged:alpine@sha256:2ddec616f1cb58bcac057aa388f28cb81e35137641ef4226d321714499329bd1 AS runner
 # Recreate the html tree owned by the runtime uid: the base image ships
 # /usr/share/nginx/html owned by root (with a stock 50x.html), and
