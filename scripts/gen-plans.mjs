@@ -5,37 +5,42 @@
 /**
  * gen-plans.mjs, canonical plan registry → TypeScript emitter.
  *
+ * The canonical plan registry lives in the public umbrella chart repo
+ * zeroroot-ai/charts, under helm/gibson-operators/files/. The tenant operator
+ * ships the same file as a ConfigMap, so the site and the operator read one
+ * registry. (Open-core relocation, ADR-0050: billing and plans left OSS
+ * gibson, and the chart repo took the registry.)
+ *
  * Two source modes:
  *
- *   local  (default)   read plans.yaml + plans.schema.json from the polyrepo
- *                      sibling at enterprise/deploy/helm/gibson-operators/files/.
- *                      Used for local dev where the workspace has both clones.
+ *   remote (default)   fetch plans.yaml + plans.schema.json from GitHub raw at
+ *                      https://raw.githubusercontent.com/zeroroot-ai/charts/{ref}/helm/gibson-operators/files/...
+ *                      charts is public, so no credential is needed. A
+ *                      GITHUB_TOKEN env var, when set, is sent to raise the
+ *                      rate limit.
+ *                      Ref: PLANS_REF env var, default "main".
  *
- *   remote             fetch plans.yaml + plans.schema.json from GitHub raw at
- *                      https://raw.githubusercontent.com/zeroroot-ai/deploy/{ref}/helm/gibson-operators/files/...
- *                      Used in Docker / CI where the sibling clone is not on disk.
- *                      Auth: GITHUB_TOKEN env var (gibson is private).
- *                      Ref:  PLANS_REF env var, default "main".
- *
- * Open-core relocation (gibson#915 / ADR-0050): #915 ripped billing/plans out
- * of OSS gibson; the canonical plans source is now the `deploy` repo under
- * helm/gibson-operators/files/. Both source modes point at deploy.
+ *   local              read plans.yaml + plans.schema.json from the directory
+ *                      named by the PLANS_DIR env var. Point PLANS_DIR at
+ *                      helm/gibson-operators/files/ inside a charts checkout.
+ *                      Used for offline work and when a chart edit is not
+ *                      pushed yet. There is no implicit sibling path: the
+ *                      directory is always explicit.
  *
  * Mode selection:
  *   --remote / --source=remote  | PLANS_SOURCE=remote   ⇒ remote
  *   --local  / --source=local   | PLANS_SOURCE=local    ⇒ local
- *   default                                              ⇒ local
+ *   default                                              ⇒ remote
  *
- * Emits:  enterprise/platform/dashboard/src/generated/plans.ts
+ * Emits:  src/generated/plans.ts
  *
  * The generated file contains strongly-typed Plan / Quotas / Pricing / PlanID
- * definitions + the frozen `plans` constant used by /pricing, BillingContent,
- * and tier-checker. This script is the single bridge between the Go operator's
- * source of truth and the dashboard; no other TS file should parse the YAML
- * directly.
+ * definitions and the frozen `plans` constant that /pricing renders. This
+ * script is the single bridge between the chart registry and the site. No
+ * other TypeScript file parses the YAML directly.
  *
- * Runs in the `prebuild` npm hook. Exits with a non-zero status on any failure
- * so the build fails loudly rather than producing stale types.
+ * The script exits with a non-zero status on any failure, so a build fails
+ * loudly rather than emitting stale types.
  *
  * Schema simplified by spec plans-and-quotas-simplification:
  *   - Four plan ids: team, org, enterprise, enterprise-deploy
@@ -50,34 +55,20 @@ import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const DASHBOARD_ROOT = resolve(HERE, "..");
-// Worktree-aware: when DASHBOARD_ROOT is .worktrees/<name>/ the naive
-// `../../..` walk lands short of the workspace root. Rewind to the main
-// checkout root before walking up. dashboard#175.
-const isWorktree = DASHBOARD_ROOT.includes("/.worktrees/");
-const MAIN_DASHBOARD_ROOT = isWorktree
-  ? DASHBOARD_ROOT.replace(/\/\.worktrees\/[^/]+$/, "")
-  : DASHBOARD_ROOT;
-const REPO_ROOT = resolve(MAIN_DASHBOARD_ROOT, "..", "..", "..");
-// Open-core relocation (gibson#915 / ADR-0050): #915 ripped billing/plans out
-// of OSS gibson, so the canonical plans source is now `deploy`
-// (helm/gibson-operators/files/): ELv2-readable by the dashboard; the closed
-// billing impl reads the same copy. (Previously gibson/operators/tenant/plans/.)
-const PLANS_YAML = resolve(
-  REPO_ROOT,
-  "enterprise/deploy/helm/gibson-operators/files/plans.yaml",
-);
-const PLANS_SCHEMA = resolve(
-  REPO_ROOT,
-  "enterprise/deploy/helm/gibson-operators/files/plans.schema.json",
-);
-const OUTPUT = resolve(DASHBOARD_ROOT, "src/generated/plans.ts");
+// The site root holds scripts/ and src/. Resolving from the script file keeps
+// this correct in a git worktree and in a container, because it never walks
+// above the checkout.
+const SITE_ROOT = resolve(HERE, "..");
+const OUTPUT = resolve(SITE_ROOT, "src/generated/plans.ts");
 
-const REMOTE_REPO = "zeroroot-ai/deploy";
+const REMOTE_REPO = "zeroroot-ai/charts";
+const CHART_FILES_DIR = "helm/gibson-operators/files";
 const REMOTE_PATHS = {
-  yaml: "helm/gibson-operators/files/plans.yaml",
-  schema: "helm/gibson-operators/files/plans.schema.json",
+  yaml: `${CHART_FILES_DIR}/plans.yaml`,
+  schema: `${CHART_FILES_DIR}/plans.schema.json`,
 };
+// Where the generated header points a reader who wants the registry itself.
+const SOURCE_REF = `${REMOTE_REPO} ${REMOTE_PATHS.yaml}`;
 
 const KNOWN_PLAN_IDS = ["team", "org", "enterprise", "enterprise-deploy"];
 
@@ -107,34 +98,25 @@ function resolveSource(argv) {
   if (env && env !== "") {
     die(`PLANS_SOURCE must be 'remote' or 'local', got ${JSON.stringify(env)}`);
   }
-  return "local";
+  return "remote";
 }
 
 /**
- * Fetch a single file from the gibson monorepo's raw content endpoint.
- * Uses the GITHUB_TOKEN env var (the BuildKit `ghtoken` secret in the
- * Dockerfile, the `secrets.GH_PAT_*` PAT in CI workflows). gibson is a
- * private repo so unauthenticated fetches will 401 / 404.
+ * Fetch a single file from the chart repo's raw content endpoint.
+ * charts is public, so no credential is required. A GITHUB_TOKEN env var,
+ * when present, only raises the rate limit.
  */
 async function fetchRemoteFile(ref, repoPath) {
   const token = process.env.GITHUB_TOKEN;
-  if (!token) {
-    die(
-      "PLANS_SOURCE=remote requires GITHUB_TOKEN env var with read access " +
-        `to ${REMOTE_REPO} (private repo). Set GITHUB_TOKEN or switch to ` +
-        "PLANS_SOURCE=local.",
-    );
-  }
   const url = `https://raw.githubusercontent.com/${REMOTE_REPO}/${encodeURIComponent(ref)}/${repoPath}`;
+  const headers = {
+    Accept: "application/vnd.github.raw",
+    "User-Agent": "zeroroot-www-gen-plans",
+  };
+  if (token) headers.Authorization = `Bearer ${token}`;
   let resp;
   try {
-    resp = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/vnd.github.raw",
-        "User-Agent": "gibson-dashboard-gen-plans",
-      },
-    });
+    resp = await fetch(url, { headers });
   } catch (e) {
     die(`fetch ${url}: ${e.message}`);
   }
@@ -142,41 +124,51 @@ async function fetchRemoteFile(ref, repoPath) {
     die(
       `fetch ${url}: HTTP ${resp.status} ${resp.statusText}` +
         (resp.status === 404
-          ? ` (check PLANS_REF=${JSON.stringify(ref)} resolves to a commit on ${REMOTE_REPO})`
-          : resp.status === 401 || resp.status === 403
-            ? " (check GITHUB_TOKEN has read access to the private repo)"
+          ? ` (check PLANS_REF=${JSON.stringify(ref)} resolves to a commit on ${REMOTE_REPO}, and that ${repoPath} still exists there)`
+          : resp.status === 403 || resp.status === 429
+            ? " (rate limited: set GITHUB_TOKEN, or use PLANS_SOURCE=local with PLANS_DIR)"
             : ""),
     );
   }
   return await resp.text();
 }
 
-/** Load plans.yaml + plans.schema.json from local polyrepo paths. */
+/**
+ * Load plans.yaml + plans.schema.json from the directory named by PLANS_DIR.
+ * The caller states the directory, so no workstation layout is assumed.
+ */
 function loadLocal() {
-  if (!existsSync(PLANS_YAML)) {
+  const dir = process.env.PLANS_DIR;
+  if (!dir) {
     die(
-      `plans.yaml not found at ${PLANS_YAML} (local mode). ` +
-        "Ensure the polyrepo sibling clone exists at that path, or switch to " +
-        "remote mode with PLANS_SOURCE=remote (sets GITHUB_TOKEN required).",
+      "local mode requires the PLANS_DIR env var. Point it at " +
+        `${CHART_FILES_DIR} inside a ${REMOTE_REPO} checkout, for example ` +
+        `PLANS_DIR=../charts/${CHART_FILES_DIR}. Drop PLANS_SOURCE=local to ` +
+        "read the same files from GitHub instead.",
     );
   }
-  if (!existsSync(PLANS_SCHEMA)) {
-    die(`plans.schema.json not found at ${PLANS_SCHEMA} (local mode)`);
+  const plansYaml = resolve(dir, "plans.yaml");
+  const plansSchema = resolve(dir, "plans.schema.json");
+  if (!existsSync(plansYaml)) {
+    die(`plans.yaml not found at ${plansYaml} (PLANS_DIR=${dir})`);
+  }
+  if (!existsSync(plansSchema)) {
+    die(`plans.schema.json not found at ${plansSchema} (PLANS_DIR=${dir})`);
   }
   return {
-    yamlText: readFileSync(PLANS_YAML, "utf8"),
-    schemaText: readFileSync(PLANS_SCHEMA, "utf8"),
-    sourceLabel: `local: ${PLANS_YAML}`,
+    yamlText: readFileSync(plansYaml, "utf8"),
+    schemaText: readFileSync(plansSchema, "utf8"),
+    sourceLabel: `local: ${plansYaml}`,
   };
 }
 
 /** Fetch plans.yaml + plans.schema.json from the canonical remote source. */
 async function loadRemote() {
   const ref = process.env.PLANS_REF || "main";
-  // Diagnostic to stderr (never stdout): in --stdout mode the parent
-  // captures stdout as the generated TS payload, so any progress line on
-  // stdout pollutes the captured output and trips drift gates like
-  // check-plans-fresh.mjs that diff the capture against the on-disk file.
+  // Diagnostic to stderr (never stdout): in --stdout mode the caller captures
+  // stdout as the generated TypeScript payload, so any progress line on stdout
+  // pollutes the capture and breaks a drift check that diffs it against the
+  // committed file.
   process.stderr.write(
     `gen-plans: fetching from ${REMOTE_REPO}@${ref} (PLANS_SOURCE=remote)\n`,
   );
@@ -282,9 +274,9 @@ function renderTypeScript(doc) {
   const lines = [];
   lines.push(
     "// GENERATED FILE, do not edit.",
-    "// Source: enterprise/deploy/helm/gibson-operators/files/plans.yaml",
-    "// Generator: enterprise/platform/dashboard/scripts/gen-plans.mjs",
-    "// Run `npm run build` (or the `prebuild` hook) to regenerate.",
+    `// Source: ${SOURCE_REF}`,
+    "// Generator: scripts/gen-plans.mjs",
+    "// Run `node scripts/gen-plans.mjs` to regenerate.",
     "",
     "export type PlanID =",
     ...KNOWN_PLAN_IDS.map((id, i) => {
