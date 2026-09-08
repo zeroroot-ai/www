@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/zeroroot-ai/www/compare/v1.0.1...v1.0.2) (2026-09-08)
+
+
+### Bug Fixes
+
+* read the plan registry from zeroroot-ai/charts ([#11](https://github.com/zeroroot-ai/www/issues/11)) ([95b2670](https://github.com/zeroroot-ai/www/commit/95b267052e5564c2e655c4cd81d03908e4c94825))
+
 ## [1.0.1](https://github.com/zeroroot-ai/www/compare/v1.0.0...v1.0.1) (2026-09-07)
 
 
